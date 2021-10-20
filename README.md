@@ -18,6 +18,10 @@ A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
 
 1. Add the pentest cheat sheets by adding the repo to navi:
 
+    `$ navi repo add esp0xdeadbeef/cheat.sheets`
+
+    and check out the [infosecstreams cheat.sheets!](https://github.com/infosecstreams/cheat.sheets) :)
+
     `$ navi repo add infosecstreams/cheat.sheets`
 
 ### Installing the shell widget
