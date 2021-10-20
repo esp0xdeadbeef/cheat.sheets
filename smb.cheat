@@ -1,0 +1,11 @@
+%SMB
+$ target: if [[ ! -z $target ]]; then; echo $target; else echo ""; fi
+
+# enum smb
+echo 'echo "nmblookup -A <target>
+smbmap -H <target>
+echo exit | smbclient -L \\\\<target>
+
+"smbclient //<target>/share -U " "%" "
+enum4linux <target>' | sh
+
