@@ -8,6 +8,18 @@ A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
 
     `$ sudo apt install fd-find fzf`
 
+### notes for arch 
+
+```bash
+cargo install fd-find # via rust and add ~/.cargo/bin/ to $PATH
+# add  fdfind to /sbin/fdfind
+ln -sf ~/.cargo/bin/fd /sbin/fdfind
+# or
+pacman -Sy fd
+# add fd to /sbin/fdfind
+ln -sf $(which fd) /sbin/fdfind
+```
+
 1. Install `cargo` if you don't have it (example the bash before piping it to `sh`):
 
     `$ curl https://sh.rustup.rs -sSf | sh`
@@ -23,6 +35,7 @@ A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
     and check out the [infosecstreams cheat.sheets!](https://github.com/infosecstreams/cheat.sheets) :)
 
     `$ navi repo add infosecstreams/cheat.sheets`
+
 
 ### Installing the shell widget
 
