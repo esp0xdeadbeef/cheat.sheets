@@ -1,0 +1,31 @@
+% DNS Enum
+
+$ dns nameserver: echo "ns1 ns2 ns3" | tr ' ' '\n'
+
+# whois lookup on target
+whois <target>
+
+
+$ options: echo "a|txt|ns|mx|axfr" | tr '|' '\n'
+# dig on the target
+dig <options> <target>
+
+# dig on the target with nameserver
+dig <options> <target> @ns1.<target>
+
+
+# use host to query the dns
+host -t <options> <target> | tee -a 
+
+# list all options?
+host -a <target>
+host -l <target> ns1.<target>
+
+# zonetransfer on ns2
+dnsrecon -d <target> -t axfr @ns2.<target>
+dnsenum <target>
+nslookup -> set type=any -> ls -d <target>
+for sub in $(cat subdomains.txt);do host $sub.<target>|grep "has.address";done
+
+
+$ target: if [[ ! -z $target ]]; then; echo $target; else echo ""; fi
