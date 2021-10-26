@@ -75,7 +75,10 @@ nmap -p 445 --script smb-vuln-ms08-067 <target>
 nmap -p 445 --script smb-vuln-ms10-054 <target> 
 nmap -p 445 --script smb-vuln-ms10-061 <target> 
 nmap -p 445 --script smb-vuln-ms17-010 <target> 
--- Always check for updated list on https://nmap.org/nsedoc/scripts/
+
+# nmap - SMB all vulns windows:
+
+nmap -p 445 --script smb-vuln-ms06-025 --script smb-vuln-ms07-029 --script smb-vuln-ms08-067 --script smb-vuln-ms10-054 --script smb-vuln-ms10-061 --script smb-vuln-ms17-010 <target>
 
 # map - Brute Force Accounts (be aware of account lockout!)
 nmap –p 445 --script smb-brute –script-args userdb=user-list.txt,passdb=pass-list.txt <target>
