@@ -55,7 +55,7 @@ nmap -p 445 --script smb-enum-users <target> --script-args smbuser=<username>,sm
 
 nmap --script smb-enum-users.nse --script-args smb<username>=User1,smbpass=Pass@1234,smbdomain=workstation -p445 <target>
 
-nmap --script smb-enum-users.nse --script-args smb<username>=User1,smbhash=<hash>,smbdomain=<smbdomain> -p445 <target>
+nmap --script smb-enum-users.nse --script-args smb<username>=User1,smbhash=<lm:ntlm>,smbdomain=<smbdomain> -p445 <target>
 
 # nmap - Enum Groups
 nmap -p 445 --script smb-enum-groups <target> --script-args smbuser=<username>,smbpass=<password>,smbdomain=<smbdomain>
