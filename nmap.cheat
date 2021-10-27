@@ -29,8 +29,6 @@ nmap --script banner <ip or range>
 # Nmap script vuln
 nmap --script vuln <ip or range>
 
-$ top_ports: awk '$2~/tcp$/' /usr/share/nmap/nmap-services | sort -r -k3 | head -n <n_top_ports> | awk '{print $2}' | cut -d '/' -f 1 | tr '\n' ', '
-
 # full script to run fast Enum (outputs 3 files in current directory) 
-echo "<target>" | xargs -I {} echo "nmap -p <top_ports> {} -v | tee top_<top_ports>_nmap.out.tmp;grep open top_<top_ports>_nmap.out.tmp | grep -Eo \"[[:digit:]]*\" | tr \"\\n\" , > top_<top_ports>_nmap.out;nmap -p- --exclude-ports <top_ports> {} | tee nmap.out; nmap -p \$(echo \$(cat nmap.out | grep open | grep -Eo \"[[:digit:]]*\" | tr \"\\n\" ,) | sed \"s/.$//\") -sV  -O -A {} | tee service_nmap.out"
+echo "<target>" | xargs -I {} echo "nmap -p awk \"$2~/tcp$/\" /usr/share/nmap/nmap-services | sort -r -k3 | head -n <n_top_ports> | awk \"{print $2}\" | cut -d \"/\" -f 1 | tr \"\n\" \", \" {} -v | tee top_awk \"$2~/tcp$/\" /usr/share/nmap/nmap-services | sort -r -k3 | head -n <n_top_ports> | awk \"{print $2}\" | cut -d \"/\" -f 1 | tr \"\n\" \", \"_nmap.out.tmp;grep open top_awk \"$2~/tcp$/\" /usr/share/nmap/nmap-services | sort -r -k3 | head -n <n_top_ports> | awk \"{print $2}\" | cut -d \"/\" -f 1 | tr \"\n\" \", \"_nmap.out.tmp | grep -Eo \"[[:digit:]]*\" | tr \"\\n\" , > top_awk \"$2~/tcp$/\" /usr/share/nmap/nmap-services | sort -r -k3 | head -n <n_top_ports> | awk \"{print $2}\" | cut -d \"/\" -f 1 | tr \"\n\" \", \"_nmap.out;nmap -p- --exclude-ports awk \"$2~/tcp$/\" /usr/share/nmap/nmap-services | sort -r -k3 | head -n <n_top_ports> | awk \"{print $2}\" | cut -d \"/\" -f 1 | tr \"\n\" \", \" {} | tee nmap.out; nmap -p \$(echo \$(cat nmap.out | grep open | grep -Eo \"[[:digit:]]*\" | tr \"\\n\" ,) | sed \"s/.$//\") -sV  -O -A {} | tee service_nmap.out" | sh
 
