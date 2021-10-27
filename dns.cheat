@@ -39,8 +39,8 @@ gobuster -t 15 dns --domain <domain> --wordlist <wordlist> --show-ips
 # gobuster with resolver
 gobuster -t 15 dns --resolver <resolver> --domain <domain> --wordlist <wordlist> --show-ips
 
-# enum with msfconsole basic settings
-msfconsole -q -x 'use auxiliary/gather/enum_dns;set DOMAIN <domain>; set ENUM_BRT True; set WORDLIST <wordlist>; run'
+# enum with msfconsole basic settings (lets dos yourself with scanning)
+msfconsole -q -x 'use auxiliary/gather/enum_dns;set DOMAIN <domain>; set ENUM_BRT True; set WORDLIST <wordlist>;options'
 
 $ target: if [[ ! -z $target ]]; then; echo $target; fi
 $ wordlist: fdfind . /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i dns | sort -u 
