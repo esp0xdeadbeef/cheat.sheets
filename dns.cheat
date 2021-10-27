@@ -43,4 +43,4 @@ gobuster -t 15 dns --resolver <resolver> --domain <domain> --wordlist <wordlist>
 msfconsole -q -x 'use auxiliary/gather/enum_dns;set DOMAIN <domain>; set ENUM_BRT True; set WORDLIST <wordlist>; run'
 
 $ target: if [[ ! -z $target ]]; then; echo $target; fi
-$ wordlist: fdfind . /usr/share/{seclists,wordlist} /usr/share/amass/ -Ltf | grep -i dns | sort -u 
+$ wordlist: fdfind . /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i dns | sort -u 
