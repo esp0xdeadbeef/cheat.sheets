@@ -1,0 +1,15 @@
+% web fuzzing
+
+$ wordlist: fdfind . $(pwd) /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i dns | sort -u 
+
+# feroxbuster
+feroxbuster --url <url>
+
+# feroxbuster with custom wordlist
+feroxbuster --url <url> -w <wordlist>
+
+# vhosts FUFF
+ffuf -w <wordlist> -u <url> -H "Host: FUZZ" 
+
+# vhosts gobuster
+gobuster vhost --url <The target URL> --wordlist <wordlist>
