@@ -1,6 +1,8 @@
 % DNS Enum
 
 $ options: echo "a|txt|ns|mx|axfr" | tr '|' '\n'
+$ target: if [[ ! -z $target ]]; then; echo $target; fi
+$ wordlist: fdfind . /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i dns | sort -u 
 
 
 # whois on the target
@@ -42,5 +44,3 @@ gobuster -t 15 dns --resolver <resolver> --domain <domain> --wordlist <wordlist>
 # enum with msfconsole basic settings (lets dos yourself with scanning)
 msfconsole -q -x 'use auxiliary/gather/enum_dns;set DOMAIN <domain>; set WORDLIST <wordlist>;options'
 
-$ target: if [[ ! -z $target ]]; then; echo $target; fi
-$ wordlist: fdfind . /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i dns | sort -u 
