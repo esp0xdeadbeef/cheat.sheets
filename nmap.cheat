@@ -1,0 +1,37 @@
+% NMAP cheats
+
+
+# Discovers IPs
+nmap -v -sn <ip or range>
+
+# Run a TCP Scan on all the ports
+# remove -p- to not scan all the ports
+nmap -sT -p- -Pn <ip or range>
+
+# Run a SYN Scan (SYN is the default mode)
+nmap -sS -p- -Pn <ip or range>
+
+# Run a UDP Scan, replace -sT with -sU
+# -p- and -Pn has been removed because UDP scans are very slow
+nmap --top-ports <n top udp ports amount> -sUV <ip or range>
+
+# Run a XMAS Scan
+nmap -sX -p- -Pn <ip or range>
+
+# Run a NULL Scan
+nmap -sN -p- -Pn <ip or range>
+
+# Replace the range to a specific IP to scan all the ports of one IP
+
+# Nmap script banner
+nmap --script banner <ip or range>
+
+# Nmap script vuln
+nmap --script vuln <ip or range>
+
+# nmap script to run fast Enum (outputs 3 files in current directory)
+
+$ top_ports: awk '$2~/tcp$/' /usr/share/nmap/nmap-services | sort -r -k3 | head -n 100 | awk '{print $2}' | cut -d '/' -f 1 | tr '\n' ', '
+echo "<target>" | xargs -I {} echo "nmap -p <top_ports> {} -v | tee top_<top_ports>_nmap.out.tmp;grep open top_<top_ports>_nmap.out.tmp | grep -Eo \"[[:digit:]]*\" | tr \"\\n\" , > top_<top_ports>_nmap.out;nmap -p- --exclude-ports <top_ports> {} | tee nmap.out; nmap -p \$(echo \$(cat nmap.out | grep open | grep -Eo \"[[:digit:]]*\" | tr \"\\n\" ,) | sed \"s/.$//\") -sV  -O -A {} | tee service_nmap.out"
+
+
