@@ -34,6 +34,6 @@ proxychains nmap -sT -Pn <ip or range>
 proxychains nmap -sT -Pn --top-ports <n top udp ports amount> <ip or range>
 
 
-# full script to run fast Enum (outputs 3 files in current directory) 
-echo "running nmap on <target> full ports; <n_top_ports> will be scanned fast.";awk '$2~/tcp$/' /usr/share/nmap/nmap-services | sort -r -k3 | head -n <n_top_ports> | awk '{print $2}' | cut -d '/' -f 1 | tr '\n' ', ' > /tmp/top_<target>_<n_top_ports>_ports; echo "<target>" | xargs -I {} echo "nmap -p$(cat /tmp/top_<target>_<n_top_ports>_ports) {} -v | tee top_<n_top_ports>_nmap.out;grep open top_<n_top_ports>_nmap.out | grep -Eo \"[[:digit:]]*\" | tr \"\\n\" , > /tmp/top_<n_top_ports>_nmap.out.tmp;nmap -p- --exclude-ports $(cat top_<n_top_ports>_nmap.out.tmp /tmp/top_<target>_<n_top_ports>_ports) {} | tee -a nmap.out; nmap -p \$(echo \$(cat nmap.out | grep open | grep -Eo \"[[:digit:]]*\" | tr \"\\n\" ,) | sed \"s/.$//\") -sV -O -A {} | tee service_nmap.out" | sh
+# fast Enum full to run (outputs 3 files in current directory) 
+echo "<ip>" | xargs -I {} echo "nmap --top-ports 50 {} | tee top_50_nmap.out;nmap -p- {} | tee nmap.out;nmap -p\$(echo \$(cat nmap.out | grep open | grep -Eo \"[[:digit:]]*\" | tr \"\\n\" ,) | sed \"s/.$//\") -sV  -O -A {} | tee service_nmap.out" | sh
 
