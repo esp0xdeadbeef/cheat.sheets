@@ -1,24 +1,22 @@
-% NMAP cheats
+% portscan
 
-# Discovers IPs
+# nmap Discovers IPs
 nmap -v -sn <ip or range>
 
-# TCP Scan all the ports, remove -p- to not scan all the ports
+# nmap TCP Scan all the ports, remove -p- to not scan all the ports
 nmap -sT -p- -Pn <ip or range>
 
-# TCP Scan SYN Scan (SYN is the default mode)
+# nmap TCP Scan SYN Scan (SYN is the default mode)
 nmap -sS -p- -Pn <ip or range>
 
-# UDP Scan, scan n ports, (not to high coz it's slow as f)
+# nmap UDP Scan, scan n ports, (not to high coz it's slow as f)
 nmap --top-ports <n top udp ports amount> -sUV <ip or range>
 
-# XMAS TCP Scan
+# nmap XMAS TCP Scan
 nmap -sX -p- -Pn <ip or range>
 
-# NULL TCP Scan
+# nmap NULL TCP Scan
 nmap -sN -p- -Pn <ip or range>
-
-# Replace the range to a specific IP to scan all the ports of one IP
 
 # Nmap script banner
 nmap --script banner <ip or range>
@@ -26,14 +24,20 @@ nmap --script banner <ip or range>
 # Nmap script vuln
 nmap --script vuln <ip or range>
 
-
 # TCP Scan proxychains ICMP doesn't work.
 proxychains nmap -sT -Pn <ip or range>
 
 # UDP Scan proxychains ICMP doesn't work.
 proxychains nmap -sT -Pn --top-ports <n top udp ports amount> <ip or range>
 
-
 # fast Enum full to run (outputs 3 files in current directory) 
 echo "<ip>" | xargs -I {} echo "nmap --top-ports 50 {} | tee top_50_nmap.out;nmap -p- {} | tee nmap.out;nmap -p\$(echo \$(cat nmap.out | grep open | grep -Eo \"[[:digit:]]*\" | tr \"\\n\" ,) | sed \"s/.$//\") -sV  -O -A {} | tee service_nmap.out" | sh
 
+# rustscan 
+rustscan -a <ip or range> -g
+
+# rustscan with Nmap behind it with allot of threads.
+rustscan -t 1500 -a 127.0.0.1 -- -A -sC
+
+# rustscan with docker
+docker run -it --rm --name rustscan rustscan/rustscan:latest -a <ip or range> -g
