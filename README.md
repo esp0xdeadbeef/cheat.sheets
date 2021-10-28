@@ -6,19 +6,7 @@ A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
 
 1. Install `fd-find fzf` if you don't have them:
 
-    `$ sudo apt install fd-find fzf`
-
-### notes for arch 
-
-```bash
-cargo install fd-find # via rust and add ~/.cargo/bin/ to $PATH
-# add  fdfind to /sbin/fdfind
-ln -sf ~/.cargo/bin/fd /sbin/fdfind
-# or
-pacman -Sy fd
-# add fd to /sbin/fdfind
-ln -sf $(which fd) /sbin/fdfind
-```
+    `$ sudo apt install fd-find fzf` * check for arch the notes.
 
 1. Install `cargo` if you don't have it (example the bash before piping it to `sh`):
 
@@ -32,10 +20,20 @@ ln -sf $(which fd) /sbin/fdfind
 
     `$ navi repo add esp0xdeadbeef/cheat.sheets`
 
-    and check out the [infosecstreams cheat.sheets!](https://github.com/infosecstreams/cheat.sheets) :)
+1. Check out the [infosecstreams cheat.sheets!](https://github.com/infosecstreams/cheat.sheets) :)
 
-    `$ navi repo add infosecstreams/cheat.sheets`
 
+### notes for arch 
+
+```bash
+cargo install fd-find # via rust and add ~/.cargo/bin/ to $PATH
+# add  fdfind to /sbin/fdfind
+ln -sf ~/.cargo/bin/fd /sbin/fdfind
+# or
+pacman -Sy fd
+# add fd to /sbin/fdfind
+ln -sf $(which fd) /sbin/fdfind
+```
 
 ### Installing the shell widget
 
