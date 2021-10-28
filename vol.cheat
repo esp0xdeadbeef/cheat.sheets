@@ -1,0 +1,30 @@
+% volatility2 cheats 
+## creds go to (https://medium.com/@zemelusa/first-steps-to-volatile-memory-analysis-dcbd4d2d56a1)
+
+
+
+# What type of dump am I going to analyzei ?
+volatility2 -f <dump_location> imageinfo
+
+# Which process are running find profile by `volatility22 --info`
+volatility2 -f <dump_location> --profile=<profile> pslist
+volatility2 -f <dump_location> --profile=<profile> pstree
+volatility2 -f <dump_location> --profile=<profile> psxview
+
+# List open TCP/UDP connections
+volatility2 -f <dump_location> --profile=<profile> connscan
+volatility2 -f <dump_location> --profile=<profile> sockets
+volatility2 -f <dump_location> --profile=<profile> netscan
+
+# What commands were lastly run on the computer
+volatility2 -f <dump_location> --profile=<profile> cmdline
+volatility2 -f <dump_location> --profile=<profile> consoles
+volatility2 -f <dump_location> --profile=<profile> cmdscan
+
+# Dump processes exe and memory 
+volatility2 -f <dump_location> --profile=<profile> procdump -p <pid> --dump-dir .
+volatility2 -f <dump_location> --profile=<profile> memdump -p <pid> --dump-dir .
+
+# Hive and Registry key values
+volatility2 -f <dump_location> --profile=<profile> hivelist
+volatility2 -f <dump_location> --profile=<profile> printkey -K "<regedit_path>"
