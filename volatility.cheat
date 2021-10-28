@@ -2,7 +2,7 @@
 ## heavely edited but creds go to (https://medium.com/@zemelusa/first-steps-to-volatile-memory-analysis-dcbd4d2d56a1)
 ## alias the volatility2 somewhere so its in your PATH variable.. (/sbin/volatility2, /usr/bin/volatility2, etc...)
 $ dump_location: ls *.bin *.mem *.dmp 2>/dev/null | sort -u | tr ' ' '\n'
-$ active_profile_options: python3 -c "import os; p = os.popen('volatility2 --info 2> /dev/null');a = p.read(); p.close(); print(a.split('--------')[1].split('\n\n')[0])"
+$ active_profile_options: "python3 -c \"import os; p = os.popen('volatility2 --info 2> /dev/null');a = p.read(); p.close(); print(a.split('--------')[1].split('\n\n')[0])\""
 
 # make active_profile.txt volatility2
 echo "<active_profile_options>" | cut -d ' ' -f 1 > active_profile.txt
