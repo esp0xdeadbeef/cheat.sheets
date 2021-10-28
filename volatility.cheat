@@ -12,33 +12,33 @@ $ active_profile_options: echo L3Vzci9zYmluL3B5dGhvbjMgLWMgImltcG9ydCBvczsgcCA9I
 echo "<active_profile_options>" | cut -d ' ' -f 1 > .active_profile.txt
 
 # volatility2 What type of dump am I going to analyze
-volatility2 -f <dump_location> imageinfo
+volatility2 -f <dump_location> imageinfo | tee -a imageinfo.out
 
 # volatility2 Print all running processes by following the EPROCESS lists
-volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) pslist
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) pslist | tee -a pslist.out
 
 # volatility2 Print process list as a tree
-volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) pstree
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) pstree | tee -a pstree.out
 
 # volatility2 Find hidden processes with various process listings
-volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) psxview
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) psxview | tee -a psxview.out
 
 # volatility2 List open TCP/UDP connections
 
 # volatility2 Pool scanner for tcp connections
-volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) connscan
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) connscan | tee -a connscan.out
 
 # volatility2 Print list of open sockets
-volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) sockets
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) sockets | tee -a sockets.out
 
 # volatility2 Display process command-line arguments
-volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) cmdline
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) cmdline | tee -a cmdline.out
 
-# volatility2 Extract command history by scanning for _CONSOLE_INFORMATION
-volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) consoles
+# volatility2 Extract command history by scanning for _CONSOLE_INFORMATION 
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) consoles | tee -a consoles.out
 
 # volatility2 Extract command history by scanning for _COMMAND_HISTORY
-volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) cmdscan
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) cmdscan | tee -a cmdscan.out
 
 # volatility2 Dump a process to an executable file sample
 volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) procdump -p <pid> --dump-dir .
@@ -47,7 +47,7 @@ volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) procdump -p 
 volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) memdump -p <pid> --dump-dir .
 
 # volatility2 Print list of registry hives.
-volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) hivelist
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) hivelist | tee -a hivelist.out
 
 # volatility2 Print a registry key, and its subkeys and values
-volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) printkey -K "<regedit_path>"
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) printkey -K "<regedit_path>" | tee -a <regedit_path>.out
