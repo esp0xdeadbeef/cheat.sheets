@@ -2,48 +2,52 @@
 ## heavely edited but creds go to (https://medium.com/@zemelusa/first-steps-to-volatile-memory-analysis-dcbd4d2d56a1)
 ## alias the volatility2 somewhere so its in your PATH variable.. (/sbin/volatility2, /usr/bin/volatility2, etc...)
 $ dump_location: ls *.bin *.mem *.dmp 2>/dev/null | sort -u | tr ' ' '\n'
-$ active_profile_options: python3 -c "import os; p = os.popen('volatility2 --info 2> /dev/null');a = p.read(); p.close(); print(a.split('--------')[1].split('\n\n')[0])"
+## base64 encoded data is: 
+## $ active_profile_options: /usr/sbin/python3 -c "import os; p = os.popen('volatility2 --info  2> /dev/null');a = p.read(); p.close(); print('\n'.join(a.split('--------')[1].replace(' \n', '\n').split('\n\n')[0].split('\n')[1:]))" | tr -s ' '
+## i don't know why it is not working without baseing it. (i hope it's a temp fix. ;) ) 
 
-# make active_profile.txt volatility2
-echo "<active_profile_options>" | cut -d ' ' -f 1 > active_profile.txt
+$ active_profile_options: echo L3Vzci9zYmluL3B5dGhvbjMgLWMgImltcG9ydCBvczsgcCA9IG9zLnBvcGVuKCd2b2xhdGlsaXR5MiAtLWluZm8gIDI+IC9kZXYvbnVsbCcpO2EgPSBwLnJlYWQoKTsgcC5jbG9zZSgpOyBwcmludCgnXG4nLmpvaW4oYS5zcGxpdCgnLS0tLS0tLS0nKVsxXS5yZXBsYWNlKCcgXG4nLCAnXG4nKS5zcGxpdCgnXG5cbicpWzBdLnNwbGl0KCdcbicpWzE6XSkpIiB8IHRyIC1zICcgJwo= | base64 -d | sh
+
+# make/make .active_profile.txt volatility2
+echo <active_profile_options> | cut -d ' ' -f 1 > .active_profile.txt
 
 # volatility2 What type of dump am I going to analyze
 volatility2 -f <dump_location> imageinfo
 
 # volatility2 Print all running processes by following the EPROCESS lists
-volatility2 -f <dump_location> --profile=$(cat active_profile.txt) pslist
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) pslist
 
 # volatility2 Print process list as a tree
-volatility2 -f <dump_location> --profile=$(cat active_profile.txt) pstree
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) pstree
 
 # volatility2 Find hidden processes with various process listings
-volatility2 -f <dump_location> --profile=$(cat active_profile.txt) psxview
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) psxview
 
 # volatility2 List open TCP/UDP connections
 
 # volatility2 Pool scanner for tcp connections
-volatility2 -f <dump_location> --profile=$(cat active_profile.txt) connscan
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) connscan
 
 # volatility2 Print list of open sockets
-volatility2 -f <dump_location> --profile=$(cat active_profile.txt) sockets
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) sockets
 
 # volatility2 Display process command-line arguments
-volatility2 -f <dump_location> --profile=$(cat active_profile.txt) cmdline
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) cmdline
 
 # volatility2 Extract command history by scanning for _CONSOLE_INFORMATION
-volatility2 -f <dump_location> --profile=$(cat active_profile.txt) consoles
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) consoles
 
 # volatility2 Extract command history by scanning for _COMMAND_HISTORY
-volatility2 -f <dump_location> --profile=$(cat active_profile.txt) cmdscan
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) cmdscan
 
 # volatility2 Dump a process to an executable file sample
-volatility2 -f <dump_location> --profile=$(cat active_profile.txt) procdump -p <pid> --dump-dir .
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) procdump -p <pid> --dump-dir .
 
 # volatility2 Dump the addressable memory for a process (dump the memory of the proc)
-volatility2 -f <dump_location> --profile=$(cat active_profile.txt) memdump -p <pid> --dump-dir .
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) memdump -p <pid> --dump-dir .
 
 # volatility2 Print list of registry hives.
-volatility2 -f <dump_location> --profile=$(cat active_profile.txt) hivelist
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) hivelist
 
 # volatility2 Print a registry key, and its subkeys and values
-volatility2 -f <dump_location> --profile=$(cat active_profile.txt) printkey -K "<regedit_path>"
+volatility2 -f <dump_location> --profile=$(cat .active_profile.txt) printkey -K "<regedit_path>"
