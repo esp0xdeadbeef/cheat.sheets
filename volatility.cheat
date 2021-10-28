@@ -1,0 +1,49 @@
+% volatility2 
+## heavely edited but creds go to (https://medium.com/@zemelusa/first-steps-to-volatile-memory-analysis-dcbd4d2d56a1)
+## alias the volatility2 somewhere so its in your PATH variable.. (/sbin/volatility2, /usr/bin/volatility2, etc...)
+$ dump_location: ls *.bin *.mem *.dmp 2>/dev/null | sort -u | tr ' ' '\n'
+$ active_profile_options: python3 -c "import os; p = os.popen('volatility2 --info 2> /dev/null');a = p.read(); p.close(); print(a.split('--------')[1].split('\n\n')[0])"
+
+# make active_profile.txt volatility2
+echo "<active_profile_options>" | cut -d ' ' -f 1 > active_profile.txt
+
+# volatility2 What type of dump am I going to analyze
+volatility2 -f <dump_location> imageinfo
+
+# volatility2 Print all running processes by following the EPROCESS lists
+volatility2 -f <dump_location> --profile=$(cat active_profile.txt) pslist
+
+# volatility2 Print process list as a tree
+volatility2 -f <dump_location> --profile=$(cat active_profile.txt) pstree
+
+# volatility2 Find hidden processes with various process listings
+volatility2 -f <dump_location> --profile=$(cat active_profile.txt) psxview
+
+# volatility2 List open TCP/UDP connections
+
+# volatility2 Pool scanner for tcp connections
+volatility2 -f <dump_location> --profile=$(cat active_profile.txt) connscan
+
+# volatility2 Print list of open sockets
+volatility2 -f <dump_location> --profile=$(cat active_profile.txt) sockets
+
+# volatility2 Display process command-line arguments
+volatility2 -f <dump_location> --profile=$(cat active_profile.txt) cmdline
+
+# volatility2 Extract command history by scanning for _CONSOLE_INFORMATION
+volatility2 -f <dump_location> --profile=$(cat active_profile.txt) consoles
+
+# volatility2 Extract command history by scanning for _COMMAND_HISTORY
+volatility2 -f <dump_location> --profile=$(cat active_profile.txt) cmdscan
+
+# volatility2 Dump a process to an executable file sample
+volatility2 -f <dump_location> --profile=$(cat active_profile.txt) procdump -p <pid> --dump-dir .
+
+# volatility2 Dump the addressable memory for a process (dump the memory of the proc)
+volatility2 -f <dump_location> --profile=$(cat active_profile.txt) memdump -p <pid> --dump-dir .
+
+# volatility2 Print list of registry hives.
+volatility2 -f <dump_location> --profile=$(cat active_profile.txt) hivelist
+
+# volatility2 Print a registry key, and its subkeys and values
+volatility2 -f <dump_location> --profile=$(cat active_profile.txt) printkey -K "<regedit_path>"
