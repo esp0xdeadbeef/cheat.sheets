@@ -8,8 +8,8 @@ $ dump_location: ls *.bin *.mem *.dmp 2>/dev/null | sort -u | tr ' ' '\n'
 
 $ active_profile_options: echo L3Vzci9zYmluL3B5dGhvbjMgLWMgImltcG9ydCBvczsgcCA9IG9zLnBvcGVuKCd2b2xhdGlsaXR5MiAtLWluZm8gIDI+IC9kZXYvbnVsbCcpO2EgPSBwLnJlYWQoKTsgcC5jbG9zZSgpOyBwcmludCgnXG4nLmpvaW4oYS5zcGxpdCgnLS0tLS0tLS0nKVsxXS5yZXBsYWNlKCcgXG4nLCAnXG4nKS5zcGxpdCgnXG5cbicpWzBdLnNwbGl0KCdcbicpWzE6XSkpIiB8IHRyIC1zICcgJwo= | base64 -d | sh
 
-# make/make .active_profile.txt volatility2
-echo <active_profile_options> | cut -d ' ' -f 1 > .active_profile.txt
+# make/create .active_profile.txt volatility2
+echo "<active_profile_options>" | cut -d ' ' -f 1 > .active_profile.txt
 
 # volatility2 What type of dump am I going to analyze
 volatility2 -f <dump_location> imageinfo
