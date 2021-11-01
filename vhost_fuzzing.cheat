@@ -12,4 +12,4 @@ feroxbuster --url <url> -w <wordlist>
 ffuf -w <wordlist> -u <url> -H "Host: FUZZ" 
 
 # vhosts gobuster
-gobuster -t <threads-default-10> vhost --url <The_target\ URL> --wordlist <wordlist>
+gobuster -t <threads-default-10> vhost --url <The-target-URL> --wordlist <wordlist>
