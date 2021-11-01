@@ -30,7 +30,7 @@ dnsrecon -d <target> -t axfr @<nameserver>.<target>
 dnsenum <target>
 
 # nslookup with server and ns to lookup
-printf "set type=any\n<reverse lookup>\nexit\n" | nslookup
+printf "set type=any\n<reverse-lookup-ip>\nexit\n" | nslookup
 
 # Use something decent please on your attacker box, you could use this script on a target
 for sub in $(cat <wordlist>);do host $sub.<target>|grep "has.address";done
