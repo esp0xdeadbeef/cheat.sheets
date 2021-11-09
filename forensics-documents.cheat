@@ -1,0 +1,45 @@
+% forensics documents
+
+$ filename: fdfind . $(pwd) -Ltf | sort -u 
+
+# run mailcap (can be used for docx)
+run-mailcap --nopager <filename> | tee runmailcap-<filename>.out
+
+# install and upgrade oletools
+sudo -H python3 -m pip install -U oletools
+
+# oleid: to analyze OLE files to detect specific characteristics usually found in malicious files.
+oleid <filename> | tee oleid-<filename>.out
+
+# olevba: to extract and analyze VBA Macro source code from MS Office documents (OLE and OpenXML).
+olevba <filename> | tee olevba-<filename>.out
+
+# MacroRaptor: to detect malicious VBA Macros (can be used with zip + password)
+mraptor <filename> | tee mraptor-<filename>.out
+
+# msodde: to detect and extract DDE/DDEAUTO links from MS Office documents, RTF and CSV
+msodde -a <filename> | tee msodde-<filename>.out
+
+# pyxswf: to detect, extract and analyze Flash objects (SWF) that may be embedded in files such as MS Office documents (e.g. Word, Excel) and RTF, which is especially useful for malware analysis.
+pyxswf -o <filename>
+
+# oleobj: to extract embedded objects from OLE files.
+oleobj -s all <filename>
+
+# rtfobj: to extract embedded objects from RTF files.
+rtfobj -s all <filename>
+
+# olebrowse: A simple GUI to browse OLE files (e.g. MS Word, Excel, Powerpoint documents), to view and extract individual data streams.
+olebrowse <filename>
+
+# olemeta: to extract all standard properties (metadata) from OLE files.
+olemeta  <filename> | tee olemeta-<filename>.out
+
+# oletimes: to extract creation and modification timestamps of all streams and storages.
+oletimes  <filename> | tee oletimes-<filename>.out
+
+# oledir: to display all the directory entries of an OLE file, including free and orphaned entries.
+oledir <filename> | tee oledir-<filename>.out
+
+# olemap: to display a map of all the sectors in an OLE file.
+olemap <filename> | tee olemap-<filename>.out
