@@ -1,0 +1,26 @@
+% web fuzzing
+
+$ wordlist: fdfind . $(pwd) /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u 
+
+# feroxbuster
+feroxbuster --url <url> | tee feroxbuster.out
+
+# feroxbuster with custom wordlist
+feroxbuster --url <url> -w <wordlist> | tee feroxbuster-custom-<wordlist>.out
+
+# vhosts FUFF
+ffuf -w <wordlist> -u <url> -H "Host: FUZZ" | tee feroxbuster-custom-<wordlist>.out
+
+# vhosts gobuster
+gobuster -t <threads-default-10> vhost --url <The-target-URL> --wordlist <wordlist>
+
+# json post data FUFF {"name": "FUZZ", "anotherkey": "anothervalue"}
+ffuf -w <wordlist> -u <url> -X POST -H "Content-Type: application/json" -d '<json-data>' -fr "error"
+
+# extention fuzzing (php and html default)
+ffuf -w <wordlist> -u <url>/FUZZ -e .php,.html
+
+# directory bruteforce
+ffuf -w <wordlist> -u http://site.com/FUZZ/
+
+
