@@ -1,0 +1,13 @@
+% cms cheatsheet
+
+# doopscan install docker
+export cwd=$(pwd);cd /tmp/; git clone https://github.com/droope/droopescan.git;cd droopescan;docker build -t droope/droopescan .;cd $cwd
+
+# doopscan scan drupal on target
+docker run --rm droope/droopescan scan drupal -u '<url>'
+
+# wordpress scan an host (remove the tls-checks if http)
+wpscan --enumerate ap,at,cb,dbe --url '<url>' --disable-tls-checks | tee -a wp-enum-all.txt
+
+# wordpress enumerate users from host (remove the tls-checks if http)
+wpscan --enumerate u --url '<url>' --disable-tls-checks | tee -a wp-enum-users.txt
