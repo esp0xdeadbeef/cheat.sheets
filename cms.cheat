@@ -9,7 +9,7 @@ docker run --rm droope/droopescan scan drupal -u '<url>'
 # wordpress scan an host (remove the tls-checks if http)
 wpscan --enumerate ap,at,cb,dbe --url '<url>' --disable-tls-checks | tee -a wp-enum-all.txt
 
-# wordpress scan agressive mode (default )
+# wordpress scan agressive mode (Default: mixed, is missing allot.)
 wpscan --url '<url>' --plugins-detection aggressive | tee -a wp-agressive-plugins.txt
 
 # wordpress enumerate users from host (remove the tls-checks if http)
