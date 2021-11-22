@@ -59,5 +59,3 @@ ffuf -request <request> -w <wordlist>:DIRECTORYATTACK -request-proto http
 
 # crackmapexec let's do every protocol (slow)
 for i in $(cme | grep '{' | tail -n 1 | cut -d '{' -f 2 | cut -d '}' -f 1 | tr ',' '\n'); do cme $i <ip> -d <domain> -u '<user-list>' -p <pass-list>;done
-
-
