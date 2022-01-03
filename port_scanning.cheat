@@ -37,7 +37,7 @@ echo "<ip>" | xargs -I {} echo "nmap --top-ports 50 {} | tee -a top_50_nmap.out;
 rustscan -a <ip-or-range> -g | tee -a rustscan.out
 
 # rustscan with Nmap behind it with a lot of threads.
-rustscan -t 1500 -a <ip> -- -A -sC | tee -a rustscan_nmap.out
+rustscan -t 1500 --ulimit 5000 -a <ip> -- -A -sC | tee -a rustscan_nmap.out
 
 # rustscan with docker
 docker run -it --rm --name rustscan rustscan/rustscan:latest -a <ip-or-range> -g | tee -a rustscan.out
