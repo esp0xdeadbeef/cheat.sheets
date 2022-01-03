@@ -8,7 +8,7 @@ $ dump-location: ls *.bin *.mem *.dmp 2>/dev/null | sort -u | tr ' ' '\n'
 $ active-profile-options: echo L3Vzci9zYmluL3B5dGhvbjMgLWMgImltcG9ydCBvczsgcCA9IG9zLnBvcGVuKCd2b2xhdGlsaXR5MiAtLWluZm8gIDI+IC9kZXYvbnVsbCcpO2EgPSBwLnJlYWQoKTsgcC5jbG9zZSgpOyBwcmludCgnXG4nLmpvaW4oYS5zcGxpdCgnLS0tLS0tLS0nKVsxXS5yZXBsYWNlKCcgXG4nLCAnXG4nKS5zcGxpdCgnXG5cbicpWzBdLnNwbGl0KCdcbicpWzE6XSkpIiB8IHRyIC1zICcgJwo= | base64 -d | sh
 
 $ active-profile-options: echo cHl0aG9uMyAtYyAiaW1wb3J0IG9zOyBwID0gb3MucG9wZW4oJ3ZvbGF0aWxpdHkyIC0taW5mbyAgMj4gL2Rldi9udWxsJyk7YSA9IHAucmVhZCgpOyBwLmNsb3NlKCk7IHByaW50KCdcbicuam9pbihhLnNwbGl0KCctLS0tLS0tLScpWzFdLnJlcGxhY2UoJyBcbicsICdcbicpLnNwbGl0KCdcblxuJylbMF0uc3BsaXQoJ1xuJylbMTpdKSkiIHwgdHIgLXMgJyAnCg== | base64 -d | sh
-$ active-profile-options: "python3 -c \"import os; p = os.popen('volatility2 --info  2> /dev/null');a = p.read(); p.close(); print('\n'.join(a.split('\x2D\x2D\x2D\x2D\x2D\x2D\x2D\x2D')[1].replace(' \n', '\n').split('\n\n')[0].split('\n')[1:]))\" | tr -s ' '"
+$ active-profile-options: "python3 -c \\"import os; p = os.popen('volatility2 --info  2> /dev/null');a = p.read(); p.close(); print('\n'.join(a.split('\x2D\x2D\x2D\x2D\x2D\x2D\x2D\x2D')[1].replace(' \n', '\n').split('\n\n')[0].split('\n')[1:]))\\" | tr -s ' '"
 
 # download and install/make volatality2
 if [ ! -e "/usr/local/bin/volatality2" ]; then;echo "volatality2 already found."; else; lwd="$(pwd)";TMPDIR=$(mktemp -d);cd $TMPDIR; wget http://downloads.volatilityfoundation.org/releases/2.6/volatility_2.6_lin64_standalone.zip; unzip vol*;rm *.zip; cd vol*;chmod +x vol*; sudo mv vol* /usr/local/bin/volatility2 || echo "need sudo to move volatility2 to /usr/local/bin/" ; cd $lwd; fi
