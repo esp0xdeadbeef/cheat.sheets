@@ -10,7 +10,7 @@ $ active-profile-options: echo L3Vzci9zYmluL3B5dGhvbjMgLWMgImltcG9ydCBvczsgcCA9I
 $ active-profile-options: echo cHl0aG9uMyAtYyAiaW1wb3J0IG9zOyBwID0gb3MucG9wZW4oJ3ZvbGF0aWxpdHkyIC0taW5mbyAgMj4gL2Rldi9udWxsJyk7YSA9IHAucmVhZCgpOyBwLmNsb3NlKCk7IHByaW50KCdcbicuam9pbihhLnNwbGl0KCctLS0tLS0tLScpWzFdLnJlcGxhY2UoJyBcbicsICdcbicpLnNwbGl0KCdcblxuJylbMF0uc3BsaXQoJ1xuJylbMTpdKSkiIHwgdHIgLXMgJyAnCg== | base64 -d | sh
 
 # download and install/make volatality2
-if [ -n "$(which volatality2)" ]; then exit; fi;lwd="$(pwd)";cd /tmp; mkdir temp-dir-vol; cd temp-dir-vol; wget http://downloads.volatilityfoundation.org/releases/2.6/volatility_2.6_lin64_standalone.zip; unzip vol*;rm *.zip; cd vol*;chmod +x vol*; sudo mv vol* /usr/local/bin/volatility2 || echo "need sudo to move volatility2 to /usr/local/bin/" ; cd $lwd
+if [ -z "$(which volatality2)" ]; then lwd="$(pwd)";TMPDIR=$(mktemp -d);trap "exit 1"           HUP INT PIPE QUIT TERM; trap 'rm -rf "$TMPDIR"' EXIT;cd $TMPDIR; wget http://downloads.volatilityfoundation.org/releases/2.6/volatility_2.6_lin64_standalone.zip; unzip vol*;rm *.zip; cd vol*;chmod +x vol*; sudo mv vol* /usr/local/bin/volatility2 || echo "need sudo to move volatility2 to /usr/local/bin/" ; cd $lwd;else; echo "already installed."; fi
 
 # make/create .active-profile.txt volatility2
 echo "<active-profile-options>" | cut -d ' ' -f 1 > .active-profile.txt
