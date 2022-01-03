@@ -4,4 +4,4 @@
 ldapsearch -LLL -x -H ldap://<domain> -b '' -s base '(objectclass=*)'
 
 # ldap search with correct dc and enumerate all entries
-ldapsearch -x -b "$(ldapsearch -LLL -x -H ldap://<ip> -b '' -s base '(objectclass=*)' | grep rootDomainNamingContext | cut -d " " -f 2)" -h <ip> | tee ldapsearch.out
+ldapsearch -x -b "$(ldapsearch -LLL -x -H ldap://<ip> -b '' -s base '(objectclass=*)' | grep rootDomainNamingContext | cut -d " " -f 2)" "*" -h <ip> | tee ldapsearch.out
