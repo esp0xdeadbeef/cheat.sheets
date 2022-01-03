@@ -40,7 +40,7 @@ smbclient //<target>/<share> -c 'rename <current file> <new file>' <password> -U
 enum4linux -a <target>
 
 # enum4linux - General enumeration - authenticated session
-enum4linux -a <target> -u <username> -p <password>
+enum4linux -u <username> -p <password> -a <target> 
 
 # enum4linux - Users enumeration
 enum4linux -u <username> -p <password> -U <target>
