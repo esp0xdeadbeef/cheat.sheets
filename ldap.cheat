@@ -1,3 +1,5 @@
+% LDAP Enum
+
 # ldap search all objectclasses
 ldapsearch -LLL -x -H ldap://<domain> -b '' -s base '(objectclass=*)'
 
