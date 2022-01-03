@@ -6,8 +6,8 @@ export cwd=$(pwd);cd /tmp/; git clone https://github.com/droope/droopescan.git;c
 # doopscan scan drupal on target
 docker run --rm droope/droopescan scan drupal -u '<url>'
 
-# wordpress scan an host (remove the tls-checks if http)
-wpscan --enumerate ap,at,cb,dbe --url '<url>' --disable-tls-checks | tee -a wp-enum-all.txt
+# wordpress enumerate all (remove the tls-checks if http)
+wpscan --url '<url>' -e ap,at,tt,cb,dbe,u,m --update --plugins-detection aggressive --plugins-version-detection aggressive --disable-tls-checks | tee -a wp-enum-all.txt
 
 # wordpress scan agressive mode (Default: mixed, is missing allot.)
 wpscan --url '<url>' --plugins-detection aggressive | tee -a wp-agressive-plugins.txt
