@@ -1,0 +1,15 @@
+% kubectl cheats
+
+# get node info
+kubectl get nodes -o wide
+
+
+
+# download helm3 (debian)
+echo 'curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+sudo apt-get install apt-transport-https --yes
+echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm' | base64 -w 0
+echo Y3VybCBodHRwczovL2JhbHRvY2RuLmNvbS9oZWxtL3NpZ25pbmcuYXNjIHwgc3VkbyBhcHQta2V5IGFkZCAtCnN1ZG8gYXB0LWdldCBpbnN0YWxsIGFwdC10cmFuc3BvcnQtaHR0cHMgLS15ZXMKZWNobyAiZGViIGh0dHBzOi8vYmFsdG9jZG4uY29tL2hlbG0vc3RhYmxlL2RlYmlhbi8gYWxsIG1haW4iIHwgc3VkbyB0ZWUgL2V0Yy9hcHQvc291cmNlcy5saXN0LmQvaGVsbS1zdGFibGUtZGViaWFuLmxpc3QKc3VkbyBhcHQtZ2V0IHVwZGF0ZQpzdWRvIGFwdC1nZXQgaW5zdGFsbCBoZWxtCg== | base64 -d | sh
+
