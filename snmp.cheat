@@ -26,3 +26,5 @@ onesixtyone -i <targets> -c <file-with-community-strings>
 
 # brute-force
 snmp-check <target>
+
+nmap -sU -p161 --script "snmp* and not snmp-brute" <target>
