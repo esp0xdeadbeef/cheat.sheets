@@ -1,7 +1,7 @@
 % web fuzzing
 
 $ wordlist: fdfind . $(pwd) /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u 
-$ wordlist: wordlist | grep DNS
+$ wordlist_dns: wordlist | grep DNS
 
 # feroxbuster
 feroxbuster  -o feroxbuster.out --url <url>
@@ -10,7 +10,7 @@ feroxbuster  -o feroxbuster.out --url <url>
 feroxbuster -o feroxbuster-custom.out --url <url> -w <wordlist>
 
 # vhosts FUFF
-ffuf -w <wordlist>  -o ffuf-vhosts.out -u <url> -H "Host: FUZZ.$(echo "<url>" | sed 'http[s]')"
+ffuf -w <wordlist_dns> -o ffuf-vhosts.out -u <url> -H "Host: FUZZ.$(echo "<url>" | sed 'http[s]')"
 
 # vhosts gobuster
 gobuster -t <threads-default-10> vhost --url <The-target-URL> --wordlist <wordlist> | tee gobuster-vhosts.out
