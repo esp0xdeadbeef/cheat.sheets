@@ -41,3 +41,6 @@ rustscan -t 1500 --ulimit 5000 -a <ip> -- -A -sC | tee -a rustscan_nmap.out
 
 # rustscan with docker
 docker run -it --rm --name rustscan rustscan/rustscan:latest -a <ip-or-range> -g | tee -a rustscan.out
+
+# Rustscan with nmap behind it lots of threads, udp(top 50)/tcp scan searchsploit of udp and tcp
+rustscan -t 1500 --ulimit 5000 --tries 3 -a <ip> -- -oX rustscan_nmap_tcp.xml -A -sC | tee -a rustscan_nmap_tcp.out & ;nmap -sU --top-ports 50 -oX rustscan_nmap_udp.xml -A -sC <ip> ; fg; searchsploit --exclude="(DoS)" --nmap rustscan_nmap_tcp.xml | tee -a searchsploit.out; searchsploit --exclude="(DoS)" --nmap rustscan_nmap_udp.xml | tee -a searchsploit.out
