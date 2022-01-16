@@ -45,13 +45,13 @@ docker run -it --rm --name rustscan rustscan/rustscan:latest -a <ip-or-range> -g
 # Rustscan with nmap behind it lots of threads, udp(top 50)/tcp scan searchsploit of udp and tcp
 export TCP=".rustscan_nmap_tcp.xml"; echo "$TCP"
 export UDP=".nmap_udp.xml"; echo "$UDP"
-if [[ ! -e $TCP ]]; 
+if [[ -e $TCP ]]; 
 then 
     rustscan -t 1500 --ulimit 5000 --tries 3 -a <ip> -- -oX $TCP -A -sC | tee -a rustscan_nmap_tcp.out & 
 else 
     echo "already scanned $TCP"; 
 fi
-if [[ ! -e $UDP ]]; 
+if [[ -e $UDP ]]; 
 then
     nmap -sU --top-ports 50 -oX $UDP -A -sC <ip> | tee nmap_udp.out
 else 
