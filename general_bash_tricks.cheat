@@ -1,11 +1,12 @@
 % General Bash Tricks
 
 
-# remove url prefix bash
+# string editing 
+echo "remove scema from webpage"
 site='ftp://www.example.com'; echo ${site#*//}
-
-# remove pre or postfixes (check scemata also)
+echo "remove (pre|suf)fix bash"
 string="hello-world";prefix="hell";suffix="ld";echo "${string:${#prefix}:${#string}-${#prefix}-${#suffix}}" 
+
 
 # only files with find
 find . ! -type d
