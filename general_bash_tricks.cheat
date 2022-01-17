@@ -1,0 +1,15 @@
+% GENERAL bash tricks
+
+# use xargs multiple times.
+echo 'test1\ntest2' | xargs -r0 /bin/bash -c 'echo "$@"; echo "$@";' ''
+
+# use xargs with stdin in the middle
+echo 'test1\ntest2\ntest3' | xargs -I {} echo '{}'
+echo 'test1\ntest2\ntest3' | xargs -I somerandomstring echo 'somerandomstring'
+echo 'test1\ntest2\ntest3' | xargs -I {} echo {} | while read stuff; do echo "$stuff"; echo "$stuff";done
+
+# remove url prefix bash
+site='ftp://www.example.com' echo ${site#*//}
+
+# remove pre or postfixes (check scemata also)
+string="hello-world";prefix="hell";suffix="ld";echo "${string:${#prefix}:${#string}-${#prefix}-${#suffix}}" 
