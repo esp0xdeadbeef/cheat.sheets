@@ -2,9 +2,9 @@
 
 
 # string editing 
-echo "remove scema from webpage"
+echo "# remove scema from webpage"
 site='ftp://www.example.com'; echo ${site#*//}
-echo "remove (pre|suf)fix bash"
+echo "# remove (pre|suf)fix bash"
 string="hello-world";prefix="hell";suffix="ld";echo "${string:${#prefix}:${#string}-${#prefix}-${#suffix}}" 
 
 
@@ -21,22 +21,39 @@ echo 'test1\ntest2\ntest3' | xargs -I somerandomstring echo 'somerandomstring'
 
 
 # grep reminders
-echo "some word\n#some word 2\n\n some word 3 with space\nsupport\nanother one." >> /tmp/file_that_definitely_did_not_exist.txt # a test file :)
-grep -v 'some word' /tmp/file_*.txt  # hide all matches
-grep -c 'some word' /tmp/file_*.txt  # get match count
-grep -w 'some word' /tmp/file_*.txt  # whole word search
-grep -n 'some'  /tmp/file_*.txt # display the line numbers
-grep -m1 'some' /tmp/file_*.txt # match counter limit m[num]
-grep -B1 '2' /tmp/file_*.txt # match pattern with before[num]
-grep -A1 '2' /tmp/file_*.txt # match pattern with after[num]
-grep -C1 '2' /tmp/file_*.txt # match pattern with before and after [num]
-grep -l 'support' /tmp/file_*.txt    # list filenames without the content.
-grep -x '.*2' /tmp/file_*.txt  # grep for output of the regex ()
-grep "^[string]" /tmp/file_*.txt # grep match starting string ("^[string]") 
-grep "\.$" /tmp/file_*.txt; # grep match ending string ("[string]$")
-echo 'some word 3\nsupport' > /tmp/zfile_that_pattern.txt;grep -f /tmp/zfile_that_pattern.txt /tmp/file_*.txt ;rm /tmp/zfile_that_pattern.txt # use a file for patterns
-grep -e 'some word 3' -e 'support' /tmp/file_*.txt # multiple patterns
-grep -E '^(#|$)' /tmp/file_*.txt # get all comments and empty lines with extended grep
-rm /tmp/file_that_definitely_did_not_exist.txt  # cleaning up
+echo " # adding a test file"
+echo "some word\n#some word 2\n\n some word 3 with space\nsupport\nanother one." >> /tmp/file_that_definitely_did_not_exist.txt 
+echo " # hide all matches"
+grep -v 'some word' /tmp/file_*.txt 
+echo " # get match count"
+grep -c 'some word' /tmp/file_*.txt 
+echo " # whole word search"
+grep -w 'some word' /tmp/file_*.txt 
+echo " # display the line numbers"
+grep -n 'some'  /tmp/file_*.txt 
+echo " # match counter limit m[num]"
+grep -m1 'some' /tmp/file_*.txt 
+echo " # match pattern with before[num]"
+grep -B1 '2' /tmp/file_*.txt 
+echo " # match pattern with after[num]"
+grep -A1 '2' /tmp/file_*.txt 
+echo " # match pattern with before and after [num]"
+grep -C1 '2' /tmp/file_*.txt 
+echo " # list filenames without the content."
+grep -l 'support' /tmp/file_*.txt    
+echo " # grep for output of the regex ()"
+grep -x '.*2' /tmp/file_*.txt  
+echo " # grep match starting string ("^[string]") "
+grep "^[string]" /tmp/file_*.txt 
+echo " # grep match ending string ("[string]$")"
+grep "\.$" /tmp/file_*.txt
+echo " # use a file for patterns"
+echo 'some word 3\nsupport' > /tmp/zfile_that_pattern.txt;grep -f /tmp/zfile_that_pattern.txt /tmp/file_*.txt ;rm /tmp/zfile_that_pattern.txt 
+echo " # multiple patterns" # cleaning up
+grep -e 'some word 3' -e 'support' /tmp/file_*.txt 
+echo " # get all comments and empty lines with extended grep (usefull with -v)"
+grep -E '^(#|$)' /tmp/file_*.txt 
+echo " # cleaning up"
+rm /tmp/file_that_definitely_did_not_exist.txt 
 
 
