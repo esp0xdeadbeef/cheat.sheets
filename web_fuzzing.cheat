@@ -1,7 +1,7 @@
 % web fuzzing
 
 $ wordlist: fdfind . $(pwd) /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u 
-$ wordlist_dns: wordlist | grep DNS
+$ wordlist_dns: fdfind . $(pwd) /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u  | grep DNS
 
 # feroxbuster
 feroxbuster  -o feroxbuster.out --url <url>
@@ -13,7 +13,7 @@ feroxbuster -o feroxbuster-custom.out --url <url> -w <wordlist>
 ffuf -w <wordlist_dns> -o ffuf-vhosts.out -u <url> -H "Host: FUZZ.$(echo "<url>" | sed 'http[s]')"
 
 # vhosts gobuster
-gobuster -t <threads-default-10> vhost --url <The-target-URL> --wordlist <wordlist> | tee gobuster-vhosts.out
+gobuster -t <threads-default-10> vhost --url <url> --wordlist <wordlist> | tee gobuster-vhosts.out
 
 # ffuf json post rest data FUFF {"name": "FUZZ", "anotherkey": "anothervalue"}
 ffuf -w <wordlist> -u <url> -X POST -H "Content-Type: application/json" -d '<json-data>' -fr "error"
