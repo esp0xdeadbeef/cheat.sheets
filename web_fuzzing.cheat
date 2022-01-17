@@ -10,7 +10,7 @@ feroxbuster  -o feroxbuster.out --url <url>
 feroxbuster -o feroxbuster-custom.out --url <url> -w <wordlist>
 
 # vhosts FUFF
-ffuf -w <wordlist_dns> -o ffuf-vhosts.out -u <url> -H "Host: FUZZ.$(echo "<url>" | sed 'http[s]')"
+ffuf -w <wordlist_dns> -o ffuf-vhosts.out -u <url> -H "Host: FUZZ.$(site="<url>"; echo ${site#*//} )"
 
 # vhosts gobuster
 gobuster -t <threads-default-10> vhost --url <url> --wordlist <wordlist> | tee gobuster-vhosts.out
