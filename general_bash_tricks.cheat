@@ -1,8 +1,8 @@
-% GENERAL bash tricks
+% General Bash Tricks
 
 
 # remove url prefix bash
-site='ftp://www.example.com' echo ${site#*//}
+site='ftp://www.example.com'; echo ${site#*//}
 
 # remove pre or postfixes (check scemata also)
 string="hello-world";prefix="hell";suffix="ld";echo "${string:${#prefix}:${#string}-${#prefix}-${#suffix}}" 
