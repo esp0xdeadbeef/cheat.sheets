@@ -1,12 +1,5 @@
 % GENERAL bash tricks
 
-# xargs reuse an variable from stdout multiple times
-echo 'test1\ntest2\ntest3' | xargs -r0 /bin/bash -c 'echo "$@"; echo "$@";' ''
-echo 'test1\ntest2\ntest3' | xargs -I {} echo {} | while read stuff; do echo "$stuff"; echo "$stuff";done
-
-# xargs use with stdin in the middle
-echo 'test1\ntest2\ntest3' | xargs -I {} echo '{}'
-echo 'test1\ntest2\ntest3' | xargs -I somerandomstring echo 'somerandomstring'
 
 # remove url prefix bash
 site='ftp://www.example.com' echo ${site#*//}
@@ -16,3 +9,33 @@ string="hello-world";prefix="hell";suffix="ld";echo "${string:${#prefix}:${#stri
 
 # only files with find
 find . ! -type d
+
+# xargs reminders
+echo "reuse an variable from stdout multiple times"
+echo 'test1\ntest2\ntest3' | xargs -r0 /bin/bash -c 'echo "$@"; echo "$@";' ''
+echo 'test1\ntest2\ntest3' | xargs -I {} echo {} | while read stuff; do echo "$stuff"; echo "$stuff";done
+echo "xargs use with stdin in the middle (last 2)"
+echo 'test1\ntest2\ntest3' | xargs -I {} echo '{}'
+echo 'test1\ntest2\ntest3' | xargs -I somerandomstring echo 'somerandomstring'
+
+
+# grep reminders
+echo "some word\n#some word 2\n\n some word 3 with space\nsupport\nanother one." >> /tmp/file_that_definitely_did_not_exist.txt # a test file :)
+grep -v 'some word' /tmp/file_*.txt  # hide all matches
+grep -c 'some word' /tmp/file_*.txt  # get match count
+grep -w 'some word' /tmp/file_*.txt  # whole word search
+grep -n 'some'  /tmp/file_*.txt # display the line numbers
+grep -m1 'some' /tmp/file_*.txt # match counter limit m[num]
+grep -B1 '2' /tmp/file_*.txt # match pattern with before[num]
+grep -A1 '2' /tmp/file_*.txt # match pattern with after[num]
+grep -C1 '2' /tmp/file_*.txt # match pattern with before and after [num]
+grep -l 'support' /tmp/file_*.txt    # list filenames without the content.
+grep -x '.*2' /tmp/file_*.txt  # grep for output of the regex ()
+grep "^[string]" /tmp/file_*.txt # grep match starting string ("^[string]") 
+grep "\.$" /tmp/file_*.txt; # grep match ending string ("[string]$")
+echo 'some word 3\nsupport' > /tmp/zfile_that_pattern.txt;grep -f /tmp/zfile_that_pattern.txt /tmp/file_*.txt ;rm /tmp/zfile_that_pattern.txt # use a file for patterns
+grep -e 'some word 3' -e 'support' /tmp/file_*.txt # multiple patterns
+grep -E '^(#|$)' /tmp/file_*.txt # get all comments and empty lines with extended grep
+rm /tmp/file_that_definitely_did_not_exist.txt  # cleaning up
+
+
