@@ -21,39 +21,38 @@ echo 'test1\ntest2\ntest3' | xargs -I somerandomstring echo 'somerandomstring'
 
 
 # grep reminders
-echo " # adding a test file"
-echo "some word\n#some word 2\n\n some word 3 with space\nsupport\nanother one." >> /tmp/file_that_definitely_did_not_exist.txt 
-echo " # hide all matches"
+echo " # adding a test file, with content:"
+echo "some word\n#some word 2\n\n some word 3 with space\nsupport\nanother one." | tee /tmp/file_that_definitely_did_not_exist.txt 
+echo " # hide all matches (-v 'some word')"
 grep -v 'some word' /tmp/file_*.txt 
-echo " # get match count"
+echo " # get match count (-c 'some word')"
 grep -c 'some word' /tmp/file_*.txt 
-echo " # whole word search"
+echo " # whole word search (-w 'some word')"
 grep -w 'some word' /tmp/file_*.txt 
-echo " # display the line numbers"
+echo " # display the line numbers (-n 'some')"
 grep -n 'some'  /tmp/file_*.txt 
-echo " # match counter limit m[num]"
+echo " # match counter limit m[num] (-m1 'some')"
 grep -m1 'some' /tmp/file_*.txt 
-echo " # match pattern with before[num]"
+echo " # match pattern with before[num] (-B1 '2')"
 grep -B1 '2' /tmp/file_*.txt 
-echo " # match pattern with after[num]"
+echo " # match pattern with after[num] (-A1 '2')"
 grep -A1 '2' /tmp/file_*.txt 
-echo " # match pattern with before and after [num]"
+echo " # match pattern with before and after [num] (-C1 '2')"
 grep -C1 '2' /tmp/file_*.txt 
-echo " # list filenames without the content."
+echo " # list filenames without the content. (-l 'support')"
 grep -l 'support' /tmp/file_*.txt    
-echo " # grep for output of the regex ()"
+echo " # grep for output of the regex ('.*2')"
 grep -x '.*2' /tmp/file_*.txt  
-echo " # grep match starting string ("^[string]") "
-grep "^[string]" /tmp/file_*.txt 
-echo " # grep match ending string ("[string]$")"
-grep "\.$" /tmp/file_*.txt
-echo " # use a file for patterns"
+echo ' # grep match starting string ("^some") ("^[string]") '
+grep "^some" /tmp/file_*.txt 
+echo " # grep match ending string ('\.$')"
+grep '\.$' /tmp/file_*.txt
+echo " # use a file for patterns (-f /tmp/zfile_that_pattern.txt)"
 echo 'some word 3\nsupport' > /tmp/zfile_that_pattern.txt;grep -f /tmp/zfile_that_pattern.txt /tmp/file_*.txt ;rm /tmp/zfile_that_pattern.txt 
-echo " # multiple patterns" # cleaning up
+echo " # multiple patterns -e 'some word 3' -e 'support'"
 grep -e 'some word 3' -e 'support' /tmp/file_*.txt 
-echo " # get all comments and empty lines with extended grep (usefull with -v)"
+echo " # get all comments and empty lines with extended grep (-E '^(#|$)')\n # ps. could be usefull with -v"
 grep -E '^(#|$)' /tmp/file_*.txt 
-echo " # cleaning up"
-rm /tmp/file_that_definitely_did_not_exist.txt 
+echo " # cleaning up"; rm /tmp/file_that_definitely_did_not_exist.txt 
 
 
