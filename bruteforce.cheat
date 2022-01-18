@@ -44,6 +44,9 @@ hydra -L <user-list> -P <pass-list> <ip> smb -V -f
 # LDAP Brute Forcing #
 hydra -L <user-list> -P <pass-list> <ip> ldap2 -V -f
 
+# Crack Password Protected zip file
+fcrackzip -u -D -p /usr/share/wordlists/rockyou.txt <zip-file-location>
+
 ## web bruteforcing
 # Hydra attack http get 401 login with a dictionary
 hydra -L <user-list> -P <pass-list> <ip> http-get /admin
