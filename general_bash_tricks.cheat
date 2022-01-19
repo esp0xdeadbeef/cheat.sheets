@@ -12,7 +12,7 @@ string="hello-world";prefix="hell";suffix="ld";echo "${string:${#prefix}:${#stri
 echo "find only files"
 find . ! -type d
 echo "cat files using inode in dir (<dir>) with regex (<partitional_file_name>)"
-ls -lai <dir> | grep <partitional_file_name> | awk '{print $1}' | xargs -I fn find <dir> -inum fn -exec cat {} 2>/dev/null \;
+ls -lai <dir> | grep <partitional_file_name> | awk '{print $1}' | xargs -I fn find <dir> -maxdepth 0 -type d -inum fn -exec cat {} 2>/dev/null \;
 
 # xargs reminders
 echo "reuse an variable from stdout multiple times"
