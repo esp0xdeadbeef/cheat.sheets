@@ -43,3 +43,15 @@ oledir <filename> | tee oledir-<filename>.out
 
 # olemap: to display a map of all the sectors in an OLE file.
 olemap <filename> | tee olemap-<filename>.out
+
+# JPEG Stego 
+steghide extract -sf <filename> | tee steghide.out
+
+# PNG Stego
+zsteg -a <filename> | tee zsteg.out
+
+# Extract all files from a given file
+binwalk -D='.*' <filename> | tee binwalk.out
+
+# Extract data from PDF document
+pdf-parser <filename> | tee pdfparser.out
