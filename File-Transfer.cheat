@@ -1,1 +1,13 @@
+% File Transfer
+
+$ filename: fdfind . $(pwd) -Ltf | sort -u 
+
+# Copy local file to remote host
+scp <filename> your_username@remoteIP:/some/remote/directory
+
+# Copy remote file to local host
+scp your_username@remoteIP:<filename> /some/local/directory
+
+# Copy local directory to remote directory
+scp -r <local_dir> your_username@remoteIP:/some/remote/directory/<remote_dir>
 
