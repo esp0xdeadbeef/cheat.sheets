@@ -56,3 +56,18 @@ volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) hivelist | t
 
 # volatility2 Print a registry key, and its subkeys and values
 volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) printkey -K "<regedit-path>" | tee -a <regedit-path>.out
+
+# volatility2 dump Passwords from a memdump using Mimikatz
+volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) mimikatz | tee -a Mimikatz.out
+
+# volatility2 Check clipboard for saved things 
+volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) clipboard | tee -a Clipboard.out
+
+# volatility2 Check Environment Variables content of a MemDump
+volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) envars | tee -a Envars.out
+
+# volatility2 Check Browser history from a memdump
+volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) iehistory | tee -a iehistory.out
+
+# volatility2 Do a file scan for interesting files in the memdump
+volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) filescan | tee -a filescan.out
