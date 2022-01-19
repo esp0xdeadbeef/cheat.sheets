@@ -61,3 +61,6 @@ echo " # --- cleaning up"; rm /tmp/file_that_definitely_did_not_exist.txt
 # clear screen without clear
 echo "\ec"
 
+# rot13 without external packages
+cat <rot13file> | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+
