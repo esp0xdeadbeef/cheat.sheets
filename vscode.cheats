@@ -1,0 +1,12 @@
+
+
+
+
+# search and replace regex
+echo "if you want to replace something like:\n\echo \" # \nwith:\necho \" # --- "
+echo " # search for:\necho ((\"|') #) "
+echo "to search for \`echo \" # \`".
+echo "to replace it "
+echo "do:"
+echo '$1 --- '
+
