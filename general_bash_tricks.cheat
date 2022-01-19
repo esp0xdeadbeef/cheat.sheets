@@ -1,5 +1,6 @@
 % General Bash Tricks
 
+$ file: fdfind . $(pwd) -Ltf | sort -u 
 
 # string editing 
 echo " # --- remove scema from webpage"
@@ -62,5 +63,5 @@ echo " # --- cleaning up"; rm /tmp/file_that_definitely_did_not_exist.txt
 echo "\ec"
 
 # rot13 without external packages
-cat <rot13file> | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+cat <file> | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 
