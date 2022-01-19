@@ -24,4 +24,9 @@ ffuf -w <wordlist> -u <url>/FUZZ -e .php,.html
 # directory bruteforce
 ffuf -w <wordlist> -u <url>/FUZZ/
 
+# directory & files bruteforce
+wfuzz -c -z file,<wordlist> --sc 200,202,204,301,302,307,403 <url>/FUZZ
+
+# GET parameter fuzzing
+ffuf -w <wordlist> -u <url>/<filename>?FUZZ=test_value -fs 4242
 
