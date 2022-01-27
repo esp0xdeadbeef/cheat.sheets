@@ -1,11 +1,12 @@
 # Test for XSS Bug in multiple subdomains
 
+# subdirectory finder for domains
 subfinder -d <target-domain> -o domains_subfinder_$1
-amass enum --passive -d <target-domain> -o domains_$1
 
+# amass enumeration on target domain
+amass enum --passive -d <target-domain> -o domains_$1
 cat domains_subfinder_$1 | tee -a domain_$1
 cat domains_$1 | filter-resolved | tee -a domains_$1.txt
-
 cat domains_$1.txt | httprobe -p http:81 -p http:8080 -p https:8443 | waybackurls | kxss | tee xss.txt
 
 # Test for Open-Redirect Bug
