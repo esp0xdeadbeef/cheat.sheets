@@ -1,3 +1,4 @@
+![](https://image.shutterstock.com/image-illustration/cheatsheet-text-on-blue-grungy-260nw-1808793118.jpg)
 # cheat.sheets
 
 A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
