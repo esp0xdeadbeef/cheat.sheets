@@ -60,3 +60,6 @@ fi
 fg 2> /dev/null; # wait for the tasks to finish.
 rm searchsploit.out 2>/dev/null;searchsploit --exclude="(PoC)|/dos/" --nmap $TCP | tee -a searchsploit.out
 searchsploit --exclude="(PoC)|/dos/" --nmap $UDP | tee -a searchsploit.out
+
+# masscan
+masscan -p1-65535,U:1-65535 <ip> --rate=3000 -e tun0
