@@ -36,3 +36,5 @@ wfuzz -c -z file,<wordlist> --sc 200,202,204,301,302,307,403 <url>/FUZZ
 # GET parameter fuzzing
 ffuf -w <wordlist> -u <url>/<filename>?FUZZ=test_value -fs 4242
 
+# ffuf with threads and wait
+ffuf -u <url> -w <wordlist> -c -p 0.1 -t 10
