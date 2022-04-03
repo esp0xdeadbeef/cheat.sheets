@@ -11,7 +11,7 @@ $ dump-location: ls *.bin *.mem *.dmp 2>/dev/null | sort -u | tr ' ' '\n'
 $ active-profile-options: echo cHl0aG9uMyAtYyAiaW1wb3J0IG9zOyBwID0gb3MucG9wZW4oJ3ZvbGF0aWxpdHkyIC0taW5mbyAgMj4gL2Rldi9udWxsJyk7YSA9IHAucmVhZCgpOyBwLmNsb3NlKCk7IHByaW50KCdcbicuam9pbihhLnNwbGl0KCctLS0tLS0tLScpWzFdLnJlcGxhY2UoJyBcbicsICdcbicpLnNwbGl0KCdcblxuJylbMF0uc3BsaXQoJ1xuJylbMTpdKSkiIHwgdHIgLXMgJyAnCg== | base64 -d | sh
 
 # download and install/make volatality2
-if [ test -f "/bin/volatality2"; ]; then;
+if test -f "/bin/volatality2"; then;
     echo "volatality2 already found."
 else; 
     lwd="$(pwd)"
