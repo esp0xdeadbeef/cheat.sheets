@@ -15,6 +15,12 @@ ffuf -w <wordlist_dns> -o ffuf-vhosts.out -u <url> -H "Host: FUZZ.$(site="<url>"
 # vhosts gobuster
 gobuster -t <threads-default-10> vhost --url <url> --wordlist <wordlist> | tee gobuster-vhosts.out
 
+# gobuster all folder and files
+gobuster dir --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/wordlists/dirb/common.txt -q | tee -a gobuster-all.out 
+gobuster dir --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt | tee -a gobuster-all.out 
+gobuster dir --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-files.txt | tee -a gobuster-all.out 
+gobuster dir --threads 45 --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/wordlists/seclists/./Discovery/DNS/dns-Jhaddix.txt | tee -a gobuster-all.out 
+
 # ffuf json post rest data FUFF {"name": "FUZZ", "anotherkey": "anothervalue"}
 ffuf -w <wordlist> -u <url> -X POST -H "Content-Type: application/json" -d '<json-data>' -fr "error"
 
