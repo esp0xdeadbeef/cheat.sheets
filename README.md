@@ -14,8 +14,9 @@ A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
     `$ curl https://sh.rustup.rs -sSf | sh`
 
 1. **Install [Navi](https://github.com/denisidoro/navi) (and FeroxBuster and Rustscan if you don't have them) with**:
-
-    `$ cargo install navi feroxbuster rustscan`
+    
+    `$ cargo install --locked navi`
+    `$ cargo install feroxbuster rustscan`
  
 1. if navi fails via cargo try the other way with brew 
    `$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
