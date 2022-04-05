@@ -16,11 +16,14 @@ A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
 1. **Install [Navi](https://github.com/denisidoro/navi) (and FeroxBuster and Rustscan if you don't have them) with**:
     
     `$ cargo install --locked navi`
+    
     `$ cargo install feroxbuster rustscan`
  
 1. if navi fails via cargo try the other way with brew 
-   `$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
-   `$ brew install navi`
+
+    `$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+    
+    `$ brew install navi`
 
 1. Add the pentest cheat sheets by adding the repo to navi:
 
