@@ -50,10 +50,10 @@ If you want to the shell widget (hint: you do), add this line to your `.bashrc`_
 
 ```shell
 # bash
-eval "$(navi widget bash)"
+echo 'eval "$(navi widget bash)"' >> .bashrc
 
 # zsh
-eval "$(navi widget zsh)"
+echo 'eval "$(navi widget zsh)"' >> .zshrc
 
 # fish
 navi widget fish | source
