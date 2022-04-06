@@ -1,0 +1,10 @@
+% whitebox web testing for exploits, source code review
+
+# Python3 web 
+echo 'os\.system
+os\.popen
+pickle\.dumps
+subprocess\.call
+pty\.spawn' | xargs -I {} grep -R {}
+
+# SQL injection

@@ -1,4 +1,4 @@
-# Test for XSS Bug in multiple subdomains
+% Test for XSS Bug in multiple subdomains
 
 # subdirectory finder for domains
 subfinder -d <target-domain> -o domains_subfinder_$1

@@ -1,3 +1,4 @@
+![](https://image.shutterstock.com/image-illustration/cheatsheet-text-on-blue-grungy-260nw-1808793118.jpg)
 # cheat.sheets
 
 A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
@@ -13,8 +14,16 @@ A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
     `$ curl https://sh.rustup.rs -sSf | sh`
 
 1. **Install [Navi](https://github.com/denisidoro/navi) (and FeroxBuster and Rustscan if you don't have them) with**:
+    
+    `$ cargo install --locked navi`
+    
+    `$ cargo install feroxbuster rustscan`
+ 
+1. if navi fails via cargo try the other way with brew 
 
-    `$ cargo install navi feroxbuster rustscan`
+    `$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+    
+    `$ brew install navi`
 
 1. Add the pentest cheat sheets by adding the repo to navi:
 
@@ -41,10 +50,10 @@ If you want to the shell widget (hint: you do), add this line to your `.bashrc`_
 
 ```shell
 # bash
-eval "$(navi widget bash)"
+echo 'eval "$(navi widget bash)"' >> .bashrc
 
 # zsh
-eval "$(navi widget zsh)"
+echo 'eval "$(navi widget zsh)"' >> .zshrc
 
 # fish
 navi widget fish | source

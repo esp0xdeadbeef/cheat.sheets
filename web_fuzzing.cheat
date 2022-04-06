@@ -13,7 +13,13 @@ feroxbuster -o feroxbuster-custom.out --url <url> -w <wordlist>
 ffuf -w <wordlist_dns> -o ffuf-vhosts.out -u <url> -H "Host: FUZZ.$(site="<url>"; echo ${site#*//} )"
 
 # vhosts gobuster
-gobuster -t <threads-default-10> vhost --url <url> --wordlist <wordlist> | tee gobuster-vhosts.out
+gobuster --threads <threads-default-10> vhost --url <url> --wordlist <wordlist> | tee gobuster-vhosts.out
+
+# gobuster all folder, files and vhosts
+gobuster dir --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/wordlists/dirb/common.txt -q | tee -a gobuster-all.out 
+gobuster dir --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt | tee -a gobuster-all.out 
+gobuster dir --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-files.txt | tee -a gobuster-all.out 
+gobuster dir --threads 45 --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/wordlists/seclists/./Discovery/DNS/dns-Jhaddix.txt | tee -a gobuster-all.out 
 
 # ffuf json post rest data FUFF {"name": "FUZZ", "anotherkey": "anothervalue"}
 ffuf -w <wordlist> -u <url> -X POST -H "Content-Type: application/json" -d '<json-data>' -fr "error"
@@ -30,3 +36,8 @@ wfuzz -c -z file,<wordlist> --sc 200,202,204,301,302,307,403 <url>/FUZZ
 # GET parameter fuzzing
 ffuf -w <wordlist> -u <url>/<filename>?FUZZ=test_value -fs 4242
 
+# ffuf with threads and wait
+ffuf -u <url> -w <wordlist> -c -p 0.1 -t 10
+
+# ffuf adding classical header (some WAF bypass)
+ffuf -c -w "<wordlist>:FILE" -H "X-Originating-IP: 127.0.0.1, X-Forwarded-For: 127.0.0.1, X-Remote-IP: 127.0.0.1, X-Remote-Addr: 127.0.0.1, X-Client-IP: 127.0.0.1" -fs 5682,0 -u <url>/FUZZ
