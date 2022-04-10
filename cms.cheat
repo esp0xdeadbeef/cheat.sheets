@@ -1,22 +1,22 @@
 % cms cheatsheet
 
-# doopscan install docker
-export cwd=$(pwd);cd /tmp/; git clone https://github.com/droope/droopescan.git;cd droopescan;docker build -t droope/droopescan .;cd $cwd
+# install doopscan
+export cwd=$(pwd);cd /tmp/; git clone https://github.com/droope/droopescan.git;sudo mv droopescan /bin/;cd $cwd
 
 # doopscan scan drupal on target
-docker run --rm droope/droopescan scan drupal -u '<url>'
+droopescan scan drupal -u '<url>'
 
 # doopscan scan joomla on target
-docker run --rm droope/droopescan scan joomla -u '<url>'
+droopescan scan joomla -u '<url>'
 
 # doopscan scan moodle on target
-docker run --rm droope/droopescan scan moodle -u '<url>'
+droopescan scan moodle -u '<url>'
 
 # doopscan scan silverstripe on target
-docker run --rm droope/droopescan scan silverstripe -u '<url>'
+droopescan scan silverstripe -u '<url>'
 
 # doopscan scan wordpress on target
-docker run --rm droope/droopescan scan wordpress -u '<url>'
+droopescan scan wordpress -u '<url>'
 
 # wordpress enumerate all (remove the tls-checks if http)
 wpscan --url '<url>' -e ap,at,tt,cb,dbe,u,m --update --plugins-detection aggressive --plugins-version-detection aggressive --disable-tls-checks | tee -a wp-enum-all.txt
