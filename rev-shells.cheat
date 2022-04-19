@@ -1,8 +1,5 @@
 % rev shells cheats
 
-# $ wordlist: fdfind . $(pwd) /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u 
-# $ IP: ip a s tun0 | grep 'inet\ ' | awk '{print $2}' | cut -d '/' -f 1
-
 $ IP: for adaptername in $(for i in "$(ip a s | sort -r | grep -E $'[[:digit:]]:[ ]')"; do echo $(echo $i | awk '{print $2}' | replace : ''); done); do ip a s $adaptername | grep 'inet\ ' | awk '{print $2}' | cut -d '/' -f 1 ; done | uniq
 
 
