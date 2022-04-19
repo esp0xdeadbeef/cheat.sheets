@@ -1,6 +1,6 @@
 % Listeners
 
-# $ port: echo '443 9001 1234 4444 32000' | tr ' ' '\n'
+$ port: echo '9001 443 1234 4444 32000' | tr ' ' '\n'
 $ shell: echo '/bin/bash /bin/zsh /bin/ash /bin/dash /bin/ksh /bin/sh bash zsh ash dash ksh sh' | tr ' ' '\n'
 $ term: echo 'screen xterm xterm-256color' | tr ' ' '\n'
 
