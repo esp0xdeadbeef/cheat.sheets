@@ -1,7 +1,7 @@
 % crypto
 
 # setup rsactftool docker image 
-export cwd=$(pwd);cd /tmp/; git clone https://github.com/Ganapati/RsaCtfTool;cd RsaCtfTool;docker build -t rsactftool .;cd $cwd
+export cwd="$(pwd)";cd /tmp/; git clone https://github.com/Ganapati/RsaCtfTool;cd RsaCtfTool;docker build -t rsactftool .;cd $cwd
 
 # data is current work directory
 # common attacks against public key output private key

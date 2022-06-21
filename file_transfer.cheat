@@ -1,6 +1,6 @@
 % File Transfer
 
-$ filename: fdfind . $(pwd) -Ltf | sort -u 
+$ filename: fdfind . "$(pwd)" -Ltf | sort -u 
 
 # Copy local file to remote host
 scp <filename> your_username@remoteIP:/some/remote/directory

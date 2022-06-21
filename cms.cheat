@@ -1,7 +1,7 @@
 % cms cheatsheet
 
 # install doopscan
-export cwd=$(pwd);cd /tmp/; git clone https://github.com/droope/droopescan.git;sudo mv droopescan /bin/;cd $cwd
+export cwd="$(pwd)";cd /tmp/; git clone https://github.com/droope/droopescan.git;sudo mv droopescan /bin/;cd $cwd
 
 # doopscan scan drupal on target
 droopescan scan drupal -u '<url>'

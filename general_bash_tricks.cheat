@@ -1,6 +1,6 @@
 % General Bash Tricks
 
-$ file: fdfind . $(pwd) -Ltf | sort -u 
+$ file: fdfind . "$(pwd)" -Ltf | sort -u 
 
 # string editing 
 echo " # --- remove scema from webpage"

@@ -1,6 +1,6 @@
 % forensics documents
 
-$ filename: fdfind . $(pwd) -Ltf | sort -u 
+$ filename: fdfind . "$(pwd)" -Ltf | sort -u 
 
 # run mailcap (can be used for docx)
 run-mailcap --nopager <filename> | tee runmailcap-<filename>.out
