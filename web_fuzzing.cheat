@@ -33,6 +33,9 @@ ffuf -w <wordlist> -u <url>/FUZZ/
 # directory & files bruteforce
 wfuzz -c -z file,<wordlist> --sc 200,202,204,301,302,307,403 <url>/FUZZ
 
+# curl list and stdin to bruteforce as wordlist
+curl -sS <urltxtfile> | wfuzz [..] -z stdin <url>
+
 # GET parameter fuzzing
 ffuf -w <wordlist> -u <url>/<filename>?FUZZ=test_value -fs 4242
 
@@ -41,3 +44,7 @@ ffuf -u <url> -w <wordlist> -c -p 0.1 -t 10
 
 # ffuf adding classical header (some WAF bypass)
 ffuf -c -w "<wordlist>:FILE" -H "X-Originating-IP: 127.0.0.1, X-Forwarded-For: 127.0.0.1, X-Remote-IP: 127.0.0.1, X-Remote-Addr: 127.0.0.1, X-Client-IP: 127.0.0.1" -fs 5682,0 -u <url>/FUZZ
+
+# passive geathering subdomains
+curl -s https://sonar.omnisint.io/subdomains/<url> | gron | tee -a <url>_subdomains.out
+
