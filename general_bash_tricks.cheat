@@ -65,3 +65,20 @@ echo "\ec"
 # rot13 without external packages
 cat <file> | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 
+# remove duplicates from or in file (creates a /tmp/tmp.txt to test on)
+echo -e 'dup1\ndup2\ndup2   \ndup1' | tee /tmp/tmp.txt
+echo "sort, remove dupes and reorder"
+sort -u <file>
+echo "remove dupes"
+awk '!a[$0]++' <file>
+echo "remove dupes"
+perl -ne 'print if ! $a{$_}++' <file>
+echo "remove dupes even if there are %s behind the string"
+perl -lne 's/\s*$//; print if ! $a{$_}++' <file>
+echo "It deletes duplicate, consecutive lines from a file (emulates \"uniq\")."
+sed '$!N; /^\(.*\)\n\1$/!P; D' <file>
+echo "remove dupes inline (replaces inside the file)"
+perl -i -ne 'print if ! $a{$_}++' /tmp/tmp.txt
+echo -e 'dup\ndup\ndup   \ndup' > /tmp/tmp.txt
+
+
