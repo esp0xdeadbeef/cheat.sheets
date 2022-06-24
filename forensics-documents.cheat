@@ -55,3 +55,12 @@ binwalk -D='.*' <filename> | tee binwalk.out
 
 # Extract data from PDF document
 pdf-parser <filename> | tee pdfparser.out
+
+
+# default to this for forsics on a file
+strings <file>
+steghide extract -sf <file>
+stegseek <file>
+exiftool <file>
+binwalk <file>
+stegseek <file>
