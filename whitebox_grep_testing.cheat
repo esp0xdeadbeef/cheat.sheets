@@ -44,13 +44,15 @@ do
 done
 
 
-# SQL injection (php for now)
+# SQL injection and exploitation (php and python for now)
 echo 'select
 update
 delete
 drop
 insert
 union
+load_file
+UDF
 connector
 mysql
 sqlite
