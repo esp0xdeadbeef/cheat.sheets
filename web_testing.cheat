@@ -24,12 +24,11 @@ gau <target-domain> | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c '
 # Find Prototype Pollution
 subfinder -d <target-domain> -all -silent | httpx -silent -threads 300 | anew -q alive.txt && sed 's/$/\/?__proto__[testparam]=exploit\//' alive.txt | page-fetch -j 'window.testparam == "exploit"? "[VULNERABLE]" : "[NOT VULNERABLE]"' | sed "s/(//g" | sed "s/)//g" | sed "s/JS //g" | grep "VULNERABLE"
 
-# take a screenshot of every page from txt file with aquatone (go install github.com/michenriksen/aquatone@latest)
+# take a screenshot of every page from domain in txt file with aquatone (https://github.com/michenriksen/aquatone/releases)
 cat <file> | aquatone -ports 80,443,3000,3001
 cat <file> | aquatone -out ./aquatone_screenshots -screenshot-timeout 1000
 
-# take a screenshot of every page from txt file with wkhtmltopdf
-cat <file> | xargs -I {} wkhtmltoimage {} 
-
+# take a screenshot of urls from txt file with wkhtmltopdf
+cat <file> | while read line; do wkhtmltoimage $line $line.png; done
 
 
