@@ -1,6 +1,7 @@
 % DNS Enum
 
-$ options: echo "a|txt|ns|mx|axfr" | tr '|' '\n'
+$ qtype: dig -h | grep 'q\-type' | tail -n1 | cut -d '(' -f 2 | cut -d '.' -f 1 | sed 's|,|\n|g'
+$ options_dig: locate \/dig.1.gz | xargs -I {} zcat {} | grep '\fB' | grep '\.B' | head -n-5 | tail -n+4 | sed 's/.B \\fB//g' | sed 's/\\fP//g' | sed 's/\\-/-/g'
 $ target: if [[ ! -z $target ]]; then; echo $target; fi
 $ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i dns | sort -u 
 
@@ -8,19 +9,13 @@ $ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ 
 # whois on the target
 whois <target>
 
-# dig on the target
-dig <options> <target>
-
-# dig on the target with nameserver
-dig <options> <target> @ns1.<target>
-
-
 # use host to query the dns
-host -t <options> <target> | tee -a 
+host -t <qtype> <target> | tee -a 
 
 # list all options?
 host -a <target>
-# host with nameserver (i think reverse dns lookup)
+
+# host with nameserver
 host -l <target> <nameserver>.<target>
 
 # zonetransfer on nameserver (ns1.. etc)
@@ -41,6 +36,35 @@ gobuster -t 15 dns --domain <domain> --wordlist <wordlist> --show-ips
 # gobuster with resolver
 gobuster -t 15 dns --resolver <resolver> --domain <domain> --wordlist <wordlist> --show-ips
 
-# enum with msfconsole basic settings (lets dos yourself with scanning)
-msfconsole -q -x 'use auxiliary/gather/enum_dns;set DOMAIN <domain>; set WORDLIST <wordlist>;options'
+# enum with msfconsole basic settings
+msfconsole -q -x 'use auxiliary/gather/enum_dns;set DOMAIN <domain>; set WORDLIST <wordlist>;options; run' # ctrl c out of it if you want to do more settings
+
+# dig on the target, default
+dig <qtype> <target>
+
+# dig on the target with nameserver
+dig <qtype> <target> @ns1.<target>
+
+# dig Only get the ip address
+dig <target> +nocomments +noauthority +noadditional +nostats 
+dig <target> +noall +answer
+dig <target> +short
+
+# To use a specific query type
+dig -t <qtype> <target> <options_dig>
+dig <target> -t <qtype> <options_dig>
+
+# To view ALL DNS record types use query ANY
+dig -t ANY <target> <options_dig>
+dig <target> ANY <options_dig>
+
+# To do a DNS reverse look up 
+dig -x <ip_adress> +short
+
+# To use a specific DNS server
+dig @<specific_dns> <target>
+
+# To do a bulk DNS query (where <file> has all the domains, one to a line)
+dig -f <file> <options_dig>
+
 
