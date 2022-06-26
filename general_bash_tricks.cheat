@@ -81,4 +81,9 @@ echo "remove dupes inline (replaces inside the file)"
 perl -i -ne 'print if ! $a{$_}++' /tmp/tmp.txt
 echo -e 'dup\ndup\ndup   \ndup' > /tmp/tmp.txt
 
+# redirect stderr to stdout
+thisfiledoesnotexist 2>&1 | grep --color command
 
+
+# open a file within cli
+xdg-open <file>
