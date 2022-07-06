@@ -96,5 +96,5 @@ xdg-mime default <mimeapps-list> $file_xdg
 xdg-mime query default $file_xdg
 
 # add a json inline with gron
-(gron <file>; echo '<inject_path> = "<inject_value>";') | gron -u
+(gron <file>; echo 'json.<inject_path> = "<inject_value>";') | gron -u
 
