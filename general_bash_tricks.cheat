@@ -1,6 +1,7 @@
 % General Bash Tricks
 
 $ file: fdfind . "$(pwd)" -Ltf | sort -u 
+$ mimeapps-list: grep -v '\[' ~/.config/mimeapps.list | grep --color=no . | awk -F '=' '{print $2}' | sed 's/;//g' | sort -u
 
 # string editing 
 echo " # --- remove scema from webpage"
@@ -87,3 +88,9 @@ thisfiledoesnotexist 2>&1 | grep --color command
 
 # open a file within cli
 xdg-open <file>
+
+# change xdg-open default program for a file
+file_xdg=$(file --mime-type -b <file>)
+xdg-mime query default $file_xdg
+xdg-mime default <mimeapps-list> $file_xdg
+xdg-mime query default $file_xdg
