@@ -4,7 +4,7 @@ $ qtype: dig -h | grep 'q\-type' | tail -n1 | cut -d '(' -f 2 | cut -d '.' -f 1 
 # $ options_dig: locate \/dig.1.gz | xargs -I {} zcat {} | grep '\fB' | grep '\.B' | head -n-5 | tail -n+4 | sed 's/.B \\fB//g' | sed 's/\\fP//g' | sed 's/\\-/-/g'
 $ target: if [[ ! -z $target ]]; then; echo $target; fi
 $ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i dns | sort -u 
-$ nameserver: echo -e '$(cat nameserver.out 2>/dev/null)\nns.<target>\nns1.<target>\nns2.<target>'
+$ dns_server: echo -e '$(cat nameserver.out 2>/dev/null)\nns.<target>\nns1.<target>\nns2.<target>'
 
 # whois on the target
 whois <target>
@@ -19,19 +19,16 @@ host -t ns $(echo '<target>' | rev | cut -d '.' -f 1,2 | rev) $dns_server | tee 
 host -a <target>
 
 # host with nameserver
-host -l <target> <nameserver>.<target>
+host -l <target> $dns_server
 
-# zonetransfer on nameserver
-dnsrecon -d <target> -t axfr -n <nameserver>.<target>
+# zonetransfer on nameserver with dnsrecon
+dnsrecon -d <target> -t axfr -n $dns_server
 
 # dnsenum the target
 dnsenum <target>
 
 # nslookup with server and ns to lookup
-printf "set type=any\n<reverse-lookup-ip>\nexit\n" | nslookup
-
-# Use something decent please on your attacker box, you could use this script on a target
-for sub in $(cat <wordlist>);do host $sub.<target>|grep "has.address";done
+printf "server $dns_server\nset type=any\n<reverse-lookup-ip>\nexit\n" | nslookup
 
 # gobuster basic 
 gobuster -t 15 dns --domain <domain> --wordlist <wordlist> --show-ips
@@ -44,6 +41,9 @@ msfconsole -q -x 'use auxiliary/gather/enum_dns;set DOMAIN <domain>; set WORDLIS
 
 # dig on the target, default nameserver with default q-type (a) and nameserver defined in system 
 dig <target>
+
+# zonetransfer on nameserver with dig
+q-type axfr <target> @$dns_server
 
 # dig on the target with nameserver
 dig q-type <qtype> <target> @ns1.<target>
