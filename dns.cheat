@@ -4,14 +4,16 @@ $ qtype: dig -h | grep 'q\-type' | tail -n1 | cut -d '(' -f 2 | cut -d '.' -f 1 
 # $ options_dig: locate \/dig.1.gz | xargs -I {} zcat {} | grep '\fB' | grep '\.B' | head -n-5 | tail -n+4 | sed 's/.B \\fB//g' | sed 's/\\fP//g' | sed 's/\\-/-/g'
 $ target: if [[ ! -z $target ]]; then; echo $target; fi
 $ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i dns | sort -u 
-$ nameserver: echo -e 'ns\nns1\nns2' | fzf
+$ nameserver: echo -e '$(cat nameserver.out 2>/dev/null)\nns.<target>\nns1.<target>\nns2.<target>'
 
 # whois on the target
 whois <target>
 
-# query the dns
-host -t <qtype> <target> $(host -t ns $(echo '<target>' | rev | cut -d '.' -f 1,2 | rev) $(ping -c 1 <target> | head -n 1 | cut -d '(' -f 2 | cut -d ')' -f 1) | tail -n 1 | rev | awk '{print $1}' | rev | sed 's/\.$//g')
+# query the dns and export it
+export $dns_server=$(host -t <qtype> <target> $(host -t ns $(echo '<target>' | rev | cut -d '.' -f 1,2 | rev) $(ping -c 1 <target> | head -n 1 | cut -d '(' -f 2 | cut -d ')' -f 1) | tail -n 1 | rev | awk '{print $1}' | rev | sed 's/\.$//g')); echo $dns_server
 
+# get ns server from an hostname
+host -t ns $(echo '<target>' | rev | cut -d '.' -f 1,2 | rev) $dns_server | tee nameserver.out
 
 # list all options?
 host -a <target>
