@@ -9,8 +9,9 @@ $ nameserver: echo -e 'ns\nns1\nns2' | fzf
 # whois on the target
 whois <target>
 
-# use host to query the dns
-host -t <qtype> <target> | tee -a <target>.host.out
+# query the dns
+host -t <qtype> <target> $(host -t ns $(echo '<target>' | rev | cut -d '.' -f 1,2 | rev) $(ping -c 1 <target> | head -n 1 | cut -d '(' -f 2 | cut -d ')' -f 1) | tail -n 1 | rev | awk '{print $1}' | rev | sed 's/\.$//g')
+
 
 # list all options?
 host -a <target>
