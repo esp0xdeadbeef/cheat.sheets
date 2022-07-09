@@ -4,7 +4,7 @@ $ qtype: dig -h | grep 'q\-type' | tail -n1 | cut -d '(' -f 2 | cut -d '.' -f 1 
 # $ options_dig: locate \/dig.1.gz | xargs -I {} zcat {} | grep '\fB' | grep '\.B' | head -n-5 | tail -n+4 | sed 's/.B \\fB//g' | sed 's/\\fP//g' | sed 's/\\-/-/g'
 $ target: if [[ ! -z $target ]]; then; echo $target; fi
 $ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i dns | sort -u 
-$ nameserver: echo 'ns\nns1\nns2'
+$ nameserver: echo -e 'ns\nns1\nns2' | fzf
 
 # whois on the target
 whois <target>
