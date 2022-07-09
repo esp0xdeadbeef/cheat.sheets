@@ -1,16 +1,16 @@
 % DNS Enum
 
-$ qtype: dig -h | grep 'q\-type' | tail -n1 | cut -d '(' -f 2 | cut -d '.' -f 1 | sed 's|,|\n|g'
+$ qtype: dig -h | grep 'q\-type' | tail -n1 | cut -d '(' -f 2 | cut -d '.' -f 1 | sed 's|,|\n|g' | grep .
 # $ options_dig: locate \/dig.1.gz | xargs -I {} zcat {} | grep '\fB' | grep '\.B' | head -n-5 | tail -n+4 | sed 's/.B \\fB//g' | sed 's/\\fP//g' | sed 's/\\-/-/g'
 $ target: if [[ ! -z $target ]]; then; echo $target; fi
 $ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i dns | sort -u 
-
+$ nameserver: echo 'ns\nns1\nns2'
 
 # whois on the target
 whois <target>
 
 # use host to query the dns
-host -t <qtype> <target> | tee -a 
+host -t <qtype> <target> | tee -a <target>.host.out
 
 # list all options?
 host -a <target>
@@ -18,8 +18,8 @@ host -a <target>
 # host with nameserver
 host -l <target> <nameserver>.<target>
 
-# zonetransfer on nameserver (ns1.. etc)
-dnsrecon -d <target> -t axfr @<nameserver>.<target>
+# zonetransfer on nameserver
+dnsrecon -d <target> -t axfr -n <nameserver>.<target>
 
 # dnsenum the target
 dnsenum <target>
@@ -39,24 +39,14 @@ gobuster -t 15 dns --resolver <resolver> --domain <domain> --wordlist <wordlist>
 # enum with msfconsole basic settings
 msfconsole -q -x 'use auxiliary/gather/enum_dns;set DOMAIN <domain>; set WORDLIST <wordlist>;options; run' # ctrl c out of it if you want to do more settings
 
-# dig on the target, default
-dig <qtype> <target>
+# dig on the target, default nameserver with default q-type (a) and nameserver defined in system 
+dig <target>
 
 # dig on the target with nameserver
-dig <qtype> <target> @ns1.<target>
-
-# dig Only get the ip address
-dig <target> +nocomments +noauthority +noadditional +nostats 
-dig <target> +noall +answer
-dig <target> +short
+dig q-type <qtype> <target> @ns1.<target>
 
 # To use a specific query type
-dig -t <qtype> <target>
-dig <target> -t <qtype>
-
-# To view ALL DNS record types use query ANY
-dig -t ANY <target>
-dig <target> ANY
+dig q-type <qtype> <target>
 
 # To do a DNS reverse look up 
 dig -x <ip_adress> +short
