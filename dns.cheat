@@ -10,7 +10,7 @@ $ nameserver: echo -e '$(cat nameserver.out 2>/dev/null)\nns.<target>\nns1.<targ
 whois <target>
 
 # query the dns and export it
-export $dns_server=$(host -t <qtype> <target> $(host -t ns $(echo '<target>' | rev | cut -d '.' -f 1,2 | rev) $(ping -c 1 <target> | head -n 1 | cut -d '(' -f 2 | cut -d ')' -f 1) | tail -n 1 | rev | awk '{print $1}' | rev | sed 's/\.$//g')); echo $dns_server
+export dns_server=$(host -t ns $(echo '<target>' | rev | cut -d '.' -f 1,2 | rev) $(ping -c 1 <target> | head -n 1 | cut -d '(' -f 2 | cut -d ')' -f 1) | tail -n 1 | rev | awk '{print $1}' | rev | sed 's/\.$//g')); echo $dns_server
 
 # get ns server from an hostname
 host -t ns $(echo '<target>' | rev | cut -d '.' -f 1,2 | rev) $dns_server | tee nameserver.out
