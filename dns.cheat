@@ -15,7 +15,7 @@ export dns_server=$(host -t ns $(echo '<target>' | rev | cut -d '.' -f 1,2 | rev
 # get ns server from an hostname
 host -t ns $(echo '<target>' | rev | cut -d '.' -f 1,2 | rev) $dns_server | tee nameserver.out
 
-# list all options?
+# list 'all' options with host
 host -a <target>
 
 # host with nameserver
