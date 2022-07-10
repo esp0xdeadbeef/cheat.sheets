@@ -46,7 +46,7 @@ dig <target>
 q-type axfr <target> @$dns_server
 
 # dig on the target with nameserver
-dig q-type <qtype> <target> @ns1.<target>
+dig q-type <qtype> <target> @$dns_server
 
 # To use a specific query type
 dig q-type <qtype> <target>
