@@ -60,39 +60,39 @@ dig @<specific_dns> <target>
 # To do a bulk DNS query (where <file> has all the domains, one to a line)
 dig -f <file>
 
-# (hack the box cheats) Identify the A record for the target domain.
+# \(hack the box cheats\) Identify the A record for the target domain.
 nslookup <target>
 
-# (hack the box cheats) Identify the A record for the target domain.
+# \(hack the box cheats\) Identify the A record for the target domain.
 nslookup -query=A <target>
 
-# (hack the box cheats) Identify the A record for the target domain.
+# \(hack the box cheats\) Identify the A record for the target domain.
 dig <target> @<nameserver-or-IP>
 
-# (hack the box cheats) Identify the A record for the target domain.
+# \(hack the box cheats\) Identify the A record for the target domain.
 dig a <target> @<nameserver-or-IP>
 
-# (hack the box cheats) Identify the PTR record for the target IP address.
+# \(hack the box cheats\) Identify the PTR record for the target IP address.
 nslookup -query=PTR <target>
 
-# (hack the box cheats) Identify the PTR record for the target IP address.
+# \(hack the box cheats\) Identify the PTR record for the target IP address.
 dig -x <target> @<nameserver-or-IP>
 
-# (hack the box cheats) Identify ANY records for the target domain.
+# \(hack the box cheats\) Identify ANY records for the target domain.
 nslookup -query=ANY <target>
 
-# (hack the box cheats) Identify ANY records for the target domain.
+# \(hack the box cheats\) Identify ANY records for the target domain.
 dig any <target> @<nameserver-or-IP>
 
-# (hack the box cheats) Identify the TXT records for the target domain.
+# \(hack the box cheats\) Identify the TXT records for the target domain.
 nslookup -query=TXT <target>
 
-# (hack the box cheats) Identify the TXT records for the target domain.
+# \(hack the box cheats\) Identify the TXT records for the target domain.
 dig txt <target> @<nameserver-or-IP>
 
-# (hack the box cheats) Identify the MX records for the target domain.
+# \(hack the box cheats\) Identify the MX records for the target domain.
 nslookup -query=MX <target>
 
-# (hack the box cheats) Identify the MX records for the target domain.
+# (1+1) \(hack the box cheats\) Identify the MX records for the target domain.
 dig mx <target> @<nameserver-or-IP>
 
