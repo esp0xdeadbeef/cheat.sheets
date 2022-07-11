@@ -2,8 +2,8 @@
 
 $ qtype: dig -h | grep 'q\-type' | tail -n1 | cut -d '(' -f 2 | cut -d '.' -f 1 | sed 's|,|\n|g' | grep .
 # $ options_dig: locate \/dig.1.gz | xargs -I {} zcat {} | grep '\fB' | grep '\.B' | head -n-5 | tail -n+4 | sed 's/.B \\fB//g' | sed 's/\\fP//g' | sed 's/\\-/-/g'
-$ target: if [[ ! -z $target ]]; then; echo $target; fi
-$ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i dns | sort -u 
+$ target: if [[ ! -z <target> ]]; then; echo <target>; fi
+$ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i dns | sort -u
 $ dns_server: echo -e '$(cat nameserver.out 2>/dev/null)\nns.<target>\nns1.<target>\nns2.<target>'
 
 # whois on the target
@@ -30,7 +30,7 @@ dnsenum <target>
 # nslookup with server and ns to lookup
 printf "server $dns_server\nset type=any\n<reverse-lookup-ip>\nexit\n" | nslookup
 
-# gobuster basic 
+# gobuster basic
 gobuster -t 15 dns --domain <domain> --wordlist <wordlist> --show-ips
 
 # gobuster with resolver
@@ -39,7 +39,7 @@ gobuster -t 15 dns --resolver <resolver> --domain <domain> --wordlist <wordlist>
 # enum with msfconsole basic settings
 msfconsole -q -x 'use auxiliary/gather/enum_dns;set DOMAIN <domain>; set WORDLIST <wordlist>;options; run' # ctrl c out of it if you want to do more settings
 
-# dig on the target, default nameserver with default q-type (a) and nameserver defined in system 
+# dig on the target, default nameserver with default q-type (a) and nameserver defined in system
 dig <target>
 
 # zonetransfer on nameserver with dig
@@ -51,7 +51,7 @@ dig q-type <qtype> <target> @$dns_server
 # To use a specific query type
 dig q-type <qtype> <target>
 
-# To do a DNS reverse look up 
+# To do a DNS reverse look up
 dig -x <ip_adress> +short
 
 # To use a specific DNS server
@@ -60,4 +60,39 @@ dig @<specific_dns> <target>
 # To do a bulk DNS query (where <file> has all the domains, one to a line)
 dig -f <file>
 
+# (hack the box cheats) Identify the A record for the target domain.
+nslookup <target>
+
+# (hack the box cheats) Identify the A record for the target domain.
+nslookup -query=A <target>
+
+# (hack the box cheats) Identify the A record for the target domain.
+dig <target> @<nameserver-or-IP>
+
+# (hack the box cheats) Identify the A record for the target domain.
+dig a <target> @<nameserver-or-IP>
+
+# (hack the box cheats) Identify the PTR record for the target IP address.
+nslookup -query=PTR <target>
+
+# (hack the box cheats) Identify the PTR record for the target IP address.
+dig -x <target> @<nameserver-or-IP>
+
+# (hack the box cheats) Identify ANY records for the target domain.
+nslookup -query=ANY <target>
+
+# (hack the box cheats) Identify ANY records for the target domain.
+dig any <target> @<nameserver-or-IP>
+
+# (hack the box cheats) Identify the TXT records for the target domain.
+nslookup -query=TXT <target>
+
+# (hack the box cheats) Identify the TXT records for the target domain.
+dig txt <target> @<nameserver-or-IP>
+
+# (hack the box cheats) Identify the MX records for the target domain.
+nslookup -query=MX <target>
+
+# (hack the box cheats) Identify the MX records for the target domain.
+dig mx <target> @<nameserver-or-IP>
 
