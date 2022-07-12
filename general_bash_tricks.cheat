@@ -99,3 +99,9 @@ xdg-mime query default $file_xdg
 # add a json inline with gron
 (gron <file>; echo 'json.<inject_path> = "<inject_value>";') | gron -u
 
+
+# skip the first lines-to-skip lines from a file and get the rest (n=amount of lines)
+tail -n +$((<n-lines-to-skip> + 1)) <file>
+
+# cat a file and stop at the lines from the bottom (n=amount of lines)
+head -n -<n-lines-from-bottom-to-stop-printing> <file>
