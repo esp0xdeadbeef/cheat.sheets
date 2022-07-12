@@ -32,3 +32,6 @@ echo 'test1\ntest2\ntest3' | cook -d - d hackerone,H1 ,_ secret,user -mc '0:l;2:
 
 # generate a wordlist from a webpage (-h for more info) 
 cewl --convert-umlauts --meta --email --email_file /tmp/cewl-email-output --meta_file /tmp/cewl-meta-file --verbose <url>
+
+# hack the box cheat: Misc Create Sequence Wordlist
+for i in $(seq 1 1000); do echo $i >> /tmp/1-1000-ids.txt; done
