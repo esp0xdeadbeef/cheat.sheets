@@ -105,3 +105,7 @@ tail -n +$((<n-lines-to-skip> + 1)) <file>
 
 # cat a file and stop at the lines from the bottom (n=amount of lines)
 head -n -<n-lines-from-bottom-to-stop-printing> <file>
+
+
+# replace by hex chars with sed (09=\t, 0a=\n, check `man ascii`) 
+echo 'test\ttest' | sed 's/\x09/\x0a/g'
