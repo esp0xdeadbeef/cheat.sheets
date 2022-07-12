@@ -32,3 +32,5 @@ cat <file> | aquatone -out ./aquatone_screenshots -screenshot-timeout 1000
 cat <file> | while read line; do wkhtmltoimage $line $line.png; done
 
 
+# hack the box cheat: Misc curl w/ POST
+curl http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=key' -H 'Content-Type: application/x-www-form-urlencoded'
