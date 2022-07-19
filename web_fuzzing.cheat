@@ -2,6 +2,7 @@
 
 $ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u 
 $ wordlist_dns: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u  | grep DNS
+$ wordlist_extensions: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep 'extensions\|' | sort -u  | grep DNS
 
 # feroxbuster
 feroxbuster  -o feroxbuster.out --url <url>
@@ -24,8 +25,11 @@ gobuster dir --threads 45 --quiet --no-tls-validation --follow-redirect --url <u
 # ffuf json post rest data FUFF {"name": "FUZZ", "anotherkey": "anothervalue"}
 ffuf -w <wordlist> -u <url> -X POST -H "Content-Type: application/json" -d '<json-data>' -fr "error"
 
-# extention fuzzing (php and html default)
+# fuzzing with a extensions fuzzing (php and html default)
 ffuf -w <wordlist> -u <url>/FUZZ -e .php,.html
+
+# extensions fuzzing with ffuf
+ffuf -w <wordlist_extensions> -u <url>/indexFUZZ
 
 # directory bruteforce
 ffuf -w <wordlist> -u <url>/FUZZ/
