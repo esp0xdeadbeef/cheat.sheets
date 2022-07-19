@@ -2,7 +2,7 @@
 
 $ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u 
 $ wordlist_dns: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u  | grep DNS
-$ wordlist_extensions: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep 'extensions\|' | sort -u  | grep DNS
+$ wordlist_extensions: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep 'extensions' | sort -u --ignore-case | grep DNS
 
 # feroxbuster
 feroxbuster  -o feroxbuster.out --url <url>
@@ -28,7 +28,7 @@ ffuf -w <wordlist> -u <url> -X POST -H "Content-Type: application/json" -d '<jso
 # fuzzing with a extensions fuzzing (php and html default)
 ffuf -w <wordlist> -u <url>/FUZZ -e .php,.html
 
-# extensions fuzzing with ffuf
+# extension fuzzing with ffuf
 ffuf -w <wordlist_extensions> -u <url>/indexFUZZ
 
 # directory bruteforce
