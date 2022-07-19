@@ -109,3 +109,10 @@ head -n -<n-lines-from-bottom-to-stop-printing> <file>
 
 # replace by hex chars with sed (09=\t, 0a=\n, check `man ascii`) 
 echo 'test\ttest' | sed 's/\x09/\x0a/g'
+
+
+# sort on keys, sort various columns in a csv file by numeric and dictionary order, columns 5 and after as dictionary order
+echo -e '2,3,a,9,C\n2,2,b,20,F\n2,2,c,19,Gb,hj\n2,2,c,19,Gb,hi\n2,2,c,19,Ga\n2,2,b,22,Ga\n1,10,b,22,Ga' > tmp_list_that_does_not_exists.csv
+echo -e "original: \n$(cat tmp_list_that_does_not_exists.csv)"; 
+echo "sorted: "; sort --field-separator=, --key=1,1n -k2,2n -k3,3d -k4,4n -k5d tmp_list_that_does_not_exists.csv
+rm tmp_list_that_does_not_exists.csv
