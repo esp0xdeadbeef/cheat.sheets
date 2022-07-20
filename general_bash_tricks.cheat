@@ -121,6 +121,6 @@ rm tmp_list_that_does_not_exists.csv
 echo 'Hello general_bash_tricks' > '/tmp/sometempfilethatdoesnotexist`pwd`'; inode=$(ls -li /tmp | grep 'pwd' | awk '{print $1}')
 echo $inode | xargs -I inodenumber find /tmp/ -maxdepth 1 -inum inodenumber -exec echo {} \; -exec cat {} \; -exec echo "" \; -exec rm {} \;
 
-# remove a file that you cannot remove normally
+# *carefully* remove a file with inode and iname
 find . -maxdepth 1 -inum $(ls -li $path | grep '<partitional_file_name>' | awk '{print $1}') -exec -exec rm {} \; # by inum
 find . -maxdepth 1 -iname '*<partitional_file_name>*' -exec echo {} \; # by iname
