@@ -27,7 +27,7 @@ cook -date '17,Sep,1994' date date date
 echo 'test1\ntest2\ntest3' | cook -d - d
 
 # usage for linux
-cook help usage | grep '\$' | cut -d '$' -f 2 | sed -e 's/^[ \t]*//' | replace \( \\\( | replace \) \\\) | replace \` \\\`
+cook help usage | grep '\$' | sed -e 's/^[ \t]*\$ //' | sed 's/\x28/\\\x28/g' | sed 's/\x29/\\\x29/g' | sed 's/\x60/\\\x60/g'
 
 # stdin with words concat with module on cols and module on all
 echo 'test1\ntest2\ntest3' | cook -d - d hackerone,H1 ,_ secret,user -mc '0:l;2:l;1:t' -m leet[1]
