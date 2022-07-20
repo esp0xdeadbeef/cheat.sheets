@@ -117,7 +117,10 @@ echo -e "original: \n$(cat tmp_list_that_does_not_exists.csv)";
 echo "sorted: "; sort --field-separator=, --key=1,1n -k2,2n -k3,3d -k4,4n -k5d tmp_list_that_does_not_exists.csv
 rm tmp_list_that_does_not_exists.csv
 
-# echo, cat, and remove a file with inode
-echo 'Hello general_bash_tricks ;)' > '/tmp/sometempfilethatdoesnotexist`pwd`'; inode=$(ls -li /tmp | grep 'pwd' | awk '{print $1}')
+# echo, cat, and remove a file with inode (example)
+echo 'Hello general_bash_tricks' > '/tmp/sometempfilethatdoesnotexist`pwd`'; inode=$(ls -li /tmp | grep 'pwd' | awk '{print $1}')
 echo $inode | xargs -I inodenumber find /tmp/ -maxdepth 1 -inum inodenumber -exec echo {} \; -exec cat {} \; -exec echo "" \; -exec rm {} \;
 
+# remove a file that you cannot remove normally
+find . -maxdepth 1 -inum $(ls -li $path | grep '<partitional_file_name>' | awk '{print $1}') -exec -exec rm {} \; # by inum
+find . -maxdepth 1 -iname '*<partitional_file_name>*' -exec echo {} \; # by iname
