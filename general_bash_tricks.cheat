@@ -116,3 +116,8 @@ echo -e '2,3,a,9,C\n2,2,b,20,F\n2,2,c,19,Gb,hj\n2,2,c,19,Gb,hi\n2,2,c,19,Ga\n2,2
 echo -e "original: \n$(cat tmp_list_that_does_not_exists.csv)"; 
 echo "sorted: "; sort --field-separator=, --key=1,1n -k2,2n -k3,3d -k4,4n -k5d tmp_list_that_does_not_exists.csv
 rm tmp_list_that_does_not_exists.csv
+
+# echo, cat, and remove a file with inode
+echo 'Hello general_bash_tricks ;)' > '/tmp/sometempfilethatdoesnotexist`pwd`'; inode=$(ls -li /tmp | grep 'pwd' | awk '{print $1}')
+echo $inode | xargs -I inodenumber find /tmp/ -maxdepth 1 -inum inodenumber -exec echo {} \; -exec cat {} \; -exec echo "" \; -exec rm {} \;
+
