@@ -20,6 +20,7 @@ cook "\"search.htb\"" techgaun-github-dorks
 
 # use date
 cook -dob date\(17,Sep,1994\) elliot _,- dob
+cook -dob 17,Sep,1994 elliot _,- dob
 cook -date '17,Sep,1994' date date date
 
 # use stdin
