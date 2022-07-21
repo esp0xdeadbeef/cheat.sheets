@@ -86,7 +86,6 @@ echo -e 'dup\ndup\ndup   \ndup' > /tmp/tmp.txt
 # redirect stderr to stdout
 thisfiledoesnotexist 2>&1 | grep --color command
 
-
 # open a file within cli
 xdg-open <file>
 
@@ -124,3 +123,7 @@ echo $inode | xargs -I inodenumber find /tmp/ -maxdepth 1 -inum inodenumber -exe
 # *carefully* remove a file with inode and iname
 find . -maxdepth 1 -inum $(ls -li $path | grep '<partitional_file_name>' | awk '{print $1}') -exec -exec rm {} \; # by inum
 find . -maxdepth 1 -iname '*<partitional_file_name>*' -exec echo {} \; # by iname
+
+# replace an port (all integers) inside old scans
+sed 's/:[[:digit:]]\+\//:<new_port>\//g' <file> # place an -i for in-file operations
+
