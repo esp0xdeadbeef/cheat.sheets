@@ -81,10 +81,10 @@ echo "It deletes duplicate, consecutive lines from a file (emulates \"uniq\")."
 sed '$!N; /^\(.*\)\n\1$/!P; D' <file>
 echo "remove dupes inline (replaces inside the file)"
 perl -i -ne 'print if ! $a{$_}++' /tmp/tmp.txt
-echo -e 'dup\ndup\ndup   \ndup' > /tmp/tmp.txt
+echo -e 'dup\ndup\ndup   \ndup' > /tmp/tmp.txt # leaving a file after to test on.
 
 # redirect stderr to stdout
-thisfiledoesnotexist 2>&1 | grep --color command
+thiscommanddoesnotexist 2>&1 | grep --color command
 
 # open a file within cli
 xdg-open <file>
