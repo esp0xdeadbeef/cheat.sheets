@@ -130,3 +130,6 @@ sed 's/:[[:digit:]]\+\//:<new_port>\//g' <file> # place an -i for in-file operat
 
 # replace newlines with sed
 echo -n 'test\ntest' | sed ':a;N;$!ba;s/\n/\t/g'
+
+# print all files in the current workdirectory that are printable
+find . -type f -exec grep -Iq . {} \; -print | xargs cat
