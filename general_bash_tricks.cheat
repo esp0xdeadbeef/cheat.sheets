@@ -105,9 +105,6 @@ tail -n +$((<n-lines-to-skip> + 1)) <file>
 # cat a file and stop at the lines from the bottom (n=amount of lines)
 head -n -<n-lines-from-bottom-to-stop-printing> <file>
 
-
-
-
 # sort on keys, sort various columns in a csv file by numeric and dictionary order, columns 5 and after as dictionary order
 echo -e '2,3,a,9,C\n2,2,b,20,F\n2,2,c,19,Gb,hj\n2,2,c,19,Gb,hi\n2,2,c,19,Ga\n2,2,b,22,Ga\n1,10,b,22,Ga' > tmp_list_that_does_not_exists.csv
 echo -e "original: \n$(cat tmp_list_that_does_not_exists.csv)"; 
