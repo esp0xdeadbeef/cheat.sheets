@@ -14,8 +14,4 @@ find <output> ! -type d | grep -v '\$' | grep -v 'meta-inf' | grep -v org|grep "
 find unzipped2 ! -type d | grep -v '\$' | grep -v 'meta-inf' | grep -v org|  grep "\.class"
 procyon -jar <jar> -o <output>
 
-# Decompile an android apk app
-
-apktool d <apk> 
-
 
