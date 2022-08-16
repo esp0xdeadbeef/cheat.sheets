@@ -1,0 +1,52 @@
+% Android and ADB Cheats
+
+$ service: frida-ps -U | awk '{print $2}'
+$ script: ls *.js
+
+# Decompile an android apk app
+apktool d <apk> 
+
+# Fix the bug with `waiting for debugger`
+adb shell am clear-debug-app
+
+# -needs root- downloads unzip push and run frida-server on Android device
+wget "$(gron https://api.github.com/repos/frida/frida/releases/latest | grep -E 'https:\/\/(.*)-android-arm64.xz' | grep server | cut -d '"' -f2)" -O /tmp/frida-server.xz; unxz /tmp/frida-server.xz; adb push /tmp/frida-server /data/local/tmp/frida-server; adb shell "chmod 755 /data/local/tmp/frida-server"; adb shell "/data/local/tmp/frida-server &" &
+
+# Start frida server
+adb shell "/data/local/tmp/frida-server &"
+
+# frida list all running processes
+frida-ps -Uai
+
+# frida list devices
+frida-ls-devices
+
+# frida-trace Launch SnapChat on your iPhone and trace crypto API calls
+frida-trace -U -f <service> -I "libcommonCrypto*"
+
+# frida-trace Trace recv* and send* APIs in Safari, insert library names in logging
+frida-trace --decorate -i "recv*" -i "send*" Safari
+
+# frida-trace Trace ObjC method calls in Safari
+frida-trace -m "-[NSView drawRect:]" Safari
+
+# frida-trace Launch SnapChat on your iPhone and trace crypto API calls
+frida-trace -U -f <service> -I "libcommonCrypto*"
+
+# frida-trace Launch YouTube (com.google.android.youtube) and trace Java methods with “certificate” in their signature (s), ignoring case (i) and only searching in user-defined classes (u)
+frida-trace -U -f com.google.android.youtube --runtime=v8 -j '*!*certificate*/isu'
+
+# frida-trace Trace all JNI functions in Samsung FaceService app on Android
+frida-trace -U -i "Java_*" com.samsung.faceservice
+
+# frida-trace Trace a Windows process's calls to "mem*" functions in msvcrt.dll
+frida-trace -p 1372 -i "msvcrt.dll!*mem*"
+
+# frida-trace Trace all functions matching "*open*" in the process except in msvcrt.dll
+frida-trace -p 1372 -i "*open*" -x "msvcrt.dll!*open*"
+
+# frida-trace Trace an unexported function in libjpeg.so
+frida-trace -p 1372 -a "libjpeg.so!0x4793c"
+
+# launch app with frida sideload a script in the app without a pause
+frida -U -f <service> -l <script>.js --no-pause
