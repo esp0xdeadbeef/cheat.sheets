@@ -9,3 +9,31 @@ do
     grep --color -inR --fixed-strings  $line
 done
 
+
+# find all files with blacklist on `.js .html .md .lock .json .log *vendor*` and filter on wordlist.
+find . -type f -exec grep -Iq . {} \; -print | grep -iv '\.js$\|\.html$\|\.md$\|\.lock$\|\.json$\|\.log$>\|vendor' | while read file;
+do
+    results=$(grep --color -in --fixed-strings -f <wordlist> $file)
+    if [ -n "$results" ];
+    then
+        echo -e "results in file: $file:"
+        grep --color -in --fixed-strings -f <wordlist> $file
+    else
+        echo "no results found in file: $file"
+    fi
+done
+
+
+# find all files with blacklist files on `regex` and filter on wordlist.
+find . -type f -exec grep -Iq . {} \; -print | grep -iv '<regex>' | while read file;
+do
+    results=$(grep --color -in --fixed-strings -f <wordlist> $file)
+    if [ -n "$results" ];
+    then
+        echo -e "results in file: $file:"
+        grep --color -in --fixed-strings -f <wordlist> $file
+    else
+        echo "no results found in file: $file"
+    fi
+done
+
