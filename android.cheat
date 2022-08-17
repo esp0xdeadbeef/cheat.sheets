@@ -3,13 +3,22 @@
 $ service: frida-ps -U | awk '{print $2}'
 $ script: ls *.js
 
+# start the adb server as root (is needed)
+sudo adb stop-server; sudo adb start-server
+
+# What android devices are available
+adb devices
+
+# Enter adb in root mode
+adb root
+
 # Decompile an android apk app
 apktool d <apk> 
 
 # Fix the bug with `waiting for debugger`
 adb shell am clear-debug-app
 
-# -needs root- downloads unzip push and run frida-server on Android device
+# -needs rooted device- downloads unzip push and run frida-server on Android device
 wget "$(gron https://api.github.com/repos/frida/frida/releases/latest | grep -E 'https:\/\/(.*)-android-arm64.xz' | grep server | cut -d '"' -f2)" -O /tmp/frida-server.xz; unxz /tmp/frida-server.xz; adb push /tmp/frida-server /data/local/tmp/frida-server; adb shell "chmod 755 /data/local/tmp/frida-server"; adb shell "/data/local/tmp/frida-server &" &
 
 # Start frida server
@@ -49,4 +58,4 @@ frida-trace -p 1372 -i "*open*" -x "msvcrt.dll!*open*"
 frida-trace -p 1372 -a "libjpeg.so!0x4793c"
 
 # launch app with frida sideload a script in the app without a pause
-frida -U -f <service> -l <script>.js --no-pause
+frida -U -f <service> -l <script> --no-pause
