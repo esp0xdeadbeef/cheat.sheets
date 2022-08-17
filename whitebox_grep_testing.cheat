@@ -1,6 +1,6 @@
 % whitebox web testing for exploits, source code review
 
-$ wordlist: fdfind . "$(pwd)" $(locate whitebox-wordlists) /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u 
+$ wordlist: locate whitebox-wordlists | grep '\.txt' | sort -u 
 
 # repo scan
 cat <wordlist> | while read line;
