@@ -2,7 +2,7 @@
 # cheat.sheets
 
 A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
-
+![](CheatSheets.png)
 ## Installing
 
 1. Install `fd-find fzf` if you don't have them:
