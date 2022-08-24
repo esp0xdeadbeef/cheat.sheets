@@ -1,0 +1,75 @@
+% whitebox web testing for exploits, source code review
+
+$ wordlist: locate whitebox-wordlists | grep '\.txt' | sort -u 
+$ blacklist: locate blacklist | grep '\.txt' | sort -u
+
+# repo scan
+cat <wordlist> | while read line;
+do
+    echo "current statment: $line"
+    grep --color -inR --fixed-strings  $line
+done
+
+
+# find all files in current workdirectory with blacklist on `.js .html .md .lock .json .log *vendor* */.git*` and filter on wordlist.
+find . -type f -exec grep -Iq . {} \; -print | grep -iv '\.js$\|\.html$\|\.md$\|\.lock$\|\.json$\|\.log$\|vendor\|\/\.git' | while read file;
+do
+    results=$(grep -i --fixed-strings -f <wordlist> $file)
+    if [ -n "$results" ];
+    then
+        echo -e "results in file: $file:"
+        grep --color -in --fixed-strings -f <wordlist> $file
+    else
+        echo "no results found in file: $file"
+    fi
+done
+
+
+# find all files in current workdirectory with blacklist files on `regex` and filter on wordlist.
+find . -type f -exec grep -Iq . {} \; -print | grep -iv '<regex>' | while read file;
+do
+    results=$(grep -i --fixed-strings -f <wordlist> $file)
+    if [ -n "$results" ];
+    then
+        echo -e "results in file: $file:"
+        grep --color -in --fixed-strings -f <wordlist> $file
+    else
+        echo "no results found in file: $file"
+    fi
+done
+
+# find all files in current workdirectory with blacklist as wordlist and filter(s) as a wordlist
+find . -type f -exec grep -Iq . {} \; -print | grep -ivf <blacklist> | while read file;
+do
+    results=$(grep -i --fixed-strings -f <wordlist> $file)
+    if [ -n "$results" ];
+    then
+        echo -e "results in file: $file:"
+        grep --color -in --fixed-strings -f <wordlist> $file
+    else
+        echo "no results found in file: $file"
+    fi
+done
+
+# check php info while in cli
+echo '<?php echo phpinfo(); ?>' | php -- -
+
+# set mysql sql logging to verbose with profile file
+echo -e '[mysqld]\nlog_error=/var/log/mysql/mysql_error.log\ngeneral_log_file=/var/log/mysql/mysqld.log\ngeneral_log=1\n\n[mysqld_safe]\nlog_error=/var/log/mysql/mysql_error.log' | tee /etc/mysql/conf.d/enable_debugger.cnf
+systemctl restart mysql; 
+echo -e "use the following commands to tail the logs you just enabled:\ntail -F /var/log/mysql/mysql_error.log\nand:\ntail -F /var/log/mysql/mysqld.log"
+
+# set mysql sql logging to verbose cli (excluding log_error it's a RO variable)
+echo -e "SET global general_log_file='/var/log/mysql/mysqld.log'; \nSET global log_output = 'file';\nSET global general_log = on;" | mysql -u root -p
+systemctl restart mysql
+echo "use the following command to tail the log you just enabled:\ntail -F /var/log/mysql/mysqld.log\nand test it with\necho 'select 1' | mysql -u root -p"
+
+# set postgres logging and tail the file
+settings_loc=$(echo /etc/postgresql/*/main | tail -n1) 
+log_loc=/var/log/postgresql
+cp $settings_loc/postgresql.conf $settings_loc/postgresql.conf.$(date --rfc-3339=seconds | sed 's/[ |+|:|-]//g').bak
+echo -e "log_destination = 'stderr'\nlogging_collector = on\nlog_directory = '$log_loc'\nlog_filename = 'postgresql_%Y%m%d.log'\nlog_rotation_age = 1d\nlog_rotation_size = 2000MB\nlog_min_duration_statement = -1\nlog_connections = on\nlog_duration = on\nlog_hostname = on\nlog_line_prefix = '%t [%p] %q%d@%u, %h, %a, %l '\nlog_statement = 'all'\nlog_timezone = 'Europe/Vienna'" | tee -a $settings_loc/postgresql.conf
+chown postgres:postgres $settings_loc/postgresql.conf
+systemctl restart postgresql
+sleep 1 && echo 'select 1' | sudo -u postgres psql >/dev/null 2>/dev/null &
+tail -F $log_loc/postgresql_$(date --rfc-3339=date | sed 's/[ |+|:|-]//g').log
