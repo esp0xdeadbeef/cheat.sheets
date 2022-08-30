@@ -1,14 +1,18 @@
+% update cheatsheet
 
+$ burpversion: echo 'community pro'
 
 # default one
 apt update && apt upgrade
 
 
 # update burp
-gron 'https://portswigger.net/burp/releases/data?previousLastId=-1&lastId=-1&t='$(date +%s)'&pageSize=1' | tee /tmp/gronned_portswigger.net
-grep -i version /tmp/gronned_portswigger.net | cut -d '"' -f 2 | sort -V | tail -n1 | tee /tmp/latest_version.burp
+gron 'https://portswigger.net/burp/releases/data?previousLastId=-1&lastId=-1&t='$(date +%s)'&pageSize=10' > /tmp/gronned_portswigger.net
+grep -i version /tmp/gronned_portswigger.net | grep -iv content | cut -d '"' -f 2 | sort -V | tail -n1 | tee /tmp/latest_version.burp
 echo "[+] checking if burp is uptodate:"
-if grep -xq $(burpsuite --version | cut -d '-' -f 1) /tmp/latest_version.burp
+version=$(burpsuite --version | cut -d '-' -f 1)
+if ! [ -z ${version+x} ]; then version=unknownversion1.1.1.1.1.1; fi
+if grep -xq $(echo version) /tmp/latest_version.burp
 then
     echo "burp is up to date."
 else
@@ -16,6 +20,11 @@ else
     filename=$(curl -IsS "$portswiggers_update_mirror?product=community&version=$(cat /tmp/latest_version.burp)&type=Linux" | grep -oP 'filename\=(.*?);' | cut -d '=' -f 2 | cut -d ';' -f 1 | sed 's|/|_|g')
     echo "downloading burpsuite to /tmp/$filename"
     wget "$portswiggers_update_mirror?product=community&version=$(cat /tmp/latest_version.burp)&type=Linux" -O /tmp/$filename
-    chmod +x /tmp/$filename
-    /tmp/$filename
+    if grep $(sha256sum /tmp/$filename ) /tmp/gronned_portswigger.net
+    then
+        chmod +x /tmp/$filename
+        /tmp/$filename
+        echo -e "remove the old burpsuite if you want with:\nrm -r $(cat $(which burpsuite) | grep -oP "\S*[a-z].jar" | sed 's![^/]*$!!')\nrm /bin/burpsuite"
+        echo -e "depending on the version you've installed, use:\nln -s /opt/BurpSuiteCommunity/BurpSuiteCommunity /bin/burpsuite\nln -s /opt/BurpSuite/BurpSuite /bin/burpsuite"
+    fi
 fi
