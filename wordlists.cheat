@@ -40,4 +40,5 @@ for i in $(seq 1 1000); do echo $i >> /tmp/1-1000-ids.txt; done
 
 # Username creds / credentials generator with username-anarchy 
 git clone https://github.com/urbanadventurer/username-anarchy.git /opt/username-anarchy || (cd /opt/username-anarchy; git pull)
-/opt/username-anarchy/username-anarchy 'firstname'  'secondname';/opt/username-anarchy/username-anarchy 
+/opt/username-anarchy/username-anarchy 'firstname_example'  'secondname_example';
+/opt/username-anarchy/username-anarchy 
