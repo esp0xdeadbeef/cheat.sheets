@@ -1,4 +1,5 @@
 % wordlist cheat sheet
+$ file: ls | sort -u 
 
 # hack the box cheat: Wordlists Directory/Page Wordlist
 /opt/useful/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt
@@ -42,3 +43,8 @@ for i in $(seq 1 1000); do echo $i >> /tmp/1-1000-ids.txt; done
 git clone https://github.com/urbanadventurer/username-anarchy.git /opt/username-anarchy || (cd /opt/username-anarchy; git pull)
 /opt/username-anarchy/username-anarchy 'firstname_example'  'secondname_example';
 /opt/username-anarchy/username-anarchy 
+
+
+# Mangle username creds with rsmangler (will apt install if not on system)
+apt install -y rsmangler
+rsmangler --file <file>
