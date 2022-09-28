@@ -35,7 +35,7 @@ cook help usage | grep '\$' | sed -e 's/^[ \t]*\$ //' | sed 's/\x28/\\\x28/g' | 
 echo 'test1\ntest2\ntest3' | cook -d - d hackerone,H1 ,_ secret,user -mc '0:l;2:l;1:t' -m leet[1]
 
 # cook, read from file
-cook -file: <wordlists> file
+cook -f: ./payloads.txt f
 
 # cewl, generate a wordlist from a webpage (-h for more info) 
 cewl --convert-umlauts --meta --email --email_file /tmp/cewl-email-output --meta_file /tmp/cewl-meta-file --verbose <url>
