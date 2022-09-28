@@ -2,49 +2,49 @@
 $ file: ls | sort -u 
 
 # hack the box cheat: Wordlists Directory/Page Wordlist
-/opt/useful/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt
+locate /usr/share/ | grep -i seclists | grep directory-list-2.3-small.txt
 
 # hack the box cheat: Wordlists Extensions Wordlist
-/opt/useful/SecLists/Discovery/Web-Content/web-extensions.txt
+locate /usr/share/ | grep -i seclists | grep web-extensions.txt
 
 # hack the box cheat: Wordlists Domain Wordlist
-/opt/useful/SecLists/Discovery/DNS/subdomains-top1million-5000.txt
+locate /usr/share/ | grep -i seclists | grep subdomains-top1million-5000.txt
 
 # hack the box cheat: Wordlists Parameters Wordlist
-/opt/useful/SecLists/Discovery/Web-Content/burp-parameter-names.txt
+locate /usr/share/ | grep -i seclists | grep burp-parameter-names.txt
 
-# cook get usage
+# cook, get usage
 cook help usage
 
-# tutorial github lists
+# cook, tutorial github lists
 cook "\"search.htb\"" techgaun-github-dorks
 
-# use date
+# cook, use date
 cook -dob date\(17,Sep,1994\) elliot _,- dob
 cook -dob 17,Sep,1994 elliot _,- dob
 cook -date '17,Sep,1994' date date date
 
-# use stdin
+# cook, use stdin
 echo 'test1\ntest2\ntest3' | cook -d - d
 
-# usage for linux
+# cook, usage for linux
 cook help usage | grep '\$' | sed -e 's/^[ \t]*\$ //' | sed 's/\x28/\\\x28/g' | sed 's/\x29/\\\x29/g' | sed 's/\x60/\\\x60/g'
 
-# stdin with words concat with module on cols and module on all
+# cook, stdin with words concat with module on cols and module on all
 echo 'test1\ntest2\ntest3' | cook -d - d hackerone,H1 ,_ secret,user -mc '0:l;2:l;1:t' -m leet[1]
 
-# generate a wordlist from a webpage (-h for more info) 
+# cewl, generate a wordlist from a webpage (-h for more info) 
 cewl --convert-umlauts --meta --email --email_file /tmp/cewl-email-output --meta_file /tmp/cewl-meta-file --verbose <url>
 
 # hack the box cheat: Misc Create Sequence Wordlist
 for i in $(seq 1 1000); do echo $i >> /tmp/1-1000-ids.txt; done
 
-# Username creds / credentials generator with username-anarchy 
+# username-anarchy, Username creds / credentials generator
 git clone https://github.com/urbanadventurer/username-anarchy.git /opt/username-anarchy || (cd /opt/username-anarchy; git pull)
 /opt/username-anarchy/username-anarchy 'firstname_example'  'secondname_example';
 /opt/username-anarchy/username-anarchy 
 
 
-# Mangle username creds with rsmangler (will apt install if not on system)
-apt install -y rsmangler
+# rsmangler, Mangle username creds (will apt install if not on system)
+which rsmangler || apt install -y rsmangler
 rsmangler --file <file>
