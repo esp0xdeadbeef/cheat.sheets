@@ -1,17 +1,18 @@
 % wordlist cheat sheet
 $ file: ls | sort -u 
+$ wordlists: (locate /usr/share/; ls) | grep -i seclists | sort -u
 
 # hack the box cheat: Wordlists Directory/Page Wordlist
-locate /usr/share/ | grep -i seclists | grep directory-list-2.3-small.txt
+<wordlists> | grep directory-list-2.3-small.txt
 
 # hack the box cheat: Wordlists Extensions Wordlist
-locate /usr/share/ | grep -i seclists | grep web-extensions.txt
+wordlists | grep -i seclists | grep web-extensions.txt
 
 # hack the box cheat: Wordlists Domain Wordlist
-locate /usr/share/ | grep -i seclists | grep subdomains-top1million-5000.txt
+<wordlists> | grep -i seclists | grep subdomains-top1million-5000.txt
 
 # hack the box cheat: Wordlists Parameters Wordlist
-locate /usr/share/ | grep -i seclists | grep burp-parameter-names.txt
+<wordlists> | grep -i seclists | grep burp-parameter-names.txt
 
 # cook, get usage
 cook help usage
@@ -32,6 +33,9 @@ cook help usage | grep '\$' | sed -e 's/^[ \t]*\$ //' | sed 's/\x28/\\\x28/g' | 
 
 # cook, stdin with words concat with module on cols and module on all
 echo 'test1\ntest2\ntest3' | cook -d - d hackerone,H1 ,_ secret,user -mc '0:l;2:l;1:t' -m leet[1]
+
+# cook, read from file
+cook -file: <wordlists> file
 
 # cewl, generate a wordlist from a webpage (-h for more info) 
 cewl --convert-umlauts --meta --email --email_file /tmp/cewl-email-output --meta_file /tmp/cewl-meta-file --verbose <url>
