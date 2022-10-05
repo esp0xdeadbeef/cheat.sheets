@@ -1,8 +1,8 @@
 % web fuzzing
 
 $ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u 
-$ wordlist_dns: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u  | grep DNS
-$ wordlist_extensions: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep 'extensions' | sort -u --ignore-case | grep DNS
+$ wordlist_dns: (fdfind . /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i 'dns'; fdfind . "$(pwd)") | sort -u --ignore-case
+$ wordlist_extensions: (fdfind . /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i 'extensions'; fdfind . "$(pwd)") | sort -u --ignore-case
 
 # feroxbuster
 feroxbuster  -o feroxbuster.out --url <url>
