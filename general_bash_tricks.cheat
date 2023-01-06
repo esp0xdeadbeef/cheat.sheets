@@ -119,6 +119,10 @@ echo $inode | xargs -I inodenumber find /tmp/ -maxdepth 1 -inum inodenumber -exe
 find . -maxdepth 1 -inum $(ls -li $path | grep '<partitional_file_name>' | awk '{print $1}') -exec -exec rm {} \; # by inum
 find . -maxdepth 1 -iname '*<partitional_file_name>*' -exec echo {} \; # by iname
 
+
+# execute commands with sed
+echo 'ls -la\nps aux' | sed 's/.*/&/e'
+
 # replace by hex chars with sed (09=\t, 0a=\n, check `man ascii`) 
 echo 'test\ttest' | sed 's/\x09/\x0a/g'
 
@@ -130,3 +134,8 @@ echo -n 'test\ntest' | sed ':a;N;$!ba;s/\n/\t/g'
 
 # print all files in the current workdirectory that are printable
 find . -type f -exec grep -Iq . {} \; -print | xargs cat
+
+
+# replace spaces in filename with `_` lowercase
+for file in *; do mv "$file" $(echo $file | tr ' ' '_') ; done
+
