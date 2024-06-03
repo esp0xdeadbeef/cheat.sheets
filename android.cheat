@@ -2,6 +2,10 @@
 
 $ service: frida-ps -U | awk '{print $2}'
 $ script: ls *.js
+$ output_path_on_device: echo /sdcard/capture.pcap
+$ device_port: echo 8080
+$ host_port: echo 8080
+$ url_or_path: echo http://www.google.com/to_for_example.mp4
 
 # start the adb server as root (is needed)
 sudo adb stop-server; sudo adb start-server
@@ -59,3 +63,103 @@ frida-trace -p 1372 -a "libjpeg.so!0x4793c"
 
 # launch app with frida sideload a script in the app without a pause
 frida -U -f <service> -l <script> --no-pause
+
+# Start the ADB server (use sudo)
+sudo adb start-server
+
+# Start the ADB server (will prob fail without sudo)
+adb start-server
+
+# Stop the ADB server
+adb kill-server
+
+# Check connected devices
+adb devices
+
+# Enter ADB shell
+adb shell
+
+# Push a file to the device
+adb push <local> <remote>
+# Example: adb push myfile.txt /sdcard/
+
+# Pull a file from the device
+adb pull <remote> <local>
+# Example: adb pull /sdcard/myfile.txt ./
+
+# Install an APK
+adb install <apk>
+# Example: adb install myapp.apk
+
+# Uninstall an app
+adb uninstall <package_name>
+# Example: adb uninstall com.example.myapp
+
+# Reboot the device
+adb reboot
+
+# Reboot into bootloader
+adb reboot bootloader
+
+# Reboot into recovery mode
+adb reboot recovery
+
+# Remount system partition in read-write mode
+adb remount
+
+# Connect to a device over TCP/IP
+adb connect <device_ip>:<device_port>
+
+# Launch a browser
+adb shell am start -a android.intent.action.VIEW -d <url_or_path>
+
+
+# Play an MP4 video
+adb shell am start -a android.intent.action.VIEW -d <url_or_path> -t video/mp4
+
+# List installed packages
+adb shell pm list packages
+
+# List system packages
+adb shell pm list packages -s
+
+# List third-party packages
+adb shell pm list packages -3
+
+# Get APK location of a package
+adb shell pm path <package_name>
+# Example: adb shell pm path com.example.myapp
+
+# View logcat output
+adb logcat
+
+# Save logcat output to a file
+adb logcat -d > logcat.txt
+
+# Clear logcat buffer
+adb logcat -c
+
+# View device logs for a specific tag
+adb logcat -s <tag>
+# Example: adb logcat -s MyAppTag
+
+# Get device information
+adb shell getprop
+
+# Get battery status
+adb shell dumpsys battery
+
+# Get current running processes
+adb shell ps
+
+# Get disk usage
+adb shell df
+
+# Forward a port from the device to the host
+adb forward tcp:<host_port> tcp:<device_port>
+
+# Reverse a port from the host to the device
+adb reverse tcp:<device_port> tcp:<host_port>
+
+# Capture TCP dump on all adapters
+adb shell tcpdump -i any -p -s 0 -w <output_path_on_device>
