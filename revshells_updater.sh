@@ -15,5 +15,5 @@ echo -e '% rev shells generated from github/mthbernardes/rsg\n' | tee revshells_
 grep '^\$ IP:' ./rev-shells.cheat | tee -a revshells_generated.cheat
 grep '^\$ port:' ./listeners.cheat | tee -a revshells_generated.cheat
 echo "" | tee -a revshells_generated.cheat
-python3 /tmp/scrape.py > revshells_generated.cheat
+python3 /tmp/scrape.py | tee -a revshells_generated.cheat
 rm /tmp/scrape.py /tmp/shells.txt
