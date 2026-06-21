@@ -16,40 +16,40 @@ $ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ 
 <wordlist> | grep -i seclists | grep burp-parameter-names.txt
 
 # cook, get usage
-cook help usage
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook help usage
 
 # cook, tutorial github lists
-cook "\"search.htb\"" techgaun-github-dorks
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook "\"search.htb\"" techgaun-github-dorks
 
 # cook, use date
-cook -dob date\(17,Sep,1994\) elliot _,- dob
-cook -dob 17,Sep,1994 elliot _,- dob
-cook -date '17,Sep,1994' date date date
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook -dob date\(17,Sep,1994\) elliot _,- dob
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook -dob 17,Sep,1994 elliot _,- dob
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook -date '17,Sep,1994' date date date
 
 # cook, use stdin
 echo 'test1\ntest2\ntest3' | cook -d - d
 
 # cook, usage for linux
-cook help usage | grep '\$' | sed -e 's/^[ \t]*\$ //' | sed 's/\x28/\\\x28/g' | sed 's/\x29/\\\x29/g' | sed 's/\x60/\\\x60/g'
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook help usage | grep '\$' | sed -e 's/^[ \t]*\$ //' | sed 's/\x28/\\\x28/g' | sed 's/\x29/\\\x29/g' | sed 's/\x60/\\\x60/g'
 
 # cook, stdin with words concat with module on cols and module on all
 echo 'test1\ntest2\ntest3' | cook -d - d hackerone,H1 ,_ secret,user -mc '0:l;2:l;1:t' -m leet[1]
 
 # cook, read from file
-cook -f: <wordlist> f
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook -f: <wordlist> f
 
 # cewl, generate a wordlist from a webpage (-h for more info) 
-cewl --convert-umlauts --meta --email --email_file /tmp/cewl-email-output --meta_file /tmp/cewl-meta-file --verbose <url>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cewl -c cewl --convert-umlauts --meta --email --email_file /tmp/cewl-email-output --meta_file /tmp/cewl-meta-file --verbose <url>
 
 # hack the box cheat: Misc Create Sequence Wordlist
 for i in $(seq 1 1000); do echo $i >> /tmp/1-1000-ids.txt; done
 
 # username-anarchy, Username creds / credentials generator
-git clone https://github.com/urbanadventurer/username-anarchy.git /opt/username-anarchy || (cd /opt/username-anarchy; git pull)
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#git -c git clone https://github.com/urbanadventurer/username-anarchy.git /opt/username-anarchy || (cd /opt/username-anarchy; git pull)
 /opt/username-anarchy/username-anarchy 'firstname_example'  'secondname_example';
 /opt/username-anarchy/username-anarchy 
 
 
 # rsmangler, Mangle username creds (will apt install if not on system)
-which rsmangler || apt install -y rsmangler
-rsmangler --file <file>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#which -c which rsmangler || apt install -y rsmangler
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#rsmangler -c rsmangler --file <file>

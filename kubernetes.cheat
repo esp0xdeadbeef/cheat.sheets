@@ -1,18 +1,18 @@
 % kubectl cheats
 
 # get node info
-kubectl get nodes -o wide
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#kubectl -c kubectl get nodes -o wide
 
 
 
 ## echo Y3VybCBodHRwczovL2JhbHRvY2RuLmNvbS9oZWxtL3NpZ25pbmcuYXNjIHwgc3VkbyBhcHQta2V5IGFkZCAtCnN1ZG8gYXB0LWdldCBpbnN0YWxsIGFwdC10cmFuc3BvcnQtaHR0cHMgLS15ZXMKZWNobyAiZGViIGh0dHBzOi8vYmFsdG9jZG4uY29tL2hlbG0vc3RhYmxlL2RlYmlhbi8gYWxsIG1haW4iIHwgc3VkbyB0ZWUgL2V0Yy9hcHQvc291cmNlcy5saXN0LmQvaGVsbS1zdGFibGUtZGViaWFuLmxpc3QKc3VkbyBhcHQtZ2V0IHVwZGF0ZQpzdWRvIGFwdC1nZXQgaW5zdGFsbCBoZWxtCg== | base64 -d | sh
 
 # download helm3 (debian) multiline download
-curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
-sudo apt-get install apt-transport-https --yes
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#curl -c curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#apt -c sudo apt-get install apt-transport-https --yes
 echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-sudo apt-get update
-sudo apt-get install helm
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#apt -c sudo apt-get update
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#apt -c sudo apt-get install helm
 
 # disable node spawning on master(s)
-kubectl get nodes -o wide | grep master | cut -d ' ' -f 1  | xargs -I {} kubectl taint nodes {} node-role.kubernetes.io/master=:NoSchedule
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#kubectl -c kubectl get nodes -o wide | grep master | cut -d ' ' -f 1  | xargs -I {} kubectl taint nodes {} node-role.kubernetes.io/master=:NoSchedule

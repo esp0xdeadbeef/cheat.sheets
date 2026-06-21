@@ -3,64 +3,64 @@
 $ filename: fdfind . "$(pwd)" -Ltf | sort -u 
 
 # run mailcap (can be used for docx)
-run-mailcap --nopager <filename> | tee runmailcap-<filename>.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#xdg-utils -c xdg-open <filename> | tee runmailcap-<filename>.out
 
 # install and upgrade oletools
-sudo -H python3 -m pip install -U oletools
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3 -c sudo -H python3 -m pip install -U oletools
 
 # oleid: to analyze OLE files to detect specific characteristics usually found in malicious files.
-oleid <filename> | tee oleid-<filename>.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3Packages.oletools -c oleid <filename> | tee oleid-<filename>.out
 
 # olevba: to extract and analyze VBA Macro source code from MS Office documents (OLE and OpenXML).
-olevba <filename> | tee olevba-<filename>.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3Packages.oletools -c olevba <filename> | tee olevba-<filename>.out
 
 # MacroRaptor: to detect malicious VBA Macros (can be used with zip + password)
-mraptor <filename> | tee mraptor-<filename>.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3Packages.oletools -c mraptor <filename> | tee mraptor-<filename>.out
 
 # msodde: to detect and extract DDE/DDEAUTO links from MS Office documents, RTF and CSV
-msodde -a <filename> | tee msodde-<filename>.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3Packages.oletools -c msodde -a <filename> | tee msodde-<filename>.out
 
 # pyxswf: to detect, extract and analyze Flash objects (SWF) that may be embedded in files such as MS Office documents (e.g. Word, Excel) and RTF, which is especially useful for malware analysis.
-pyxswf -o <filename>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3Packages.oletools -c pyxswf -o <filename>
 
 # oleobj: to extract embedded objects from OLE files.
-oleobj -s all <filename>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3Packages.oletools -c oleobj -s all <filename>
 
 # rtfobj: to extract embedded objects from RTF files.
-rtfobj -s all <filename>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3Packages.oletools -c rtfobj -s all <filename>
 
 # olebrowse: A simple GUI to browse OLE files (e.g. MS Word, Excel, Powerpoint documents), to view and extract individual data streams.
-olebrowse <filename>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3Packages.oletools -c olebrowse <filename>
 
 # olemeta: to extract all standard properties (metadata) from OLE files.
-olemeta  <filename> | tee olemeta-<filename>.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3Packages.oletools -c olemeta  <filename> | tee olemeta-<filename>.out
 
 # oletimes: to extract creation and modification timestamps of all streams and storages.
-oletimes  <filename> | tee oletimes-<filename>.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3Packages.oletools -c oletimes  <filename> | tee oletimes-<filename>.out
 
 # oledir: to display all the directory entries of an OLE file, including free and orphaned entries.
-oledir <filename> | tee oledir-<filename>.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3Packages.oletools -c oledir <filename> | tee oledir-<filename>.out
 
 # olemap: to display a map of all the sectors in an OLE file.
-olemap <filename> | tee olemap-<filename>.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3Packages.oletools -c olemap <filename> | tee olemap-<filename>.out
 
 # JPEG Stego 
-steghide extract -sf <filename> | tee steghide.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#steghide -c steghide extract -sf <filename> | tee steghide.out
 
 # PNG Stego
-zsteg -a <filename> | tee zsteg.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#zsteg -c zsteg -a <filename> | tee zsteg.out
 
 # Extract all files from a given file
-binwalk -D='.*' <filename> | tee binwalk.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#binwalk -c binwalk -D='.*' <filename> | tee binwalk.out
 
 # Extract data from PDF document
-pdf-parser <filename> | tee pdfparser.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#pdf-parser -c pdf-parser.py <filename> | tee pdfparser.out
 
 
 # default to this for forsics on a file
-strings <file>
-steghide extract -sf <file>
-stegseek <file>
-exiftool <file>
-binwalk <file>
-stegseek <file>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#binutils -c strings <file>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#steghide -c steghide extract -sf <file>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#stegseek -c stegseek <file>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#exiftool -c exiftool <file>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#binwalk -c binwalk <file>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#stegseek -c stegseek <file>

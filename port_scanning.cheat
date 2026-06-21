@@ -1,46 +1,46 @@
 % portscanners
 
 # nmap Discovers IPs
-nmap -v -sn <ip-or-range> | tee -a nmap_discovery.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -v -sn <ip-or-range> | tee -a nmap_discovery.out
 
 # nmap TCP Scan all the ports
-nmap -sT -p- -Pn <ip-or-range> | tee -a nmap_SYN_tcp.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -sT -p- -Pn <ip-or-range> | tee -a nmap_SYN_tcp.out
 
 # nmap TCP Scan SYN Scan (SYN is the default mode)
-nmap -sS -p- -Pn <ip-or-range> | tee -a nmap_SYN_tcp.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -sS -p- -Pn <ip-or-range> | tee -a nmap_SYN_tcp.out
 
 # nmap UDP Scan, scan n ports, (not to high coz it's slow as f)
-nmap --top-ports <n-top-udp-ports-amount> -sUV <ip-or-range> | tee -a nmap_udp.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap --top-ports <n-top-udp-ports-amount> -sUV <ip-or-range> | tee -a nmap_udp.out
 
 # nmap XMAS TCP Scan
-nmap -sX -p- -Pn <ip-or-range> | tee -a nmap_XMAS_TCP.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -sX -p- -Pn <ip-or-range> | tee -a nmap_XMAS_TCP.out
 
 # nmap NULL TCP Scan
-nmap -sN -p- -Pn <ip-or-range> | tee -a nmap_NULL_TCP.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -sN -p- -Pn <ip-or-range> | tee -a nmap_NULL_TCP.out
 
 # Nmap script banner
-nmap --script banner <ip-or-range> | tee -a nmap_banner.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap --script banner <ip-or-range> | tee -a nmap_banner.out
 
 # Nmap script vuln
-nmap --script vuln <ip-or-range> | tee -a vuln_nmap.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap --script vuln <ip-or-range> | tee -a vuln_nmap.out
 
 # TCP Scan proxychains ICMP doesn't work.
-proxychains nmap -sT -Pn <ip-or-range> | tee -a tcp_nmap_<ip-or-range>.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap nixpkgs#proxychains-ng -c proxychains4 nmap -sT -Pn <ip-or-range> | tee -a tcp_nmap_<ip-or-range>.out
 
 # UDP Scan proxychains ICMP doesn't work.
-proxychains nmap -sT -Pn --top-ports <n-top-udp-ports-amount> <ip-or-range> | tee -a udp_nmap_<ip-or-range>.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap nixpkgs#proxychains-ng -c proxychains4 nmap -sT -Pn --top-ports <n-top-udp-ports-amount> <ip-or-range> | tee -a udp_nmap_<ip-or-range>.out
 
 # fast Enum full to run (outputs 3 files in current directory) 
 echo "<ip>" | xargs -I {} echo "nmap --top-ports 50 {} | tee -a top_50_nmap.out;nmap -p- {} | tee -a nmap.out;nmap -p\$(echo \$(cat nmap.out | grep open | grep -Eo \"[[:digit:]]*\" | tr \"\\n\" ,) | sed \"s/.$//\") -sV  -O -A {} | tee -a service_nmap.out" | sh
 
 # rustscan 
-rustscan -a <ip-or-range> -g | tee -a rustscan.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#rustscan -c rustscan -a <ip-or-range> -g | tee -a rustscan.out
 
 # rustscan with Nmap behind it with a lot of threads.
-rustscan -t 1500 --ulimit 5000 -a <ip> -- -A -sC | tee -a rustscan_nmap.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#rustscan -c rustscan -t 1500 --ulimit 5000 -a <ip> -- -A -sC | tee -a rustscan_nmap.out
 
 # rustscan with docker
-docker run -it --rm --name rustscan rustscan/rustscan:latest -a <ip-or-range> -g | tee -a rustscan.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#docker -c docker run -it --rm --name rustscan rustscan/rustscan:latest -a <ip-or-range> -g | tee -a rustscan.out
 
 # Rustscan with nmap behind it lots of threads, udp(top 50)/tcp scan searchsploit of udp and tcp
 export TCP="$(pwd)/.rustscan_nmap_tcp.xml";echo $TCP
@@ -58,8 +58,8 @@ else
     echo "already scanned $UDP"; 
 fi
 fg 2> /dev/null; # wait for the tasks to finish.
-rm searchsploit.out 2>/dev/null;searchsploit --exclude="(PoC)|/dos/" --nmap $TCP | tee -a searchsploit.out
-searchsploit --exclude="(PoC)|/dos/" --nmap $UDP | tee -a searchsploit.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c rm searchsploit.out 2>/dev/null;searchsploit --exclude="(PoC)|/dos/" --nmap $TCP | tee -a searchsploit.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#exploitdb -c searchsploit --exclude="(PoC)|/dos/" --nmap $UDP | tee -a searchsploit.out
 
 # masscan
-masscan -p1-65535,U:1-65535 <ip> --rate=3000 -e tun0
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#masscan -c masscan -p1-65535,U:1-65535 <ip> --rate=3000 -e tun0

@@ -8,29 +8,29 @@
 
 
 # Start Monitor Mode and Save captures
-iw dev wlan0 add interface mon0 type monitor
-airmon-ng start wlan0 <Chanel>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#iw -c iw dev wlan0 add interface mon0 type monitor
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c airmon-ng start wlan0 <Chanel>
 
 # packet capture
-airodump-ng -c <Chanel> --bssid <MAC_AP> -w aircrack_ng.cap <InterfaceMonitor>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c airodump-ng -c <Chanel> --bssid <MAC_AP> -w aircrack_ng.cap <InterfaceMonitor>
 
 # To crack WEP for a given essid name and store into a file
-aircrack-ng -a 1 -e <essid> -l <output_file> aircrack_ng.cap
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -a 1 -e <essid> -l <output_file> aircrack_ng.cap
 
 # To crack WPA/WPA2 from airolib-ng database
-aircrack-ng -e <essid> -r <database> aircrack_ng.cap
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -e <essid> -r <database> aircrack_ng.cap
 
 # To crack WPA/WPA2 from a wordlist
-aircrack-ng -e <essid> -w <wordlist> aircrack_ng.cap
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -e <essid> -w <wordlist> aircrack_ng.cap
 
 # To crack a given bssid
-aircrack-ng -b <bssid> -l <output_file> aircrack_ng.cap
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -b <bssid> -l <output_file> aircrack_ng.cap
 
 # To crack a given bssid using FMS/Korek method
-aircrack-ng -K -b <bssid> aircrack_ng.cap
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -K -b <bssid> aircrack_ng.cap
 
 # To crack a given essid (WEP) and display the ASCII of the key
-aircrack-ng -e <essid> -s aircrack_ng.cap
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -e <essid> -s aircrack_ng.cap
 
 # To crack a given essid (WEP) and create a EWSA Project
-aircrack-ng -e <essid> -E <EWSA_file> aircrack_ng.cap
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -e <essid> -E <EWSA_file> aircrack_ng.cap

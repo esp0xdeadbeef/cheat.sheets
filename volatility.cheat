@@ -17,57 +17,57 @@ lwd="$(pwd)";TMPDIR=$(mktemp -d);cd $TMPDIR;wget https://downloads.volatilityfou
 echo "<active-profile-options>" | cut -d ' ' -f 1 > .active-profile.txt
 
 # volatility2 What type of dump am I going to analyze
-volatility2 -f <dump-location> imageinfo | tee -a imageinfo.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> imageinfo | tee -a imageinfo.out
 
 # volatility2 Print all running processes by following the EPROCESS lists
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) pslist | tee -a pslist.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) pslist | tee -a pslist.out
 
 # volatility2 Print process list as a tree
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) pstree | tee -a pstree.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) pstree | tee -a pstree.out
 
 # volatility2 Find hidden processes with various process listings
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) psxview | tee -a psxview.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) psxview | tee -a psxview.out
 
 # volatility2 List open TCP/UDP connections
 
 # volatility2 Pool scanner for tcp connections
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) connscan | tee -a connscan.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) connscan | tee -a connscan.out
 
 # volatility2 Print list of open sockets
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) sockets | tee -a sockets.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) sockets | tee -a sockets.out
 
 # volatility2 Display process command-line arguments
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) cmdline | tee -a cmdline.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) cmdline | tee -a cmdline.out
 
 # volatility2 Extract command history by scanning for _CONSOLE_INFORMATION 
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) consoles | tee -a consoles.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) consoles | tee -a consoles.out
 
 # volatility2 Extract command history by scanning for _COMMAND_HISTORY
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) cmdscan | tee -a cmdscan.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) cmdscan | tee -a cmdscan.out
 
 # volatility2 Dump a process to an executable file sample
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) procdump -p <pid> --dump-dir .
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) procdump -p <pid> --dump-dir .
 
 # volatility2 Dump the addressable memory for a process (dump the memory of the proc)
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) memdump -p <pid> --dump-dir .
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) memdump -p <pid> --dump-dir .
 
 # volatility2 Print list of registry hives.
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) hivelist | tee -a hivelist.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) hivelist | tee -a hivelist.out
 
 # volatility2 Print a registry key, and its subkeys and values
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) printkey -K "<regedit-path>" | tee -a <regedit-path>.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) printkey -K "<regedit-path>" | tee -a <regedit-path>.out
 
 # volatility2 dump Passwords from a memdump using Mimikatz
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) mimikatz | tee -a Mimikatz.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) mimikatz | tee -a Mimikatz.out
 
 # volatility2 Check clipboard for saved things 
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) clipboard | tee -a Clipboard.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) clipboard | tee -a Clipboard.out
 
 # volatility2 Check Environment Variables content of a MemDump
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) envars | tee -a Envars.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) envars | tee -a Envars.out
 
 # volatility2 Check Browser history from a memdump
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) iehistory | tee -a iehistory.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) iehistory | tee -a iehistory.out
 
 # volatility2 Do a file scan for interesting files in the memdump
-volatility2 -f <dump-location> --profile=$(cat .active-profile.txt) filescan | tee -a filescan.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#volatility3 -c vol -f <dump-location> --profile=$(cat .active-profile.txt) filescan | tee -a filescan.out

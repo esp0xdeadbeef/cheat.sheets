@@ -1,30 +1,30 @@
 % SNMP, Simple Network Management Protocol (simply not my problem)
 
 # Windows User Accounts
-snmpwalk -c public -v1 <target> 1.3.6.1.4.1.77.1.2.25
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.4.1.77.1.2.25
 
 # Windows Running Programs
-snmpwalk -c public -v1 <target> 1.3.6.1.2.1.25.4.2.1.2
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.2.1.25.4.2.1.2
 
 # Windows Hostname
-snmpwalk -c public -v1 <target> 1.3.6.1.2.1.1.5
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.2.1.1.5
 
 # Windows Share Information
-snmpwalk -c public -v1 <target> 1.3.6.1.4.1.77.1.2.3.1.1
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.4.1.77.1.2.3.1.1
 
 # Windows Share Information
-snmpwalk -c public -v1 <target> 1.3.6.1.4.1.77.1.2.27
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.4.1.77.1.2.27
 
 # Windows TCP Ports
-snmpwalk -c public -v1 <target> 1.3.6.1.2.1.6.13.1.3
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.2.1.6.13.1.3
 
 # Software Name
-snmpwalk -c public -v1 <target> 1.3.6.1.2.1.25.6.3.1.2
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.2.1.25.6.3.1.2
 
 # brute-force community strings
-onesixtyone -i <targets> -c <file-with-community-strings>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#onesixtyone -c onesixtyone -i <targets> -c <file-with-community-strings>
 
 # brute-force
-snmp-check <target>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#snmpcheck -c snmp-check <target>
 
-nmap -sU -p161 --script "snmp* and not snmp-brute" <target>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -sU -p161 --script "snmp* and not snmp-brute" <target>

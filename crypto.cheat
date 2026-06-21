@@ -5,5 +5,5 @@ export cwd="$(pwd)";cd /tmp/; git clone https://github.com/Ganapati/RsaCtfTool;c
 
 # data is current work directory
 # common attacks against public key output private key
-docker run -it -v $(pwd):/data rsactftool:latest --publickey <pub-key> --private
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#docker -c docker run -it -v $(pwd):/data rsactftool:latest --publickey <pub-key> --private
 

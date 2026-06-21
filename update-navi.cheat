@@ -1,9 +1,9 @@
 % update navi
 
 # update esp0xdeadbeef repo
-navi repo add esp0xdeadbeef/cheat.sheets
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#navi -c navi repo add esp0xdeadbeef/cheat.sheets
 
 # update infosec streams
-navi repo add infosecstreams/cheat.sheets
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#navi -c navi repo add infosecstreams/cheat.sheets
 
 

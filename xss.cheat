@@ -10,7 +10,7 @@ document\.writeln()
 document\.domain' <js_file> )
 
 # hack the box cheat: XSS javascript dangerous jQuery functions
-grep 'html()
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep 'html()
 parseHTML()
 add()
 append()

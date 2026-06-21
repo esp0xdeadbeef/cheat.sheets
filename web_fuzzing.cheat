@@ -5,83 +5,83 @@ $ wordlist_dns: (fdfind . /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf
 $ wordlist_extensions: (fdfind . /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i 'extensions'; fdfind . "$(pwd)") | sort -u --ignore-case
 
 # feroxbuster
-feroxbuster  -o feroxbuster.out --url <url>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#feroxbuster -c feroxbuster  -o feroxbuster.out --url <url>
 
 # feroxbuster with custom wordlist
-feroxbuster -o feroxbuster-custom.out --url <url> -w <wordlist>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#feroxbuster -c feroxbuster -o feroxbuster-custom.out --url <url> -w <wordlist>
 
 # vhosts FUFF
-ffuf -w <wordlist_dns> -o ffuf-vhosts.out -u <url> -H "Host: FUZZ.$(site="<url>"; echo ${site#*//} )"
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist_dns> -o ffuf-vhosts.out -u <url> -H "Host: FUZZ.$(site="<url>"; echo ${site#*//} )"
 
 # vhosts gobuster
-gobuster --threads <threads-default-10> vhost --url <url> --wordlist <wordlist> | tee gobuster-vhosts.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gobuster -c gobuster --threads <threads-default-10> vhost --url <url> --wordlist <wordlist> | tee gobuster-vhosts.out
 
 # gobuster all folder, files and vhosts
-gobuster dir --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/wordlists/dirb/common.txt -q | tee -a gobuster-all.out 
-gobuster dir --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt | tee -a gobuster-all.out 
-gobuster dir --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-files.txt | tee -a gobuster-all.out 
-gobuster dir --threads 45 --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/wordlists/seclists/./Discovery/DNS/dns-Jhaddix.txt | tee -a gobuster-all.out 
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gobuster -c gobuster dir --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/wordlists/dirb/common.txt -q | tee -a gobuster-all.out 
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gobuster -c gobuster dir --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt | tee -a gobuster-all.out 
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gobuster -c gobuster dir --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-files.txt | tee -a gobuster-all.out 
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gobuster -c gobuster dir --threads 45 --quiet --no-tls-validation --follow-redirect --url <url> --wordlist /usr/share/wordlists/seclists/./Discovery/DNS/dns-Jhaddix.txt | tee -a gobuster-all.out 
 
 # ffuf json post rest data FUFF {"name": "FUZZ", "anotherkey": "anothervalue"}
-ffuf -w <wordlist> -u <url> -X POST -H "Content-Type: application/json" -d '<json-data>' -fr "error"
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist> -u <url> -X POST -H "Content-Type: application/json" -d '<json-data>' -fr "error"
 
 # fuzzing with a extensions fuzzing (php and html default)
-ffuf -w <wordlist> -u <url>/FUZZ -e .php,.html
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist> -u <url>/FUZZ -e .php,.html
 
 # extension fuzzing with ffuf
-ffuf -w <wordlist_extensions> -u <url>/indexFUZZ
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist_extensions> -u <url>/indexFUZZ
 
 # directory bruteforce
-ffuf -w <wordlist> -u <url>/FUZZ/
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist> -u <url>/FUZZ/
 
 # directory & files bruteforce
-wfuzz -c -z file,<wordlist> --sc 200,202,204,301,302,307,403 <url>/FUZZ
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wfuzz -c wfuzz -c -z file,<wordlist> --sc 200,202,204,301,302,307,403 <url>/FUZZ
 
 # curl list and stdin to bruteforce as wordlist
-curl -sS <urltxtfile> | wfuzz [..] -z stdin <url>
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#curl -c curl -sS <urltxtfile> | wfuzz [..] -z stdin <url>
 
 # GET parameter fuzzing
-ffuf -w <wordlist> -u <url>/<filename>?FUZZ=test_value -fs 4242
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist> -u <url>/<filename>?FUZZ=test_value -fs 4242
 
 # ffuf with threads and wait
-ffuf -u <url> -w <wordlist> -c -p 0.1 -t 10
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -u <url> -w <wordlist> -c -p 0.1 -t 10
 
 # ffuf adding classical header (some WAF bypass)
-ffuf -c -w "<wordlist>:FILE" -H "X-Originating-IP: 127.0.0.1, X-Forwarded-For: 127.0.0.1, X-Remote-IP: 127.0.0.1, X-Remote-Addr: 127.0.0.1, X-Client-IP: 127.0.0.1" -u <url>/FUZZ
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -c -w "<wordlist>:FILE" -H "X-Originating-IP: 127.0.0.1, X-Forwarded-For: 127.0.0.1, X-Remote-IP: 127.0.0.1, X-Remote-Addr: 127.0.0.1, X-Client-IP: 127.0.0.1" -u <url>/FUZZ
 
 # passive geathering subdomains
-curl -s https://sonar.omnisint.io/subdomains/<url> | gron | tee -a <url>_subdomains.out
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#curl -c curl -s https://sonar.omnisint.io/subdomains/<url> | gron | tee -a <url>_subdomains.out
 
 
 # hack the box cheat: Ffuf Directory Fuzzing
-ffuf -w <wordlist> -u http://SERVER_IP:PORT/FUZZ
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist> -u http://SERVER_IP:PORT/FUZZ
 
 # hack the box cheat: Ffuf Extension Fuzzing
-ffuf -w <wordlist> -u http://SERVER_IP:PORT/indexFUZZ
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist> -u http://SERVER_IP:PORT/indexFUZZ
 
 # hack the box cheat: Ffuf Page Fuzzing
-ffuf -w <wordlist> -u http://SERVER_IP:PORT/blog/FUZZ.php
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist> -u http://SERVER_IP:PORT/blog/FUZZ.php
 
 # hack the box cheat: Ffuf Recursive Fuzzing
-ffuf -w <wordlist> -u http://SERVER_IP:PORT/FUZZ -recursion -recursion-depth 1 -e .php -v
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist> -u http://SERVER_IP:PORT/FUZZ -recursion -recursion-depth 1 -e .php -v
 
 # hack the box cheat: Ffuf Sub-domain Fuzzing
-ffuf -w <wordlist> -u https://FUZZ.hackthebox.eu/
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist> -u https://FUZZ.hackthebox.eu/
 
 # hack the box cheat: Ffuf VHost Fuzzing
-ffuf -w <wordlist> -u http://academy.htb:PORT/ -H 'Host: FUZZ.academy.htb' -fs xxx
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist> -u http://academy.htb:PORT/ -H 'Host: FUZZ.academy.htb' -fs xxx
 
 # hack the box cheat: Ffuf Parameter Fuzzing - GET
-ffuf -w <wordlist> -u http://admin.academy.htb:PORT/admin/admin.php?FUZZ=key -fs xxx
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist> -u http://admin.academy.htb:PORT/admin/admin.php?FUZZ=key -fs xxx
 
 # hack the box cheat: Ffuf Parameter Fuzzing - POST
-ffuf -w <wordlist> -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'FUZZ=key' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <wordlist> -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'FUZZ=key' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx
 
 # hack the box cheat: Ffuf Value Fuzzing
-ffuf -w ids.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=FUZZ' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w ids.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=FUZZ' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx
 
 # hack the box cheat: Ffuf Value Fuzzing (esp0xdeadbeef edition)
-cook 1-100 | ffuf -w -:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=FUZZ' -H 'Content-Type: application/x-www-form-urlencoded'
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook 1-100 | ffuf -w -:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=FUZZ' -H 'Content-Type: application/x-www-form-urlencoded'
 
 
 

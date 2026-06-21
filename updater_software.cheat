@@ -3,12 +3,12 @@
 $ burpversion: echo 'community pro'
 
 # default one
-apt update && apt upgrade
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#apt -c apt update && apt upgrade
 
 
 # update burp
-gron 'https://portswigger.net/burp/releases/data?previousLastId=-1&lastId=-1&t='$(date +%s)'&pageSize=10' > /tmp/gronned_portswigger.net
-grep -i version /tmp/gronned_portswigger.net | grep -iv content | cut -d '"' -f 2 | sort -V | tail -n1 | tee /tmp/latest_version.burp
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gron -c gron 'https://portswigger.net/burp/releases/data?previousLastId=-1&lastId=-1&t='$(date +%s)'&pageSize=10' > /tmp/gronned_portswigger.net
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -i version /tmp/gronned_portswigger.net | grep -iv content | cut -d '"' -f 2 | sort -V | tail -n1 | tee /tmp/latest_version.burp
 echo "[+] checking if burp is uptodate:"
 version=$(burpsuite --version | cut -d '-' -f 1)
 if ! [ -z ${version+x} ]; then version=unknownversion1.1.1.1.1.1; fi
