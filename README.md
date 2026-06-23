@@ -5,9 +5,9 @@ A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
 
 ## Installing
 
-1. Install the interactive tools from nixpkgs:
+1. Install the interactive tools:
 
-    `$ nix profile install --impure nixpkgs#fd nixpkgs#fzf nixpkgs#navi nixpkgs#feroxbuster nixpkgs#rustscan`
+    `$ nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nix -c nix profile install --impure -I nixpkgs=channel:nixos-unstable nixpkgs#fd nixpkgs#fzf github:esp0xdeadbeef/cheat.sheets#navi`
 
 1. Add the pentest cheat sheets by adding the repo to navi:
 
@@ -63,7 +63,7 @@ style:
     color: white
 finder:
   command: fzf
-  overrides: "--with-nth 1,2,3 --preview 'echo {}' --preview-window=up:3:wrap"
+  overrides: "--with-nth 1,2,3 --preview 'echo {}' --preview-window=down:70%:wrap"
 shell:
   command: bash
 EOF
@@ -76,7 +76,7 @@ unset FZF_DEFAULT_OPTS
 navi
 ```
 
-If you want the old behavior where the selected command is inserted into your shell prompt and you press Enter yourself, use the shell widget. `ctrl+g` is a keybinding, not a command you type:
+If you want the old behavior where the selected command is inserted into your shell prompt and you press Enter yourself, use the shell widget:
 
 ```shell
 # current zsh session
@@ -87,6 +87,16 @@ echo 'eval "$(navi widget zsh)"' >> ~/.zshrc
 ```
 
 Then go to an empty prompt, press `Ctrl` and `g` together, select the command, and press Enter once to insert it. Press Enter again to run it.
+
+The patched Navi package from this repo also supports typed interactive insertion for zsh and fish after the widget is loaded:
+
+```shell
+# zsh or fish after loading the widget
+navi
+navi --query nmap
+```
+
+Bash keeps the upstream `Ctrl+G` prompt-insertion flow. A typed `navi` command in bash can print the selected command without running it, but bash cannot put it back into the Readline prompt after Enter without replacing the Enter binding.
 
 # Final Result :
 ![](final.png)

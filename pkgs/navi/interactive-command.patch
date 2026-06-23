@@ -1,0 +1,132 @@
+diff -ruN a/shell/navi.plugin.bash b/shell/navi.plugin.bash
+--- a/shell/navi.plugin.bash	1970-01-01 01:00:01.000000000 +0100
++++ b/shell/navi.plugin.bash	2026-06-23 06:45:10.980713225 +0200
+@@ -1,13 +1,40 @@
+ #!/usr/bin/env bash
+ 
+ _navi_call() {
+-   local result="$(navi "$@" </dev/tty)"
++   local result="$(command navi "$@" </dev/tty)"
+    printf "%s" "$result"
+ }
+ 
++_navi_passthrough() {
++   case "${1:-}" in
++      repo|widget|info|fn|help|-h|--help|-V|--version|--print)
++         return 0
++         ;;
++   esac
++
++   [[ $- != *i* || ! -t 0 || ! -t 1 ]]
++}
++
++navi() {
++   if _navi_passthrough "$@"; then
++      command navi "$@"
++      return
++   fi
++
++   local output
++   output="$(_navi_call --print "$@")" || return
++
++   if [[ -n "$READLINE_LINE" || -n "$READLINE_POINT" ]]; then
++      READLINE_LINE="$output"
++      READLINE_POINT=${#READLINE_LINE}
++   else
++      printf "%s\n" "$output"
++   fi
++}
++
+ _navi_widget() {
+    local -r input="${READLINE_LINE}"
+-   local -r last_command="$(echo "${input}" | navi fn widget::last_command)"
++   local -r last_command="$(echo "${input}" | command navi fn widget::last_command)"
+ 
+    if [ -z "${last_command}" ]; then
+       local -r output="$(_navi_call --print)"
+@@ -33,4 +60,4 @@
+    bind '"\C-g": " \C-b\C-k \C-u`_navi_widget_legacy`\e\C-e\C-a\C-y\C-h\C-e\e \C-y\ey\C-x\C-x\C-f"'
+ else
+    bind -x '"\C-g": _navi_widget'
+-fi
+\ No newline at end of file
++fi
+diff -ruN a/shell/navi.plugin.fish b/shell/navi.plugin.fish
+--- a/shell/navi.plugin.fish	1970-01-01 01:00:01.000000000 +0100
++++ b/shell/navi.plugin.fish	2026-06-23 06:45:10.980713225 +0200
+@@ -2,14 +2,32 @@
+     set --local query (commandline --current-process | string trim)
+ 
+     if test -n "$query"
+-        set --local best_match (navi --print --query "$query" --best-match)
++        set --local best_match (command navi --print --query "$query" --best-match)
+         if test -n "$best_match"
+             commandline --current-process $best_match
+             return
+         end
+     end
+ 
+-    set --local candidate (navi --print --query "$query")
++    set --local candidate (command navi --print --query "$query")
++    if test -n "$candidate"
++        commandline --current-process $candidate
++    end
++end
++
++function navi
++    if not status is-interactive
++        command navi $argv
++        return
++    end
++
++    switch "$argv[1]"
++        case repo widget info fn help -h --help -V --version --print
++            command navi $argv
++            return
++    end
++
++    set --local candidate (command navi --print $argv </dev/tty)
+     if test -n "$candidate"
+         commandline --current-process $candidate
+     end
+diff -ruN a/shell/navi.plugin.zsh b/shell/navi.plugin.zsh
+--- a/shell/navi.plugin.zsh	1970-01-01 01:00:01.000000000 +0100
++++ b/shell/navi.plugin.zsh	2026-06-23 06:45:10.979713230 +0200
+@@ -1,13 +1,35 @@
+ #!/usr/bin/env zsh
+ 
+ _navi_call() {
+-   local result="$(navi "$@" </dev/tty)"
++   local result="$(command navi "$@" </dev/tty)"
+    printf "%s" "$result"
+ }
+ 
++_navi_passthrough() {
++   case "${1:-}" in
++      repo|widget|info|fn|help|-h|--help|-V|--version|--print)
++         return 0
++         ;;
++   esac
++
++   [[ ! -o interactive || ! -t 0 || ! -t 1 ]]
++}
++
++navi() {
++   if _navi_passthrough "$@"; then
++      command navi "$@"
++      return
++   fi
++
++   local result="$(_navi_call --print "$@")" || return
++   if [ -n "$result" ]; then
++      print -z -- "$result"
++   fi
++}
++
+ _navi_widget() {
+    local -r input="${LBUFFER}"
+-   local -r last_command="$(echo "${input}" | navi fn widget::last_command)"
++   local -r last_command="$(echo "${input}" | command navi fn widget::last_command)"
+    local replacement="$last_command"
+ 
+    if [ -z "$last_command" ]; then
