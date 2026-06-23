@@ -1,7 +1,7 @@
 % LDAP Enum
 
-$ domain: printf '%s\n' example.com
-$ ip: printf '%s\n' 127.0.0.1
+$ domain: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d'; printf '%s\n' example.com; } | sort -u
+$ ip: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d'; printf '%s\n' 127.0.0.1; } | sort -u
 
 # ldap search all objectclasses
 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openldap -c ldapsearch -LLL -x -H ldap://<domain> -b '' -s base '(objectclass=*)'

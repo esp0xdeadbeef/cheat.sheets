@@ -4,10 +4,10 @@ $ wordlist: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixp
 $ user-list: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" "$(nix build --impure --no-link --print-out-paths nixpkgs#wordlists)/share/wordlists" -type f 2>/dev/null | sort -u
 $ pass-list: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" "$(nix build --impure --no-link --print-out-paths nixpkgs#wordlists)/share/wordlists" -type f 2>/dev/null | sort -u
 $ list-hydras-functionality: nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c sh -c 'hydra -h | grep "Supported" | tr " " "\n" | tail -n +3'
-$ ip: printf '%s\n' 127.0.0.1
-$ domain: printf '%s\n' WORKGROUP
+$ ip: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d'; printf '%s\n' 127.0.0.1; } | sort -u
+$ domain: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d'; printf '%s\n' WORKGROUP; } | sort -u
 $ username: printf '%s\n' admin
-$ url: printf '%s\n' http://127.0.0.1/
+$ url: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d' | awk '/^https?:\/\// { print; next } { print "http://" $0 "/" }'; printf '%s\n' http://127.0.0.1/; } | sort -u
 $ request: find "$(pwd)" -type f 2>/dev/null | sort -u
 $ zip-file-location: find "$(pwd)" -type f \( -name '*.zip' -o -name '*.7z' \) 2>/dev/null | sort -u
 

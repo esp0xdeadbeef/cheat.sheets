@@ -2,7 +2,7 @@
 
 ### This is a list of useful commands/tricks using smbclient, enum4linux and nmap smb scripts - very useful on a pentesting https://sharingsec.blogspot.com
 
-$ target: printf '%s\n' 127.0.0.1
+$ target: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d'; printf '%s\n' 127.0.0.1; } | sort -u
 $ username: printf '%s\n' administrator guest
 $ password: printf '%s\n' '' 'Password123!'
 $ share: printf '%s\n' C$ ADMIN$ IPC$

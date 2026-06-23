@@ -1,7 +1,7 @@
 % DNS Enum
 
-$ target: printf '%s\n' example.com
-$ domain: printf '%s\n' example.com
+$ target: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d'; printf '%s\n' example.com; } | sort -u
+$ domain: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d'; printf '%s\n' example.com; } | sort -u
 $ resolver: printf '%s\n' 1.1.1.1 8.8.8.8 | tr ' ' '\n'
 $ reverse-lookup-ip: printf '%s\n' 127.0.0.1
 $ ip_adress: printf '%s\n' 127.0.0.1

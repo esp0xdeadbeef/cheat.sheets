@@ -1,6 +1,6 @@
 % SNMP, Simple Network Management Protocol (simply not my problem)
 
-$ target: printf '%s\n' 127.0.0.1
+$ target: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d'; printf '%s\n' 127.0.0.1; } | sort -u
 $ targets: find "$(pwd)" -type f 2>/dev/null | sort -u
 $ file-with-community-strings: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" -type f 2>/dev/null | grep -i community | sort -u
 

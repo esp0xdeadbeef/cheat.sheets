@@ -1,7 +1,7 @@
 % portscanners
 
-$ ip: printf '%s\n' 127.0.0.1
-$ ip-or-range: printf '%s\n' 127.0.0.1 127.0.0.0/24 | tr ' ' '\n'
+$ ip: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d'; printf '%s\n' 127.0.0.1; } | sort -u
+$ ip-or-range: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d'; printf '%s\n' 127.0.0.1 127.0.0.0/24 | tr ' ' '\n'; } | sort -u
 $ n-top-udp-ports-amount: printf '%s\n' 50 100 1000 | tr ' ' '\n'
 
 # nmap Discovers IPs

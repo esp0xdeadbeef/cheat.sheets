@@ -3,7 +3,7 @@
 $ wordlist: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" "$(nix build --impure --no-link --print-out-paths nixpkgs#wordlists)/share/wordlists" -type f 2>/dev/null | sort -u
 $ wordlist_dns: (find "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" "$(nix build --impure --no-link --print-out-paths nixpkgs#wordlists)/share/wordlists" -type f 2>/dev/null | grep -i 'dns'; find "$(pwd)" -type f 2>/dev/null) | sort -u --ignore-case
 $ wordlist_extensions: (find "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" "$(nix build --impure --no-link --print-out-paths nixpkgs#wordlists)/share/wordlists" -type f 2>/dev/null | grep -i 'extensions'; find "$(pwd)" -type f 2>/dev/null) | sort -u --ignore-case
-$ url: printf '%s\n' http://127.0.0.1/
+$ url: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d' | awk '/^https?:\/\// { print; next } { print "http://" $0 "/" }'; printf '%s\n' http://127.0.0.1/; } | sort -u
 $ threads-default-10: printf '%s\n' 10 25 50 | tr ' ' '\n'
 $ filename: find "$(pwd)" -type f 2>/dev/null | sort -u
 $ urltxtfile: find "$(pwd)" -type f 2>/dev/null | sort -u

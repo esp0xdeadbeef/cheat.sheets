@@ -1,6 +1,6 @@
 % Web testing, xss/redirect/prototype polution/ screenshots
 
-$ target-domain: printf '%s\n' example.com
+$ target-domain: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d'; printf '%s\n' example.com; } | sort -u
 $ file: find "$(pwd)" -type f 2>/dev/null | sort -u
 
 # subdirectory finder for domains

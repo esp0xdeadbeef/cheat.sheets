@@ -3,7 +3,7 @@ $ ip: ip -o -4 addr show scope global 2>/dev/null | awk '{print $4}' | cut -d/ -
 $ port: echo '80'
 $ file: echo 'exec-revshell.exe'
 $ adapter: ip a | grep -P '^\d*:' | grep -v 'veth\|br-\|lo\|docker' | cut -d ':' -f 2 | cut -d '@' -f 1
-$ target: echo 'target.com'
+$ target: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d'; printf '%s\n' target.com; } | sort -u
 $ webroot: printf '%s\n' "$PWD/www"
 $ migrate_rc: printf '%s\n' "$PWD/tools/migrate_explorer.rc"
 $ public_key_file: find "$HOME/.ssh" "$(pwd)" -maxdepth 1 -type f -name '*.pub' 2>/dev/null | sort -u

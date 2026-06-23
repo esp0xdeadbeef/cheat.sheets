@@ -1,6 +1,6 @@
 % cms cheatsheet
 
-$ url: printf '%s\n' http://127.0.0.1/
+$ url: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d' | awk '/^https?:\/\// { print; next } { print "http://" $0 "/" }'; printf '%s\n' http://127.0.0.1/; } | sort -u
 
 # install doopscan
 export cwd="$(pwd)";cd /tmp/; git clone https://github.com/droope/droopescan.git;sudo mv droopescan /bin/;cd $cwd
@@ -28,5 +28,4 @@ NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixp
 
 # wordpress enumerate users from host (remove the tls-checks if http)
 NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wpscan -c wpscan --enumerate u --url '<url>' --disable-tls-checks | tee -a wp-enum-users.txt
-
 
