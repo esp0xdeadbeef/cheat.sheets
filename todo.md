@@ -33,11 +33,11 @@ find ~/.local/share/navi/cheats/ -name '*.cheat' | grep <cheats_to_disable> | wh
 find ~/.local/share/navi/cheats/ -name '*<cheats_to_disable>*.cheat' -exec echo mv {} {}.old \;
 ```
 
-iii. Re enable (old) cheats within an interactive cheat sheet 
+iii. Re enable (old) cheats within an interactive cheat sheet
 
 ```bash
 find ~/.local/share/navi/cheats/ -name '*.cheat.old' | grep '<cheats_to_enable>' | while read line; do mv $line $(echo "$line" | sed 's/\.old//g' ); done
-# or something like this (needs rename util `apt install rename -y`):
+# or something like this (needs rename util):
 find ~/.local/share/navi/cheats/ -name '*<cheats_to_enable>*.cheat.old' -exec rename 's/\.old//;' {} \;
 ```
 

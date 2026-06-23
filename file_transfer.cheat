@@ -1,13 +1,14 @@
 % File Transfer
 
-$ filename: fdfind . "$(pwd)" -Ltf | sort -u 
+$ filename: find "$(pwd)" -type f 2>/dev/null | sort -u
+$ local_dir: find "$(pwd)" -type d 2>/dev/null | sort -u
+$ remote_dir: printf '%s\n' /tmp
 
 # Copy local file to remote host
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openssh -c scp <filename> your_username@remoteIP:/some/remote/directory
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openssh -c scp <filename> your_username@remoteIP:/some/remote/directory
 
 # Copy remote file to local host
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openssh -c scp your_username@remoteIP:<filename> /some/local/directory
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openssh -c scp your_username@remoteIP:<filename> /some/local/directory
 
 # Copy local directory to remote directory
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openssh -c scp -r <local_dir> your_username@remoteIP:/some/remote/directory/<remote_dir>
-
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openssh -c scp -r <local_dir> your_username@remoteIP:/some/remote/directory/<remote_dir>

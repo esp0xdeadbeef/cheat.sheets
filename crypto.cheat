@@ -1,9 +1,10 @@
 % crypto
 
-# setup rsactftool docker image 
+$ pub-key: find "$(pwd)" -type f \( -name '*.pub' -o -name '*.pem' \) 2>/dev/null | sort -u
+
+# setup rsactftool docker image
 export cwd="$(pwd)";cd /tmp/; git clone https://github.com/Ganapati/RsaCtfTool;cd RsaCtfTool;docker build -t rsactftool .;cd $cwd
 
 # data is current work directory
 # common attacks against public key output private key
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#docker -c docker run -it -v $(pwd):/data rsactftool:latest --publickey <pub-key> --private
-
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#docker -c docker run -it -v $(pwd):/data rsactftool:latest --publickey <pub-key> --private

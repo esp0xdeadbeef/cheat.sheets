@@ -1,30 +1,10 @@
 % update cheatsheet
 
-$ burpversion: echo 'community pro'
+# update this flake's inputs
+nix flake update
 
-# default one
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#apt -c apt update && apt upgrade
+# run Burp Suite Community from this flake
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure github:esp0xdeadbeef/cheat.sheets#burpsuite-community -c burpsuite
 
-
-# update burp
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gron -c gron 'https://portswigger.net/burp/releases/data?previousLastId=-1&lastId=-1&t='$(date +%s)'&pageSize=10' > /tmp/gronned_portswigger.net
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -i version /tmp/gronned_portswigger.net | grep -iv content | cut -d '"' -f 2 | sort -V | tail -n1 | tee /tmp/latest_version.burp
-echo "[+] checking if burp is uptodate:"
-version=$(burpsuite --version | cut -d '-' -f 1)
-if ! [ -z ${version+x} ]; then version=unknownversion1.1.1.1.1.1; fi
-if grep -xq $(echo version) /tmp/latest_version.burp
-then
-    echo "burp is up to date."
-else
-    portswiggers_update_mirror=https://portswigger-cdn.net/burp/releases/download
-    filename=$(curl -IsS "$portswiggers_update_mirror?product=community&version=$(cat /tmp/latest_version.burp)&type=Linux" | grep -oP 'filename\=(.*?);' | cut -d '=' -f 2 | cut -d ';' -f 1 | sed 's|/|_|g')
-    echo "downloading burpsuite to /tmp/$filename"
-    wget "$portswiggers_update_mirror?product=community&version=$(cat /tmp/latest_version.burp)&type=Linux" -O /tmp/$filename
-    if grep $(sha256sum /tmp/$filename ) /tmp/gronned_portswigger.net
-    then
-        chmod +x /tmp/$filename
-        /tmp/$filename
-        echo -e "remove the old burpsuite if you want with:\nrm -r $(cat $(which burpsuite) | grep -oP "\S*[a-z].jar" | sed 's![^/]*$!!')\nrm /bin/burpsuite"
-        echo -e "depending on the version you've installed, use:\nln -s /opt/BurpSuiteCommunity/BurpSuiteCommunity /bin/burpsuite\nln -s /opt/BurpSuite/BurpSuite /bin/burpsuite"
-    fi
-fi
+# run Burp Suite Professional from this flake
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure github:esp0xdeadbeef/cheat.sheets#burpsuite-pro -c burpsuite

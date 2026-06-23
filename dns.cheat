@@ -1,84 +1,90 @@
 % DNS Enum
 
+$ target: printf '%s\n' example.com
+$ domain: printf '%s\n' example.com
+$ resolver: printf '%s\n' 1.1.1.1 8.8.8.8 | tr ' ' '\n'
+$ reverse-lookup-ip: printf '%s\n' 127.0.0.1
+$ ip_adress: printf '%s\n' 127.0.0.1
+$ specific_dns: printf '%s\n' 1.1.1.1
+$ file: find "$(pwd)" -type f 2>/dev/null | sort -u
 $ qtype: dig -h | grep 'q\-type' | tail -n1 | cut -d '(' -f 2 | cut -d '.' -f 1 | sed 's|,|\n|g' | grep .
 # $ options_dig: locate \/dig.1.gz | xargs -I {} zcat {} | grep '\fB' | grep '\.B' | head -n-5 | tail -n+4 | sed 's/.B \\fB//g' | sed 's/\\fP//g' | sed 's/\\-/-/g'
 # $ target: if [[ ! -z <target> ]]; then; echo <target>; fi
-$ wordlist: fdfind . "$(pwd)" /usr/share/{seclists,wordlists} /usr/share/amass/ -Ltf | grep -i dns | sort -u
+$ wordlist: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" "$(nix build --impure --no-link --print-out-paths nixpkgs#wordlists)/share/wordlists" -type f 2>/dev/null | grep -i dns | sort -u
 $ dns_server: echo -e '$(cat nameserver.out 2>/dev/null)\nns.<target>\nns1.<target>\nns2.<target>'
 
 # whois on the target
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#whois -c whois <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#whois -c whois <target>
 
 # query the dns and export it
 export dns_server=$(host -t ns $(echo '<target>' | rev | cut -d '.' -f 1,2 | rev) $(ping -c 1 <target> | head -n 1 | cut -d '(' -f 2 | cut -d ')' -f 1) | tail -n 1 | rev | awk '{print $1}' | rev | sed 's/\.$//g'); echo $dns_server
 
 # get ns server from an hostname
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c host -t ns $(echo '<target>' | rev | cut -d '.' -f 1,2 | rev) $dns_server | tee nameserver.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c host -t ns $(echo '<target>' | rev | cut -d '.' -f 1,2 | rev) $dns_server | tee nameserver.out
 
 # list 'all' options with host
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c host -a <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c host -a <target>
 
 # host with nameserver
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c host -l <target> $dns_server
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c host -l <target> $dns_server
 
 # zonetransfer on nameserver with dnsrecon
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsrecon -c dnsrecon -d <target> -t axfr -n $dns_server
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsrecon -c dnsrecon -d <target> -t axfr -n $dns_server
 
 # dnsenum the target
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsenum -c dnsenum <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsenum -c dnsenum <target>
 
 # nslookup with server and ns to lookup
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c printf "server $dns_server\nset type=any\n<reverse-lookup-ip>\nexit\n" | nslookup
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c printf "server $dns_server\nset type=any\n<reverse-lookup-ip>\nexit\n" | nslookup
 
 # gobuster basic
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gobuster -c gobuster -t 15 dns --domain <domain> --wordlist <wordlist> --show-ips
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gobuster -c gobuster -t 15 dns --domain <domain> --wordlist <wordlist> --show-ips
 
 # gobuster with resolver
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gobuster -c gobuster -t 15 dns --resolver <resolver> --domain <domain> --wordlist <wordlist> --show-ips
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gobuster -c gobuster -t 15 dns --resolver <resolver> --domain <domain> --wordlist <wordlist> --show-ips
 
 # enum with msfconsole basic settings
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#metasploit -c msfconsole -q -x 'use auxiliary/gather/enum_dns;set DOMAIN <domain>; set WORDLIST <wordlist>;options; run' # ctrl c out of it if you want to do more settings
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#metasploit -c msfconsole -q -x 'use auxiliary/gather/enum_dns;set DOMAIN <domain>; set WORDLIST <wordlist>;options; run' # ctrl c out of it if you want to do more settings
 
 # dig on the target, default nameserver with default q-type (a) and nameserver defined in system
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig <target>
 
 # zonetransfer on nameserver with dig
 q-type axfr <target> @$dns_server
 
 # dig on the target with nameserver
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig q-type <qtype> <target> @$dns_server
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig q-type <qtype> <target> @$dns_server
 
 # To use a specific query type
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig q-type <qtype> <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig q-type <qtype> <target>
 
 # To do a DNS reverse look up
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig -x <ip_adress> +short
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig -x <ip_adress> +short
 
 # To use a specific DNS server
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig @<specific_dns> <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig @<specific_dns> <target>
 
 # To do a bulk DNS query (where <file> has all the domains, one to a line)
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig -f <file>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig -f <file>
 
 # (hack the box cheats) Identify the A record for the target domain.
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c nslookup <target>
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c nslookup -query=A <target>
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig <target> @$dns_server
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig a <target> @$dns_server
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c nslookup <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c nslookup -query=A <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig <target> @$dns_server
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig a <target> @$dns_server
 
 # (hack the box cheats) Identify the PTR record for the target IP address.
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c nslookup -query=PTR <target>
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig -x <target> @$dns_server
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c nslookup -query=PTR <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig -x <target> @$dns_server
 
 # (hack the box cheats) Identify ANY records for the target domain.
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c nslookup -query=ANY <target>
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig any <target> @$dns_server
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c nslookup -query=ANY <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig any <target> @$dns_server
 
 # (hack the box cheats) Identify the TXT records for the target domain.
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c nslookup -query=TXT <target>
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig txt <target> @$dns_server
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c nslookup -query=TXT <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig txt <target> @$dns_server
 
 # (hack the box cheats) Identify the MX records for the target domain.
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c nslookup -query=MX <target>
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig mx <target> @$dns_server
-
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c nslookup -query=MX <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#dnsutils -c dig mx <target> @$dns_server

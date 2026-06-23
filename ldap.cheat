@@ -1,7 +1,10 @@
 % LDAP Enum
 
+$ domain: printf '%s\n' example.com
+$ ip: printf '%s\n' 127.0.0.1
+
 # ldap search all objectclasses
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openldap -c ldapsearch -LLL -x -H ldap://<domain> -b '' -s base '(objectclass=*)'
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openldap -c ldapsearch -LLL -x -H ldap://<domain> -b '' -s base '(objectclass=*)'
 
 # ldap search with correct dc and enumerate all entries
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openldap -c ldapsearch -x -b "$(ldapsearch -LLL -x -H ldap://<ip> -b '' -s base '(objectclass=*)' | grep rootDomainNamingContext | cut -d " " -f 2)" "*" -h <ip> | tee ldapsearch.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openldap -c ldapsearch -x -b "$(ldapsearch -LLL -x -H ldap://<ip> -b '' -s base '(objectclass=*)' | grep rootDomainNamingContext | cut -d " " -f 2)" "*" -h <ip> | tee ldapsearch.out

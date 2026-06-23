@@ -5,25 +5,9 @@ A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
 
 ## Installing
 
-1. Install `fd-find fzf` if you don't have them:
+1. Install the interactive tools from nixpkgs:
 
-    `$ sudo apt install fd-find fzf` * check for arch the notes.
-
-1. Install `cargo` if you don't have it (example the bash before piping it to `sh`):
-
-    `$ curl https://sh.rustup.rs -sSf | sh`
-
-1. **Install [Navi](https://github.com/denisidoro/navi) (and FeroxBuster and Rustscan if you don't have them) with**:
-    
-    `$ cargo install --locked navi`
-    
-    `$ cargo install feroxbuster rustscan`
- 
-1. if navi fails via cargo try the other way with brew 
-
-    `$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
-    
-    `$ brew install navi`
+    `$ nix profile install --impure nixpkgs#fd nixpkgs#fzf nixpkgs#navi nixpkgs#feroxbuster nixpkgs#rustscan`
 
 1. Add the pentest cheat sheets by adding the repo to navi:
 
@@ -31,18 +15,6 @@ A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
 
 1. Check out the [infosecstreams cheat.sheets!](https://github.com/infosecstreams/cheat.sheets) :)
 
-
-### notes for arch 
-
-```bash
-cargo install fd-find # via rust and add ~/.cargo/bin/ to $PATH
-# add  fdfind to /sbin/fdfind
-ln -sf ~/.cargo/bin/fd /sbin/fdfind
-# or
-pacman -Sy fd
-# add fd to /sbin/fdfind
-ln -sf $(which fd) /sbin/fdfind
-```
 
 ### Installing the shell widget
 
@@ -63,9 +35,58 @@ You should restart your shell session. Now when you press `ctrl+g` and you shoul
 
 ## Running
 
-1. Run `navi` :
+1. Run `navi`:
 
-    `$ navi` or ... press `ctrl+g` if you installed the widget...!!!# cheat.sheets
+    `$ navi` or press `ctrl+g` if you installed the widget.
 
-# Final Result : 
+## Resources
+
+- [nix-for-offensive-security](https://github.com/esp0xdeadbeef/nix-for-offensive-security)
+
+### Seeing the command before running it
+
+The normal `navi` flow should show the command/snippet next to the description. If it only shows the descriptions, check your fzf overrides. An override such as `--with-nth 1,2` hides the snippet/command column.
+
+Quick config fix:
+
+```shell
+mkdir -p ~/.config/navi
+cat > ~/.config/navi/config.yaml <<'EOF'
+style:
+  tag:
+    width_percentage: 20
+    min_width: 14
+  comment:
+    width_percentage: 36
+    min_width: 28
+  snippet:
+    color: white
+finder:
+  command: fzf
+  overrides: "--preview 'echo {}' --preview-window=up:3:wrap"
+shell:
+  command: bash
+EOF
+```
+
+If an environment override is hiding the command column, clear it:
+
+```shell
+unset NAVI_FZF_OVERRIDES
+navi
+```
+
+If you want the old behavior where the selected command is inserted into your shell prompt and you press Enter yourself, use the shell widget. `ctrl+g` is a keybinding, not a command you type:
+
+```shell
+# current zsh session
+eval "$(navi widget zsh)"
+
+# make it permanent
+echo 'eval "$(navi widget zsh)"' >> ~/.zshrc
+```
+
+Then go to an empty prompt, press `Ctrl` and `g` together, select the command, and press Enter once to insert it. Press Enter again to run it.
+
+# Final Result :
 ![](final.png)

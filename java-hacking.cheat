@@ -1,17 +1,16 @@
 % Java Cheats
 
-$ jar: ls *.jar | sort -u 
+$ jar: find "$(pwd)" -maxdepth 1 -type f -name '*.jar' 2>/dev/null | sort -u
 
-$ apk: ls *.apk | sort -u
+$ apk: find "$(pwd)" -maxdepth 1 -type f -name '*.apk' 2>/dev/null | sort -u
+$ output: printf '%s\n' ./unzipped
 
 
-# unzip and do procyon (apt install procyon-decompiler)
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#unzip -c unzip -d <output> <jar>
+# unzip and decompile with procyon from nixpkgs
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#unzip -c unzip -d <output> <jar>
  #find <output> ! -type d | grep -v '\$' | grep -v 'meta-inf' | grep -v org|grep "\.class" | while read class; do procyon $class -o .;done
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#findutils -c find <output> ! -type d | grep -v '\$' | grep -v 'meta-inf' | grep -v org|grep "\.class" | while read class; do $class -o .;done
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#findutils -c find <output> ! -type d | grep -v '\$' | grep -v 'meta-inf' | grep -v org|grep "\.class" | while read class; do $class -o .;done
 
 
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#findutils -c find unzipped2 ! -type d | grep -v '\$' | grep -v 'meta-inf' | grep -v org|  grep "\.class"
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#procyon -c procyon -jar <jar> -o <output>
-
-
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#findutils -c find unzipped2 ! -type d | grep -v '\$' | grep -v 'meta-inf' | grep -v org|  grep "\.class"
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#procyon -c procyon -jar <jar> -o <output>

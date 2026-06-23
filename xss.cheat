@@ -1,23 +1,9 @@
 % XSS cheat sheets
 
-$ js_file: fdfind . -Ltf | grep -i '\.js$' | sort -u 
+$ js_file: find . -type f -name '*.js' 2>/dev/null | sort -u
 
 # hack the box cheat: XSS javascript dangerous functions
-(echo 'innerHTML and outerHTML must be DOM objects'; grep '\.innerHTML
-\.outerHTML
-document\.write()
-document\.writeln()
-document\.domain' <js_file> )
+(echo 'innerHTML and outerHTML must be DOM objects'; grep -E '\.innerHTML|\.outerHTML|document\.write\(\)|document\.writeln\(\)|document\.domain' <js_file>)
 
 # hack the box cheat: XSS javascript dangerous jQuery functions
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep 'html()
-parseHTML()
-add()
-append()
-prepend()
-after()
-insertAfter()
-before()
-insertBefore()
-replaceAll()
-replaceWith()' <js_file>
+nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -E 'html\(\)|parseHTML\(\)|add\(\)|append\(\)|prepend\(\)|after\(\)|insertAfter\(\)|before\(\)|insertBefore\(\)|replaceAll\(\)|replaceWith\(\)' <js_file>

@@ -1,10 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-sudo apt install fd-find fzf
-curl https://sh.rustup.rs -sSf | sh
-cargo install --locked navi
-cargo install feroxbuster rustscan
+set -euo pipefail
+
+nix profile install --impure \
+  nixpkgs#fd \
+  nixpkgs#fzf \
+  nixpkgs#navi \
+  nixpkgs#feroxbuster \
+  nixpkgs#rustscan
 navi repo add esp0xdeadbeef/cheat.sheets
-echo 'eval "$(navi widget zsh)"' >> .zshrc
-echo 'eval "$(navi widget bash)"' >> .bashrc
+# shellcheck disable=SC2016
+grep -qxF 'eval "$(navi widget zsh)"' "$HOME/.zshrc" || echo 'eval "$(navi widget zsh)"' >> "$HOME/.zshrc"
+# shellcheck disable=SC2016
+grep -qxF 'eval "$(navi widget bash)"' "$HOME/.bashrc" || echo 'eval "$(navi widget bash)"' >> "$HOME/.bashrc"
 echo " Installation Done ! Enjoy Our Tool "
