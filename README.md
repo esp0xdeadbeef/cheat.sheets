@@ -45,7 +45,7 @@ You should restart your shell session. Now when you press `ctrl+g` and you shoul
 
 ### Seeing the command before running it
 
-The normal `navi` flow should show the command/snippet next to the description. If it only shows the descriptions, check your fzf overrides. An override such as `--with-nth 1,2` hides the snippet/command column.
+The normal `navi` flow should show the command/snippet next to the description. If it only shows the descriptions, check your fzf overrides. An override such as `--with-nth 1,2` hides the snippet/command column. Use `--with-nth 1,2,3` or remove `--with-nth` entirely.
 
 Quick config fix:
 
@@ -63,16 +63,16 @@ style:
     color: white
 finder:
   command: fzf
-  overrides: "--preview 'echo {}' --preview-window=up:3:wrap"
+  overrides: "--with-nth 1,2,3 --preview 'echo {}' --preview-window=up:3:wrap"
 shell:
   command: bash
 EOF
 ```
 
-If an environment override is hiding the command column, clear it:
+If global fzf options are hiding columns, clear or override them:
 
 ```shell
-unset NAVI_FZF_OVERRIDES
+unset FZF_DEFAULT_OPTS
 navi
 ```
 
