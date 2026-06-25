@@ -12,35 +12,35 @@ $ InterfaceMonitor: printf '%s\n' mon0 wlan0mon
 $ essid: printf '%s\n' ESSID
 $ output_file: printf '%s\n' aircrack_key.txt
 $ database: find "$(pwd)" -type f \( -name '*.airolib' -o -name '*.db' \) 2>/dev/null | sort -u
-$ wordlist: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" "$(nix build --impure --no-link --print-out-paths nixpkgs#wordlists)/share/wordlists" -type f 2>/dev/null | sort -u
+$ wordlist: find "$(pwd)" "$(nix build --impure -I nixpkgs=channel:nixos-unstable --no-link --print-out-paths --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; seclists')/share/wordlists/seclists" "$(nix build --impure -I nixpkgs=channel:nixos-unstable --no-link --print-out-paths --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; wordlists')/share/wordlists" -type f 2>/dev/null | sort -u
 $ bssid: printf '%s\n' 00:11:22:33:44:55
 $ EWSA_file: printf '%s\n' capture.ewsa
 
 
 # Start Monitor Mode and Save captures
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#iw -c iw dev wlan0 add interface mon0 type monitor
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c airmon-ng start wlan0 <Chanel>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ iw ]' -c iw dev wlan0 add interface mon0 type monitor
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ aircrack-ng ]' -c airmon-ng start wlan0 <Chanel>
 
 # packet capture
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c airodump-ng -c <Chanel> --bssid <MAC_AP> -w aircrack_ng.cap <InterfaceMonitor>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ aircrack-ng ]' -c airodump-ng -c <Chanel> --bssid <MAC_AP> -w aircrack_ng.cap <InterfaceMonitor>
 
 # To crack WEP for a given essid name and store into a file
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -a 1 -e <essid> -l <output_file> aircrack_ng.cap
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ aircrack-ng ]' -c aircrack-ng -a 1 -e <essid> -l <output_file> aircrack_ng.cap
 
 # To crack WPA/WPA2 from airolib-ng database
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -e <essid> -r <database> aircrack_ng.cap
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ aircrack-ng ]' -c aircrack-ng -e <essid> -r <database> aircrack_ng.cap
 
 # To crack WPA/WPA2 from a wordlist
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -e <essid> -w <wordlist> aircrack_ng.cap
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ aircrack-ng ]' -c aircrack-ng -e <essid> -w <wordlist> aircrack_ng.cap
 
 # To crack a given bssid
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -b <bssid> -l <output_file> aircrack_ng.cap
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ aircrack-ng ]' -c aircrack-ng -b <bssid> -l <output_file> aircrack_ng.cap
 
 # To crack a given bssid using FMS/Korek method
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -K -b <bssid> aircrack_ng.cap
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ aircrack-ng ]' -c aircrack-ng -K -b <bssid> aircrack_ng.cap
 
 # To crack a given essid (WEP) and display the ASCII of the key
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -e <essid> -s aircrack_ng.cap
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ aircrack-ng ]' -c aircrack-ng -e <essid> -s aircrack_ng.cap
 
 # To crack a given essid (WEP) and create a EWSA Project
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#aircrack-ng -c aircrack-ng -e <essid> -E <EWSA_file> aircrack_ng.cap
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ aircrack-ng ]' -c aircrack-ng -e <essid> -E <EWSA_file> aircrack_ng.cap

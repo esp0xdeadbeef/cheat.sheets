@@ -7,10 +7,10 @@ $ output: printf '%s\n' ./unzipped
 
 
 # unzip and decompile with procyon from nixpkgs
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#unzip -c unzip -d <output> <jar>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ unzip ]' -c unzip -d <output> <jar>
  #find <output> ! -type d | grep -v '\$' | grep -v 'meta-inf' | grep -v org|grep "\.class" | while read class; do procyon $class -o .;done
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#findutils -c find <output> ! -type d | grep -v '\$' | grep -v 'meta-inf' | grep -v org|grep "\.class" | while read class; do $class -o .;done
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ findutils ]' -c find <output> ! -type d | grep -v '\$' | grep -v 'meta-inf' | grep -v org|grep "\.class" | while read class; do $class -o .;done
 
 
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#findutils -c find unzipped2 ! -type d | grep -v '\$' | grep -v 'meta-inf' | grep -v org|  grep "\.class"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#procyon -c procyon -jar <jar> -o <output>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ findutils ]' -c find unzipped2 ! -type d | grep -v '\$' | grep -v 'meta-inf' | grep -v org|  grep "\.class"
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ procyon ]' -c procyon -jar <jar> -o <output>

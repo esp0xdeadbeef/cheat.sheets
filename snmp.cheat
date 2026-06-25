@@ -2,33 +2,33 @@
 
 $ target: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d'; printf '%s\n' 127.0.0.1; } | sort -u
 $ targets: find "$(pwd)" -type f 2>/dev/null | sort -u
-$ file-with-community-strings: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" -type f 2>/dev/null | grep -i community | sort -u
+$ file-with-community-strings: find "$(pwd)" "$(nix build --impure -I nixpkgs=channel:nixos-unstable --no-link --print-out-paths --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; seclists')/share/wordlists/seclists" -type f 2>/dev/null | grep -i community | sort -u
 
 # Windows User Accounts
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.4.1.77.1.2.25
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ net-snmp ]' -c snmpwalk -c public -v1 <target> 1.3.6.1.4.1.77.1.2.25
 
 # Windows Running Programs
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.2.1.25.4.2.1.2
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ net-snmp ]' -c snmpwalk -c public -v1 <target> 1.3.6.1.2.1.25.4.2.1.2
 
 # Windows Hostname
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.2.1.1.5
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ net-snmp ]' -c snmpwalk -c public -v1 <target> 1.3.6.1.2.1.1.5
 
 # Windows Share Information
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.4.1.77.1.2.3.1.1
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ net-snmp ]' -c snmpwalk -c public -v1 <target> 1.3.6.1.4.1.77.1.2.3.1.1
 
 # Windows Share Information
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.4.1.77.1.2.27
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ net-snmp ]' -c snmpwalk -c public -v1 <target> 1.3.6.1.4.1.77.1.2.27
 
 # Windows TCP Ports
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.2.1.6.13.1.3
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ net-snmp ]' -c snmpwalk -c public -v1 <target> 1.3.6.1.2.1.6.13.1.3
 
 # Software Name
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#net-snmp -c snmpwalk -c public -v1 <target> 1.3.6.1.2.1.25.6.3.1.2
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ net-snmp ]' -c snmpwalk -c public -v1 <target> 1.3.6.1.2.1.25.6.3.1.2
 
 # brute-force community strings
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#onesixtyone -c onesixtyone -i <targets> -c <file-with-community-strings>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ onesixtyone ]' -c onesixtyone -i <targets> -c <file-with-community-strings>
 
 # brute-force
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#snmpcheck -c snmp-check <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ snmpcheck ]' -c snmp-check <target>
 
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -sU -p161 --script "snmp* and not snmp-brute" <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -sU -p161 --script "snmp* and not snmp-brute" <target>

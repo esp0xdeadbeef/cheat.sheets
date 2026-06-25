@@ -15,69 +15,69 @@ $ current-file: printf '%s\n' old.txt
 $ new-file: printf '%s\n' new.txt
 $ smbdomain: printf '%s\n' WORKGROUP
 $ lm_ntlm: printf '%s\n' 'aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0'
-$ user-list: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" "$(nix build --impure --no-link --print-out-paths nixpkgs#wordlists)/share/wordlists" -type f 2>/dev/null | sort -u
-$ pass-list: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" "$(nix build --impure --no-link --print-out-paths nixpkgs#wordlists)/share/wordlists" -type f 2>/dev/null | sort -u
+$ user-list: find "$(pwd)" "$(nix build --impure -I nixpkgs=channel:nixos-unstable --no-link --print-out-paths --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; seclists')/share/wordlists/seclists" "$(nix build --impure -I nixpkgs=channel:nixos-unstable --no-link --print-out-paths --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; wordlists')/share/wordlists" -type f 2>/dev/null | sort -u
+$ pass-list: find "$(pwd)" "$(nix build --impure -I nixpkgs=channel:nixos-unstable --no-link --print-out-paths --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; seclists')/share/wordlists/seclists" "$(nix build --impure -I nixpkgs=channel:nixos-unstable --no-link --print-out-paths --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; wordlists')/share/wordlists" -type f 2>/dev/null | sort -u
 
 # enum smb
-printf '%s\n' 'nmblookup -A <target>' 'nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#smbmap -c smbmap -H <target>' 'echo exit | smbclient -L \\\\<target>\\'
+printf '%s\n' 'nmblookup -A <target>' "nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ smbmap ]' -c smbmap -H <target>" 'echo exit | smbclient -L \\\\<target>\\'
 
 # List shares on a machine using NULL Session
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#samba -c smbclient -L <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ samba ]' -c smbclient -L <target>
 
 # List shares on a machine using a valid <username> + <password>
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#samba -c smbclient -L <target> -U <username>%<password>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ samba ]' -c smbclient -L <target> -U <username>%<password>
 
 # Connect to a valid share with <username> + <password>
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#samba -c smbclient //<target>/<share> -U <username>%<password>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ samba ]' -c smbclient //<target>/<share> -U <username>%<password>
 
 # List files on a specific share
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#samba -c smbclient //<target>/<share> -c 'ls' <password> -U <username>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ samba ]' -c smbclient //<target>/<share> -c 'ls' <password> -U <username>
 
 # List files on a specific share folder inside the share
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#samba -c smbclient //<target>/<share> -c 'cd <folder>; ls' <password> -U <username>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ samba ]' -c smbclient //<target>/<share> -c 'cd <folder>; ls' <password> -U <username>
 
 # Download a file from a specific share folder
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#samba -c smbclient //<target>/<share> -c 'cd <folder>;get <desired-file-name>' <password> -U <username>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ samba ]' -c smbclient //<target>/<share> -c 'cd <folder>;get <desired-file-name>' <password> -U <username>
 
 # Copy a file to a specific share folder
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#samba -c smbclient //<target>/<share> -c 'put <attacker-file> .\<remote-file-with-backslashes>' <password> -U <username>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ samba ]' -c smbclient //<target>/<share> -c 'put <attacker-file> .\<remote-file-with-backslashes>' <password> -U <username>
 
 # Create a folder in a specific share folder
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#samba -c smbclient //<target>/<share> -c 'mkdir .\<remote-folder-with-backslashes>' <password> -U <username>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ samba ]' -c smbclient //<target>/<share> -c 'mkdir .\<remote-folder-with-backslashes>' <password> -U <username>
 
 # Rename a file in a specific share folder
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#samba -c smbclient //<target>/<share> -c 'rename <current-file> <new-file>' <password> -U <username>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ samba ]' -c smbclient //<target>/<share> -c 'rename <current-file> <new-file>' <password> -U <username>
 
 # enum4linux - General enumeration - anonymous session
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#enum4linux -c enum4linux -a <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ enum4linux ]' -c enum4linux -a <target>
 
 # enum4linux - General enumeration - authenticated session
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#enum4linux -c enum4linux -u <username> -p <password> -a <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ enum4linux ]' -c enum4linux -u <username> -p <password> -a <target>
 
 # enum4linux - Users enumeration
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#enum4linux -c enum4linux -u <username> -p <password> -U <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ enum4linux ]' -c enum4linux -u <username> -p <password> -U <target>
 
 # enum4linux - Group and members enumeration
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#enum4linux -c enum4linux -u <username> -p <password> -G <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ enum4linux ]' -c enum4linux -u <username> -p <password> -G <target>
 
 # enum4linux - Password policy
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#enum4linux -c enum4linux -u <username> -p <password> -P <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ enum4linux ]' -c enum4linux -u <username> -p <password> -P <target>
 
 # nmap - Enum Users
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -p 445 --script smb-enum-users <target> --script-args smbuser=<username>,smbpass=<password>,smbdomain=<smbdomain>
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -p 445 --script smb-enum-users <target> --script-args smbuser=<username>,smbhash=<lm_ntlm>,smbdomain=<smbdomain>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -p 445 --script smb-enum-users <target> --script-args smbuser=<username>,smbpass=<password>,smbdomain=<smbdomain>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -p 445 --script smb-enum-users <target> --script-args smbuser=<username>,smbhash=<lm_ntlm>,smbdomain=<smbdomain>
 
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap --script smb-enum-users.nse --script-args smbusername=<username>,smbpass=<password>,smbdomain=workstation -p445 <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap --script smb-enum-users.nse --script-args smbusername=<username>,smbpass=<password>,smbdomain=workstation -p445 <target>
 
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap --script smb-enum-users.nse --script-args smbusername=<username>,smbhash=<lm_ntlm>,smbdomain=<smbdomain> -p445 <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap --script smb-enum-users.nse --script-args smbusername=<username>,smbhash=<lm_ntlm>,smbdomain=<smbdomain> -p445 <target>
 
 # nmap - Enum Groups
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -p 445 --script smb-enum-groups <target> --script-args smbuser=<username>,smbpass=<password>,smbdomain=<smbdomain>
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -p 445 --script smb-enum-groups <target> --script-args smbuser=<username>,smbhash=<lm_ntlm>,smbdomain=<smbdomain>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -p 445 --script smb-enum-groups <target> --script-args smbuser=<username>,smbpass=<password>,smbdomain=<smbdomain>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -p 445 --script smb-enum-groups <target> --script-args smbuser=<username>,smbhash=<lm_ntlm>,smbdomain=<smbdomain>
 
 # nmap - Enum Shares
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -p 445 --script smb-enum-shares <target> --script-args smbuser=<username>,smbpass=<password>,smbdomain=<smbdomain>
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -p 445 --script smb-enum-shares <target> --script-args smbuser=<username>,smbpass=<lm_ntlm>,smbdomain=<smbdomain>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -p 445 --script smb-enum-shares <target> --script-args smbuser=<username>,smbpass=<password>,smbdomain=<smbdomain>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -p 445 --script smb-enum-shares <target> --script-args smbuser=<username>,smbpass=<lm_ntlm>,smbdomain=<smbdomain>
 
 ### nmap - OS Discovery
 ## nmap -p 445 --script smb-os-discovery <target>
@@ -91,13 +91,13 @@ nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -p 445
 ## nmap -p 445 --script smb-vuln-ms17-010 <target>
 
 # nmap - SMB all vulns windows:
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -p 445 --script smb-vuln-ms06-025 --script smb-vuln-ms07-029 --script smb-vuln-ms08-067 --script smb-vuln-ms10-054 --script smb-vuln-ms10-061 --script smb-vuln-ms17-010 <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -p 445 --script smb-vuln-ms06-025 --script smb-vuln-ms07-029 --script smb-vuln-ms08-067 --script smb-vuln-ms10-054 --script smb-vuln-ms10-061 --script smb-vuln-ms17-010 <target>
 
 # map - Brute Force Accounts (be aware of account lockout!)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -p 445 --script smb-brute --script-args userdb=<user-list>,passdb=<pass-list> <target>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -p 445 --script smb-brute --script-args userdb=<user-list>,passdb=<pass-list> <target>
 
 # using mimikatz with nxc
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#netexec -c nxc smb <target> -u <username> -p '<password>' -M mimikatz
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ netexec ]' -c nxc smb <target> -u <username> -p '<password>' -M mimikatz
 
 # Bruteforcing with netexec
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#netexec -c nxc smb <target> -u <username> -p '<password>'
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ netexec ]' -c nxc smb <target> -u <username> -p '<password>'

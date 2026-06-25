@@ -21,11 +21,11 @@ nix shell github:esp0xdeadbeef/cheat.sheets#droopescan -c droopescan scan silver
 nix shell github:esp0xdeadbeef/cheat.sheets#droopescan -c droopescan scan wordpress -u '<url>'
 
 # wordpress enumerate all (remove the tls-checks if http)
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wpscan -c wpscan --url '<url>' -e ap,at,tt,cb,dbe,u,m --update --plugins-detection aggressive --plugins-version-detection aggressive --disable-tls-checks | tee -a wp-enum-all.txt
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ wpscan ]' -c wpscan --url '<url>' -e ap,at,tt,cb,dbe,u,m --update --plugins-detection aggressive --plugins-version-detection aggressive --disable-tls-checks | tee -a wp-enum-all.txt
 
 # wordpress scan agressive mode (Default: mixed, is missing allot.)
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wpscan -c wpscan --url '<url>' --plugins-detection aggressive | tee -a wp-agressive-plugins.txt
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ wpscan ]' -c wpscan --url '<url>' --plugins-detection aggressive | tee -a wp-agressive-plugins.txt
 
 # wordpress enumerate users from host (remove the tls-checks if http)
-NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#wpscan -c wpscan --enumerate u --url '<url>' --disable-tls-checks | tee -a wp-enum-users.txt
+NIXPKGS_ALLOW_UNFREE=1 nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ wpscan ]' -c wpscan --enumerate u --url '<url>' --disable-tls-checks | tee -a wp-enum-users.txt
 

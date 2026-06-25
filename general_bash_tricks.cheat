@@ -20,9 +20,9 @@ string="hello-world";prefix="hell";suffix="ld";echo "${string:${#prefix}:${#stri
 
 # find reminders
 echo "find only files"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#findutils -c find . ! -type d
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ findutils ]' -c find . ! -type d
 echo "cat files using inode in dir (<dir>) with regex (<partitional_file_name>)"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c ls -lai <dir> | grep <partitional_file_name> | awk '{print $1}' | xargs -I fn find <dir> -maxdepth 0 -type d -inum fn -exec cat {} 2>/dev/null \;
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ coreutils ]' -c ls -lai <dir> | grep <partitional_file_name> | awk '{print $1}' | xargs -I fn find <dir> -maxdepth 0 -type d -inum fn -exec cat {} 2>/dev/null \;
 
 # xargs reminders
 echo "reuse an variable from stdout multiple times"
@@ -37,94 +37,94 @@ echo 'test1\ntest2\ntest3' | xargs -I somerandomstring echo 'somerandomstring'
 echo " # --- adding a test file, with content:"
 echo "some word\n#some word 2\n\n some word 3 with space\nsupport\nanother one." | tee /tmp/file_that_definitely_did_not_exist.txt
 echo " # --- hide all matches (-v 'some word')"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -v 'some word' /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep -v 'some word' /tmp/file_*.txt
 echo " # --- get match count (-c 'some word')"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -c 'some word' /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep -c 'some word' /tmp/file_*.txt
 echo " # --- whole word search (-w 'some word')"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -w 'some word' /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep -w 'some word' /tmp/file_*.txt
 echo " # --- display the line numbers (-n 'some')"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -n 'some'  /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep -n 'some'  /tmp/file_*.txt
 echo " # --- match counter limit m[num] (-m1 'some')"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -m1 'some' /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep -m1 'some' /tmp/file_*.txt
 echo " # --- match pattern with before[num] (-B1 '2')"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -B1 '2' /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep -B1 '2' /tmp/file_*.txt
 echo " # --- match pattern with after[num] (-A1 '2')"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -A1 '2' /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep -A1 '2' /tmp/file_*.txt
 echo " # --- match pattern with before and after [num] (-C1 '2')"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -C1 '2' /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep -C1 '2' /tmp/file_*.txt
 echo " # --- list filenames without the content. (-l 'support')"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -l 'support' /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep -l 'support' /tmp/file_*.txt
 echo " # --- grep for output of the regex ('.*2')"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -x '.*2' /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep -x '.*2' /tmp/file_*.txt
 echo ' # --- grep match starting string ("^some") ("^[string]") '
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep "^some" /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep "^some" /tmp/file_*.txt
 echo " # --- grep match ending string ('\.$')"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep '\.$' /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep '\.$' /tmp/file_*.txt
 echo " # --- use a file for patterns (-f /tmp/zfile_that_pattern.txt)"
 echo 'some word 3\nsupport' > /tmp/zfile_that_pattern.txt;grep -f /tmp/zfile_that_pattern.txt /tmp/file_*.txt ;rm /tmp/zfile_that_pattern.txt
 echo " # --- multiple patterns -e 'some word 3' -e 'support'"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -e 'some word 3' -e 'support' /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep -e 'some word 3' -e 'support' /tmp/file_*.txt
 echo " # --- get all comments and empty lines with extended grep (-E '^(#|$)')\n # ps. could be usefull with -v"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -E '^(#|$)' /tmp/file_*.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep -E '^(#|$)' /tmp/file_*.txt
 echo " # --- cleaning up"; rm /tmp/file_that_definitely_did_not_exist.txt
 
 # clear screen without clear
 echo "\ec"
 
 # rot13 without external packages
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c cat <file> | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ coreutils ]' -c cat <file> | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 
 # remove duplicates from or in file (creates a /tmp/tmp.txt to test on)
 echo -e 'dup1\ndup2\ndup2   \ndup1' | tee /tmp/tmp.txt
 echo "sort, remove dupes and reorder"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c sort -u <file>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ coreutils ]' -c sort -u <file>
 echo "remove dupes"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gawk -c awk '!a[$0]++' <file>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gawk ]' -c awk '!a[$0]++' <file>
 echo "remove dupes"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#perl -c perl -ne 'print if ! $a{$_}++' <file>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ perl ]' -c perl -ne 'print if ! $a{$_}++' <file>
 echo "remove dupes even if there are %s behind the string"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#perl -c perl -lne 's/\s*$//; print if ! $a{$_}++' <file>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ perl ]' -c perl -lne 's/\s*$//; print if ! $a{$_}++' <file>
 echo "It deletes duplicate, consecutive lines from a file (emulates \"uniq\")."
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnused -c sed '$!N; /^\(.*\)\n\1$/!P; D' <file>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnused ]' -c sed '$!N; /^\(.*\)\n\1$/!P; D' <file>
 echo "remove dupes inline (replaces inside the file)"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#perl -c perl -i -ne 'print if ! $a{$_}++' /tmp/tmp.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ perl ]' -c perl -i -ne 'print if ! $a{$_}++' /tmp/tmp.txt
 echo -e 'dup\ndup\ndup   \ndup' > /tmp/tmp.txt # leaving a file after to test on.
 
 # redirect stderr to stdout
 thiscommanddoesnotexist 2>&1 | grep --color command
 
 # open a file within cli
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#xdg-utils -c xdg-open <file>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ xdg-utils ]' -c xdg-open <file>
 
 # change xdg-open default program for a file
 file_xdg=$(file --mime-type -b <file>)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#xdg-utils -c xdg-mime query default $file_xdg
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#xdg-utils -c xdg-mime default <mimeapps-list> $file_xdg
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#xdg-utils -c xdg-mime query default $file_xdg
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ xdg-utils ]' -c xdg-mime query default $file_xdg
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ xdg-utils ]' -c xdg-mime default <mimeapps-list> $file_xdg
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ xdg-utils ]' -c xdg-mime query default $file_xdg
 
 # add a json inline with gron
 (gron <file>; echo 'json.<inject_path> = "<inject_value>";') | gron -u
 
 
 # skip the first lines-to-skip lines from a file and get the rest (n=amount of lines)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c tail -n +$((<n-lines-to-skip> + 1)) <file>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ coreutils ]' -c tail -n +$((<n-lines-to-skip> + 1)) <file>
 
 # cat a file and stop at the lines from the bottom (n=amount of lines)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c head -n -<n-lines-from-bottom-to-stop-printing> <file>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ coreutils ]' -c head -n -<n-lines-from-bottom-to-stop-printing> <file>
 
 # sort on keys, sort various columns in a csv file by numeric and dictionary order, columns 5 and after as dictionary order
 echo -e '2,3,a,9,C\n2,2,b,20,F\n2,2,c,19,Gb,hj\n2,2,c,19,Gb,hi\n2,2,c,19,Ga\n2,2,b,22,Ga\n1,10,b,22,Ga' > tmp_list_that_does_not_exists.csv
 echo -e "original: \n$(cat tmp_list_that_does_not_exists.csv)";
 echo "sorted: "; sort --field-separator=, --key=1,1n -k2,2n -k3,3d -k4,4n -k5d tmp_list_that_does_not_exists.csv
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c rm tmp_list_that_does_not_exists.csv
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ coreutils ]' -c rm tmp_list_that_does_not_exists.csv
 
 # echo, cat, and remove a file with inode (example)
 echo 'Hello general_bash_tricks' > '/tmp/sometempfilethatdoesnotexist`pwd`'; inode=$(ls -li /tmp | grep 'pwd' | awk '{print $1}')
 echo $inode | xargs -I inodenumber find /tmp/ -maxdepth 1 -inum inodenumber -exec echo {} \; -exec cat {} \; -exec echo "" \; -exec rm {} \;
 
 # *carefully* remove a file with inode and iname
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#findutils -c find . -maxdepth 1 -inum $(ls -li $path | grep '<partitional_file_name>' | awk '{print $1}') -exec -exec rm {} \; # by inum
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#findutils -c find . -maxdepth 1 -iname '*<partitional_file_name>*' -exec echo {} \; # by iname
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ findutils ]' -c find . -maxdepth 1 -inum $(ls -li $path | grep '<partitional_file_name>' | awk '{print $1}') -exec -exec rm {} \; # by inum
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ findutils ]' -c find . -maxdepth 1 -iname '*<partitional_file_name>*' -exec echo {} \; # by iname
 
 
 # execute commands with sed
@@ -134,13 +134,13 @@ echo 'ls -la\nps aux' | sed 's/.*/&/e'
 echo 'test\ttest' | sed 's/\x09/\x0a/g'
 
 # replace an port (all integers) inside old scans
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnused -c sed 's/:[[:digit:]]\+\//:<new_port>\//g' <file> # place an -i for in-file operations
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnused ]' -c sed 's/:[[:digit:]]\+\//:<new_port>\//g' <file> # place an -i for in-file operations
 
 # replace newlines with sed
 echo -n 'test\ntest' | sed ':a;N;$!ba;s/\n/\t/g'
 
 # print all files in the current workdirectory that are printable
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#findutils -c find . -type f -exec grep -Iq . {} \; -print | xargs cat
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ findutils ]' -c find . -type f -exec grep -Iq . {} \; -print | xargs cat
 
 
 # replace spaces in filename with `_` lowercase

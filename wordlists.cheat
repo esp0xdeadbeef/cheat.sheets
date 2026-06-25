@@ -1,6 +1,6 @@
 % wordlist cheat sheet
 $ file: ls | sort -u
-$ wordlist: find "$(pwd)" "$(nix build --impure --no-link --print-out-paths nixpkgs#seclists)/share/wordlists/seclists" "$(nix build --impure --no-link --print-out-paths nixpkgs#wordlists)/share/wordlists" -type f 2>/dev/null | sort -u
+$ wordlist: find "$(pwd)" "$(nix build --impure -I nixpkgs=channel:nixos-unstable --no-link --print-out-paths --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; seclists')/share/wordlists/seclists" "$(nix build --impure -I nixpkgs=channel:nixos-unstable --no-link --print-out-paths --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; wordlists')/share/wordlists" -type f 2>/dev/null | sort -u
 $ url: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d' | awk '/^https?:\/\// { print; next } { print "http://" $0 "/" }'; printf '%s\n' http://127.0.0.1/; } | sort -u
 
 
@@ -17,39 +17,39 @@ $ url: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/d' | awk
 <wordlist> | grep -i seclists | grep burp-parameter-names.txt
 
 # cook, get usage
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook help usage
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ cook-framework ]' -c cook help usage
 
 # cook, tutorial github lists
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook "\"search.htb\"" techgaun-github-dorks
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ cook-framework ]' -c cook "\"search.htb\"" techgaun-github-dorks
 
 # cook, use date
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook -dob date\(17,Sep,1994\) elliot _,- dob
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook -dob 17,Sep,1994 elliot _,- dob
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook -date '17,Sep,1994' date date date
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ cook-framework ]' -c cook -dob date\(17,Sep,1994\) elliot _,- dob
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ cook-framework ]' -c cook -dob 17,Sep,1994 elliot _,- dob
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ cook-framework ]' -c cook -date '17,Sep,1994' date date date
 
 # cook, use stdin
 echo 'test1\ntest2\ntest3' | cook -d - d
 
 # cook, usage for linux
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook help usage | grep '\$' | sed -e 's/^[ \t]*\$ //' | sed 's/\x28/\\\x28/g' | sed 's/\x29/\\\x29/g' | sed 's/\x60/\\\x60/g'
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ cook-framework ]' -c cook help usage | grep '\$' | sed -e 's/^[ \t]*\$ //' | sed 's/\x28/\\\x28/g' | sed 's/\x29/\\\x29/g' | sed 's/\x60/\\\x60/g'
 
 # cook, stdin with words concat with module on cols and module on all
 echo 'test1\ntest2\ntest3' | cook -d - d hackerone,H1 ,_ secret,user -mc '0:l;2:l;1:t' -m leet[1]
 
 # cook, read from file
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cook-framework -c cook -f: <wordlist> f
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ cook-framework ]' -c cook -f: <wordlist> f
 
 # cewl, generate a wordlist from a webpage (-h for more info)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#cewl -c cewl --convert-umlauts --meta --email --email_file /tmp/cewl-email-output --meta_file /tmp/cewl-meta-file --verbose <url>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ cewl ]' -c cewl --convert-umlauts --meta --email --email_file /tmp/cewl-email-output --meta_file /tmp/cewl-meta-file --verbose <url>
 
 # hack the box cheat: Misc Create Sequence Wordlist
 for i in $(seq 1 1000); do echo $i >> /tmp/1-1000-ids.txt; done
 
 # username-anarchy, Username creds / credentials generator
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#git -c git clone https://github.com/urbanadventurer/username-anarchy.git /opt/username-anarchy || (cd /opt/username-anarchy; git pull)
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ git ]' -c git clone https://github.com/urbanadventurer/username-anarchy.git /opt/username-anarchy || (cd /opt/username-anarchy; git pull)
 /opt/username-anarchy/username-anarchy 'firstname_example'  'secondname_example';
 /opt/username-anarchy/username-anarchy
 
 
 # rsmangler, Mangle username creds
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#rsmangler -c rsmangler --file <file>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ rsmangler ]' -c rsmangler --file <file>

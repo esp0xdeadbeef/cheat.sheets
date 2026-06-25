@@ -5,10 +5,10 @@ $ local_dir: find "$(pwd)" -type d 2>/dev/null | sort -u
 $ remote_dir: printf '%s\n' /tmp
 
 # Copy local file to remote host
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openssh -c scp <filename> your_username@remoteIP:/some/remote/directory
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ openssh ]' -c scp <filename> your_username@remoteIP:/some/remote/directory
 
 # Copy remote file to local host
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openssh -c scp your_username@remoteIP:<filename> /some/local/directory
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ openssh ]' -c scp your_username@remoteIP:<filename> /some/local/directory
 
 # Copy local directory to remote directory
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#openssh -c scp -r <local_dir> your_username@remoteIP:/some/remote/directory/<remote_dir>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ openssh ]' -c scp -r <local_dir> your_username@remoteIP:/some/remote/directory/<remote_dir>

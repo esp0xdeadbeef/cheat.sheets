@@ -7,7 +7,7 @@ A directory of cheat sheets to use with TLDR, cheat.sh, or Navi.
 
 1. Install the interactive tools:
 
-    `$ nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#nix -c nix profile install --impure -I nixpkgs=channel:nixos-unstable nixpkgs#fd nixpkgs#fzf github:esp0xdeadbeef/cheat.sheets#navi`
+    `$ nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ nix ]' -c nix profile install --impure -I nixpkgs=channel:nixos-unstable --expr 'import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }' fd fzf github:esp0xdeadbeef/cheat.sheets#navi`
 
 1. Add the pentest cheat sheets by adding the repo to navi:
 

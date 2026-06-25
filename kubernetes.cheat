@@ -1,12 +1,12 @@
 % kubectl cheats
 
 # get node info
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#kubectl -c kubectl get nodes -o wide
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ kubectl ]' -c kubectl get nodes -o wide
 
 
 
 # run helm from nix
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#kubernetes-helm -c helm
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ kubernetes-helm ]' -c helm
 
 # disable node spawning on master(s)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#kubectl -c kubectl get nodes -o wide | grep master | cut -d ' ' -f 1  | xargs -I {} kubectl taint nodes {} node-role.kubernetes.io/master=:NoSchedule
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ kubectl ]' -c kubectl get nodes -o wide | grep master | cut -d ' ' -f 1  | xargs -I {} kubectl taint nodes {} node-role.kubernetes.io/master=:NoSchedule

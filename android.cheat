@@ -14,19 +14,19 @@ $ host_port: echo 8080
 $ url_or_path: echo http://www.google.com/to_for_example.mp4
 
 # start the adb server as root (is needed)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c sh -c 'sudo adb stop-server; sudo adb start-server'
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c sh -c 'sudo adb stop-server; sudo adb start-server'
 
 # What android devices are available
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb devices
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb devices
 
 # Enter adb in root mode
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c sh -c 'pgrep -x adb >/dev/null || { echo "ADB daemon is not running; run the start ADB server cheat first and connect a device."; exit 1; }; adb get-state >/dev/null 2>&1 && adb root || { echo "No adb device/emulator connected."; exit 1; }'
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c sh -c 'pgrep -x adb >/dev/null || { echo "ADB daemon is not running; run the start ADB server cheat first and connect a device."; exit 1; }; adb get-state >/dev/null 2>&1 && adb root || { echo "No adb device/emulator connected."; exit 1; }'
 
 # Decompile an android apk app
 apktool d <apk>
 
 # Fix the bug with `waiting for debugger`
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb shell am clear-debug-app
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb shell am clear-debug-app
 
 # -needs rooted device- downloads unzip push and run frida-server on Android device
 wget "$(gron https://api.github.com/repos/frida/frida/releases/latest | grep -E 'https:\/\/(.*)-android-arm64.xz' | grep server | cut -d '"' -f2)" -O /tmp/frida-server.xz; unxz /tmp/frida-server.xz; adb push /tmp/frida-server /data/local/tmp/frida-server; adb shell "chmod 755 /data/local/tmp/frida-server"; adb shell "/data/local/tmp/frida-server &" &
@@ -71,101 +71,101 @@ frida-trace -p 1372 -a "libjpeg.so!0x4793c"
 frida -U -f <service> -l <script> --no-pause
 
 # Start the ADB server (use sudo)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c sudo adb start-server
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c sudo adb start-server
 
 # Start the ADB server (will prob fail without sudo)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb start-server
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb start-server
 
 # Stop the ADB server
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb kill-server
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb kill-server
 
 # Check connected devices
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb devices
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb devices
 
 # Enter ADB shell
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb shell
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb shell
 
 # Push a file to the device
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb push <local> <remote>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb push <local> <remote>
 # Example: adb push myfile.txt /sdcard/
 
 # Pull a file from the device
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb pull <remote> <local>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb pull <remote> <local>
 # Example: adb pull /sdcard/myfile.txt ./
 
 # Install an APK
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb install <apk>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb install <apk>
 # Example: adb install myapp.apk
 
 # Uninstall an app
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb uninstall <package_name>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb uninstall <package_name>
 # Example: adb uninstall com.example.myapp
 
 # Reboot the device
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb reboot
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb reboot
 
 # Reboot into bootloader
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb reboot bootloader
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb reboot bootloader
 
 # Reboot into recovery mode
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb reboot recovery
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb reboot recovery
 
 # Remount system partition in read-write mode
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb remount
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb remount
 
 # Connect to a device over TCP/IP
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb connect <device_ip>:<device_port>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb connect <device_ip>:<device_port>
 
 # Launch a browser
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb shell am start -a android.intent.action.VIEW -d <url_or_path>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb shell am start -a android.intent.action.VIEW -d <url_or_path>
 
 
 # Play an MP4 video
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb shell am start -a android.intent.action.VIEW -d <url_or_path> -t video/mp4
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb shell am start -a android.intent.action.VIEW -d <url_or_path> -t video/mp4
 
 # List installed packages
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb shell pm list packages
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb shell pm list packages
 
 # List system packages
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb shell pm list packages -s
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb shell pm list packages -s
 
 # List third-party packages
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb shell pm list packages -3
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb shell pm list packages -3
 
 # Get APK location of a package
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb shell pm path <package_name>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb shell pm path <package_name>
 # Example: adb shell pm path com.example.myapp
 
 # View logcat output
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb logcat
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb logcat
 
 # Save logcat output to a file
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb logcat -d > logcat.txt
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb logcat -d > logcat.txt
 
 # Clear logcat buffer
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb logcat -c
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb logcat -c
 
 # View device logs for a specific tag
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb logcat -s <tag>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb logcat -s <tag>
 # Example: adb logcat -s MyAppTag
 
 # Get device information
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb shell getprop
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb shell getprop
 
 # Get battery status
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb shell dumpsys battery
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb shell dumpsys battery
 
 # Get current running processes
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb shell ps
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb shell ps
 
 # Get disk usage
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb shell df
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb shell df
 
 # Forward a port from the device to the host
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb forward tcp:<host_port> tcp:<device_port>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb forward tcp:<host_port> tcp:<device_port>
 
 # Reverse a port from the host to the device
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb reverse tcp:<device_port> tcp:<host_port>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb reverse tcp:<device_port> tcp:<host_port>
 
 # Capture TCP dump on all adapters
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#android-tools -c adb shell tcpdump -i any -p -s 0 -w <output_path_on_device>
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ android-tools ]' -c adb shell tcpdump -i any -p -s 0 -w <output_path_on_device>

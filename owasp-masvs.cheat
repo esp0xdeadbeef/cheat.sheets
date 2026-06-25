@@ -4,4 +4,4 @@
 $ level: echo '1 2' | tr ' ' '\n'
 
 # Get a markdown template from owasp-masvs (depending on your input level)
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#git -c git clone https://github.com/OWASP/owasp-masvs /opt/owasp-masvs; (cd /opt/owasp-masvs/ && git pull && cd tools/ && python3 ./export.py -f json | jq -c 'map( select(.L<level> == true) ) | unique[]' | sort -V | while read -r line; do echo "$line" | gron | grep --color -v '{}\|\.L1\|\.L2\|\.R' | sed 's/json\.text = \"/## /g' | sed 's/json\.category = \"/# /g' | sed 's/json\.id = \"/## /g' | sed 's/";//g'; done)
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ git ]' -c git clone https://github.com/OWASP/owasp-masvs /opt/owasp-masvs; (cd /opt/owasp-masvs/ && git pull && cd tools/ && python3 ./export.py -f json | jq -c 'map( select(.L<level> == true) ) | unique[]' | sort -V | while read -r line; do echo "$line" | gron | grep --color -v '{}\|\.L1\|\.L2\|\.R' | sed 's/json\.text = \"/## /g' | sed 's/json\.category = \"/# /g' | sed 's/json\.id = \"/## /g' | sed 's/";//g'; done)

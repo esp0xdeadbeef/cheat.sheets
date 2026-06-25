@@ -1,9 +1,9 @@
 % update navi
 
 # update esp0xdeadbeef repo
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#navi -c navi repo add esp0xdeadbeef/cheat.sheets
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ navi ]' -c navi repo add esp0xdeadbeef/cheat.sheets
 
 # update infosec streams
-nix shell --impure -I nixpkgs=channel:nixos-unstable nixpkgs#navi -c navi repo add infosecstreams/cheat.sheets
+nix shell --impure -I nixpkgs=channel:nixos-unstable --expr 'with import (builtins.findFile builtins.nixPath "nixpkgs") { config.allowUnfree = true; }; [ navi ]' -c navi repo add infosecstreams/cheat.sheets
 
 
